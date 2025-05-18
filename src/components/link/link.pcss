@@ -1,14 +1,12 @@
 .wrapper {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
 	gap: 25px;
 }
 
 .link {
 	color: inherit;
 	text-decoration: none;
-
 }
 
 .link:hover {
@@ -29,4 +27,22 @@
 .link-nice:hover::after {
 	width: 100%;
 	background-color: var(--color-accent);
+}
+
+[color="danger"] {
+	.link {
+		color: red;
+	}
+
+	.link-nice:hover::after {
+		background-color: red;
+	}
+}
+
+[size="large"] {
+	font-size: 2rem;
+
+	&:after {
+		height: 2px;
+	}
 }

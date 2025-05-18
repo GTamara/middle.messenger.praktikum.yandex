@@ -1,0 +1,20 @@
+.chat-list-item {
+	--padding: 10px;
+
+	display: flex;
+	gap: 1.5rem;
+	/* inline-size: 100%; */
+	min-height: 70px;
+	border-block-start: var(--border);
+	margin-inline: calc(0px - var(--padding));
+	padding: var(--padding);
+	align-items: center;
+
+	&_active {
+		background-color: lightcyan;
+	}
+
+	/* &:first-child {
+		border-block-start: var(--border);
+	} */
+}

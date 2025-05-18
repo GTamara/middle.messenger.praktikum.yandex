@@ -88,8 +88,7 @@ input:focus~.highlight {
 	animation: inputHighlighter 0.3s ease;
 }
 
-/* ANIMATIONS */
-/* @-webkit-keyframes inputHighlighter {
+@keyframes inputHighlighter {
 	from {
 		background: #5264AE;
 	}
@@ -100,24 +99,10 @@ input:focus~.highlight {
 	}
 }
 
-@-moz-keyframes inputHighlighter {
-	from {
-		background: #5264AE;
-	}
-
-	to {
-		width: 0;
-		background: transparent;
-	}
-} */
-
-@keyframes inputHighlighter {
-	from {
-		background: #5264AE;
-	}
-
-	to {
-		width: 0;
-		background: transparent;
-	}
+.input-icon {
+	pointer-events: none;
+	position: absolute;
+	right: 10px;
+	top: calc(50% - 12px);
+	color: var(--color-accent);
 }

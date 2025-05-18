@@ -4,9 +4,29 @@ import * as Components from './components';
 import * as Pages from './pages';
 import * as Layout from './layout';
 
+import * as ChatComponents from './pages/chat/components';
+import * as ProfileComponents from './pages/profile/components';
+
 const pages = {
 	'register': [Pages.Register],
 	'login': [Pages.Login],
+	'chat': [
+		Pages.ChatPage, {
+			items: [
+				{name: 'Example Name 1'},
+				{name: 'Example Name 2', active: true},
+				{name: 'Example Name 3'},
+				{name: 'Example Name 4'},
+				{name: 'Example Name 5'},
+			],
+		},
+	],
+	'profile': [Pages.ProfilePage],
+	'edit-profile': [Pages.EditProfileDataPage],
+	'change-password': [Pages.ChangePasswordPage],
+	'navigation': [Pages.NavigationPage],
+	'server-error': [Pages.ServerErrorPage],
+	'client-error': [Pages.ClientErrorPage],
 	
 	//   'list': [ Pages.ListPage, {
 	//     cats: [
@@ -21,7 +41,9 @@ const pages = {
 console.log('Components', Components)
 Object.entries({
 	...Components, 
-	...Layout
+	...Layout,
+	...ChatComponents,
+	...ProfileComponents,
 })
 	.forEach(([name, template]) => {
 		Handlebars.registerPartial(name, template);
@@ -37,7 +59,16 @@ function navigate(page: string) {
 	container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('register'));
+document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
+
+document.addEventListener('click', (e) => {
+	const page = (e.target as HTMLElement).getAttribute('page');
+	console.log('page', page)
+	if (page) {
+		navigate(page);
+		e.preventDefault();
+	}
+})
 
 // const button = new Button();
 // button.render('app');
