@@ -1,17 +1,17 @@
 {{#> FormLayout }}
-	{{#> Card }}
-		<div class="login">
-			<h2 class="card__title">
-				Sign in
-			</h2>
-			{{> Input label="Login" type="text" }}
-			{{> Input label="Password" type="password" }}
-			<div class="login__actions">
-				{{> Button label="Sign in" type="submit" color="primary" class="full-width" }}
-				{{> Button label="Cancel" type="button" color="basic" class="full-width" }}
+{{#> Card }}
+<div class="login">
+	<h2 class="card__title">
+		Sign in
+	</h2>
+	{{> Input label="Login" type="text" }}
+	{{> Input label="Password" type="password" }}
+	<div class="login__actions">
+		{{> Button label="Sign in" type="submit" color="primary" class="full-width" }}
+		{{> Button label="Cancel" type="button" color="basic" class="full-width" }}
 
-			</div>
-			{{> Link label="Sigh up" page="register" }}
-		</div>
-	{{/ Card}}
+	</div>
+	{{> Link label="Sigh up" page="register" }}
+</div>
+{{/ Card}}
 {{/ FormLayout}}

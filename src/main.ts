@@ -13,11 +13,11 @@ const pages = {
 	'chat': [
 		Pages.ChatPage, {
 			items: [
-				{name: 'Example Name 1'},
-				{name: 'Example Name 2', active: true},
-				{name: 'Example Name 3'},
-				{name: 'Example Name 4'},
-				{name: 'Example Name 5'},
+				{ name: 'Example Name 1' },
+				{ name: 'Example Name 2', active: true },
+				{ name: 'Example Name 3' },
+				{ name: 'Example Name 4' },
+				{ name: 'Example Name 5' },
 			],
 		},
 	],
@@ -27,7 +27,7 @@ const pages = {
 	'navigation': [Pages.NavigationPage],
 	'server-error': [Pages.ServerErrorPage],
 	'client-error': [Pages.ClientErrorPage],
-	
+
 	//   'list': [ Pages.ListPage, {
 	//     cats: [
 	//       {name: 'cat-1', avatar: cat1},
@@ -40,7 +40,7 @@ const pages = {
 };
 console.log('Components', Components)
 Object.entries({
-	...Components, 
+	...Components,
 	...Layout,
 	...ChatComponents,
 	...ProfileComponents,
