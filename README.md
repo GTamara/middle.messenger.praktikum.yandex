@@ -20,3 +20,4 @@
 
 Страницы генерируются "налету". Ссылки на все страницы представлены по адресу localhost:3000
 
+D:\projects\middle-front\middle.messenger.praktikum.yandex\ui\navigation-layout.png
