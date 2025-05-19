@@ -20,3 +20,4 @@
 
 Страницы генерируются "налету". Ссылки на все страницы представлены по адресу localhost:3000
 
+<img src="https://github.com/user-attachments/assets/170ab311-565c-42c9-afa4-375b84fd129e" width="400" />
