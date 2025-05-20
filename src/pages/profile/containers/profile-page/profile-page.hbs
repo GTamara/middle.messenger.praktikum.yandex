@@ -1,0 +1,21 @@
+{{#> ProfileLayout }}
+{{#> Card class='full-width gap-2' }}
+{{> GoBackButton color="primary" page="chat" }}
+<div class="profile-page__container">
+	{{> Avatar size="large" }}
+</div>
+<h1>ExampleName</h1>
+{{> ProfileDataItem label="E-mail" value="email@email.ru" }}
+{{> ProfileDataItem label="Login" value="login_123" }}
+{{> ProfileDataItem label="Name" value="ExampleName" }}
+{{> ProfileDataItem label="Last name" value="ExampleLastName" }}
+{{> ProfileDataItem label="Nickname" value="ExampleName" }}
+{{> ProfileDataItem label="Phone" value="+7 000 123 45 67" }}
+
+<div class="profile-page__actions">
+	{{> Link label="Edit profile details" page="register" }}
+	{{> Link label="Changepassword" page="register" }}
+	{{> Link label="Sign out" page="register" color="danger" }}
+</div>
+{{/ Card}}
+{{/ ProfileLayout}}
