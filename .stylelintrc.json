@@ -1,0 +1,24 @@
+{
+	"extends": [
+		"stylelint-config-standard",
+		"stylelint-config-standard-scss"
+	],
+	"rules": {
+		"at-rule-no-unknown": [
+			true,
+			{
+				"ignoreAtRules": [
+					"define-mixin",
+					"mixin-content",
+					"mixin",
+					"extend",
+					"for",
+					"if",
+					"else",
+					"define-extend",
+					"include"
+				]
+			}
+		]
+	}
+}

@@ -1,5 +1,6 @@
 .group {
 	position: relative;
+
 	/* margin-bottom: 45px; */
 }
 
@@ -9,6 +10,7 @@ input {
 	border: none;
 	border-bottom: 1px solid var(--color-dark-border);
 	padding: 10px 10px 10px 5px;
+
 	/* font-size:18px; */
 }
 
@@ -22,11 +24,7 @@ label {
 	top: 5px;
 	left: 5px;
 	color: var(--color-light-gray);
-	/* font-weight:normal;  */
-	/* font-size:18px; */
 	transition: 0.2s ease all;
-	-moz-transition: 0.2s ease all;
-	-webkit-transition: 0.2s ease all;
 	pointer-events: none;
 }
 
@@ -45,8 +43,8 @@ input:valid~label {
 	width: 100%;
 }
 
-.bar:before,
-.bar:after {
+.bar::before,
+.bar::after {
 	content: '';
 	position: absolute;
 	bottom: 1px;
@@ -56,17 +54,17 @@ input:valid~label {
 	transition: 0.2s ease width;
 }
 
-.bar:before {
+.bar::before {
 	left: 50%;
 }
 
-.bar:after {
+.bar::after {
 	right: 50%;
 }
 
 /* active state */
-input:focus~.bar:before,
-input:focus~.bar:after {
+input:focus~.bar::before,
+input:focus~.bar::after {
 	width: 50%;
 }
 
@@ -83,11 +81,10 @@ input:focus~.bar:after {
 
 /* active state */
 input:focus~.highlight {
-	-webkit-animation: inputHighlighter 0.3s ease;
-	-moz-animation: inputHighlighter 0.3s ease;
 	animation: inputHighlighter 0.3s ease;
 }
 
+/* stylelint-disable-next-line keyframes-name-pattern */
 @keyframes inputHighlighter {
 	from {
 		background: #5264AE;
