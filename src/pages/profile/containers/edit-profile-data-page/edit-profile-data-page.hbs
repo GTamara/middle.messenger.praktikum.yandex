@@ -1,0 +1,24 @@
+{{#> ProfileLayout }}
+{{#> Card class='full-width gap-2' }}
+{{> GoBackButton color="primary" page="profile" }}
+<div class="profile-page__container">
+	{{> Avatar size="large" }}
+</div>
+<h1>ExampleName</h1>
+{{> ProfileDataItem label="Name" value="ExampleName" }}
+{{> ProfileDataItem label="Last name" value="ExampleLastName" }}
+{{> ProfileDataItem label="Nickname" value="ExampleName" }}
+{{> ProfileDataItem label="Phone" value="+7 000 123 45 67" }} --}}
+
+{{> Input name="email" label="E-mail" type="email" }}
+{{> Input name="login" label="Login" type="text" }}
+{{> Input name="first_name" label="Name" type="text" }}
+{{> Input name="second_name" label="Last name" type="text" }}
+{{> Input name="display_name" label="Displayname" type="text" }}
+{{> Input name="phone" label="Phone" type="text" }}
+
+<div class="profile-page__actions">
+	{{> Button label="Save" type="submit" color="primary" class="full-width" }}
+</div>
+{{/ Card}}
+{{/ ProfileLayout}}

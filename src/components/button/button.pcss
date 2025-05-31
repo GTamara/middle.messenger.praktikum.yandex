@@ -1,0 +1,27 @@
+@import '../../styles/mixins.pcss';
+
+.button {
+	border-radius: 50px;
+	color: var(--color-accent);
+	padding: 9px 20px;
+	transition: all 250ms;
+	border: 0;
+	user-select: none;
+	touch-action: manipulation;
+	outline: 0;
+	font-size: 1.1rem;
+	font-weight: 500;
+}
+
+[color="primary"] {
+	@mixin primary-button-styles;
+}
+
+[color="basic"] {
+	@mixin basic-button-styles;
+}
+
+button:focus,
+button:focus-visible {
+	outline: 1px auto var(--color-medium-border);
+}

@@ -1,0 +1,48 @@
+.wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 25px;
+}
+
+.link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.link:hover {
+	color: var(--color-accent);
+	transition: color 0.5s;
+}
+
+.link-nice::after {
+	content: '';
+	display: block;
+	width: 0%;
+	height: 1px;
+	margin-top: -3px;
+	background-color: var(--color-basic-font);
+	transition: width 200ms, background-color 0.5s;
+}
+
+.link-nice:hover::after {
+	width: 100%;
+	background-color: var(--color-accent);
+}
+
+[color="danger"] {
+	.link {
+		color: red;
+	}
+
+	.link-nice:hover::after {
+		background-color: red;
+	}
+}
+
+[size="large"] {
+	font-size: 2rem;
+
+	&:after {
+		height: 2px;
+	}
+}
