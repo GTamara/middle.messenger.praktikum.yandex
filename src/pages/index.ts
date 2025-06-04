@@ -1,4 +1,4 @@
-export { Login } from './login';
+export { default as LoginPage } from './login';
 export { Register } from './register';
 export { ChatPage } from './chat';
 export { ProfilePage, EditProfileDataPage, ChangePasswordPage } from './profile';

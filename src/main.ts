@@ -6,10 +6,11 @@ import * as Layout from './layout';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
+import registerComponent from './core/registerComponent';
 
 const pages = {
-    'register': [ Pages.Register ],
-    'login': [ Pages.Login ],
+    'register': Pages.Register,
+    'login': Pages.LoginPage,
     'chat': [
         Pages.ChatPage, {
             items: [
@@ -21,10 +22,10 @@ const pages = {
             ],
         },
     ],
-    'profile': [ Pages.ProfilePage ],
+    'profile': Pages.ProfilePage,
     'edit-profile': [ Pages.EditProfileDataPage ],
     'change-password': [ Pages.ChangePasswordPage ],
-    'navigation': [ Pages.NavigationPage ],
+    'navigation': Pages.NavigationPage,
     'server-error': [ Pages.ServerErrorPage ],
     'client-error': [ Pages.ClientErrorPage ],
 
@@ -38,7 +39,7 @@ const pages = {
     //   }],
     //   'nav': [ Pages.NavigatePage ]
 };
-console.log('Components', Components);
+
 Object.entries({
     ...Components,
     ...Layout,
@@ -46,26 +47,42 @@ Object.entries({
     ...ProfileComponents,
 })
     .forEach(([name, template]) => {
+        if (typeof template === 'function') {
+            registerComponent(template);
+            // Handlebars.registerPartial(name, template);
+            return;
+        }
         Handlebars.registerPartial(name, template);
     });
 
 function navigate(page: string) {
     // @ts-ignore
-    const [source, context] = pages[page];
-    const container = document.getElementById('app')!;
 
-    const temlpatingFunction = Handlebars.compile(source);
-    // console.log('html', temlpatingFunction(context))
-    container.innerHTML = temlpatingFunction(context);
+    const container = document.getElementById('app')!;
+    if (page !== 'login') {
+        let source; let context;
+        Array.isArray(pages[page]) ?
+            [source, context] = pages[page] :
+            source = pages[page];
+
+        const temlpatingFunction = Handlebars.compile(source);
+        container.innerHTML = temlpatingFunction(context);
+        return;
+    }
+
+    // @ts-ignore
+    const Component = pages[page];
+    const component = new Component({});
+    container?.replaceChildren(component.getContent());
 }
 
 document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
 
 document.addEventListener('click', (e: MouseEvent) => {
     const page = (e.target as HTMLElement).getAttribute('page');
-    console.log('page', page);
     if (page) {
         navigate(page);
         e.preventDefault();
+        e.stopImmediatePropagation();
     }
 });

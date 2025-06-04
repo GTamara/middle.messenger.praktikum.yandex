@@ -32,6 +32,8 @@ export default defineConfig([{
 	},
 	rules: {
 		"indent": ["error", 4],
+		"no-unused-vars": "off",
+		"no-tabs": "off",
 		"object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
 		"array-bracket-spacing": ["error", "never", {
 			"singleValue": true,
@@ -40,7 +42,6 @@ export default defineConfig([{
 		}],
 		"require-jsdoc": "off",
 		"valid-jsdoc": "off",
-		// "eslint-plugin-jsdoc": "off",
 		"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1, "maxBOF": 0 }],
 		'max-len': ["error", { "code": 120 }],
 	},

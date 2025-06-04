@@ -44,7 +44,7 @@
 		"vite": "^6.3.5"
 	},
 	"engines": {
-		"node": ">=12"
+		"node": ">=18.0.0"
 	},
 	"dependencies": {
 		"express": "^4.19.2"
