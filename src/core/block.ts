@@ -150,6 +150,15 @@ export default abstract class Block {
         this.eventBus.emit(EBlockEvents.FLOW_CDU);
     };
 
+    //     setChildren = (children: Children) => {
+    //     if (!children) {
+    //         return;
+    //     }
+
+    //     Object.assign(this.children, children);
+    //     this.eventBus.emit(EBlockEvents.FLOW_CDU);
+    // };
+
     get element() {
         return this._element;
     }

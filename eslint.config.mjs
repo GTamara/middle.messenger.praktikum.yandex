@@ -43,6 +43,6 @@ export default defineConfig([{
 		"require-jsdoc": "off",
 		"valid-jsdoc": "off",
 		"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1, "maxBOF": 0 }],
-		'max-len': ["error", { "code": 120 }],
+		'max-len': ["error", { "code": 140 }],
 	},
 }]);

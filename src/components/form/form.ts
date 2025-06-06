@@ -27,7 +27,6 @@ export default class FormElement extends Block {
     getElemsTemplateByType(array: Children, type: EFormControlType) {
         return Object.entries(array)
             .filter(([_, value]) => {
-                debugger;
                 if (Array.isArray(value)) {
                     return value[0].props.ctrlType === type;
                 } else {

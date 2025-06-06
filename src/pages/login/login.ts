@@ -1,5 +1,7 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
 import Block, { type Props } from '../../core/block';
+import FormValidation from '../../core/validation/validation';
+import { getElement } from '../../helper-functions';
 
 // type FormControl = {
 // 	label: string;
@@ -10,7 +12,9 @@ import Block, { type Props } from '../../core/block';
 // };
 
 export class LoginPage extends Block {
-    constructor(props: Props) {
+    validationService;
+
+    constructor(props = {}) {
         super('app-login-page', {
             ...props,
             formState: {
@@ -21,48 +25,48 @@ export class LoginPage extends Block {
                     password: '',
                 },
             },
-
-            // LoginInput: new Input({
-
-            // 	name: 'login',
-            // 	type: 'text',
-            // 	required: true,
-            // 	order: 1,
-            // 	ctrlType: 'control',
-            // }),
-
-            // 	loginInput:  new ControlWrapper({
-            // 	label: 'Login',
-            // 	Control: new Input({
-
-            // 		name: 'login',
-            // 		type: 'text',
-            // 		required: true,
-            // 		order: 1,
-            // 		ctrlType: 'control',
-            // 	})
-            // })
-
-            // onChangeLogin: (e) => {
-            // 	const value = e.target.value;
-            // 	const error = value === "error" ? "Some error is happened." : "";
-
-            // 	this.setProps({
-            // 		formState: {
-            // 			...this.props.formState,
-            // 			login: value,
-            // 		},
-            // 		errors: {
-            // 			...this.props.errors,
-            // 			login: error,
-            // 		},
-            // 	});
-            // },
-
         });
         this.setChildren({
             Form: this.getForm(),
         });
+
+        const form = getElement(this.children.Form);
+        debugger;
+        this.validationService = new FormValidation({
+            form,
+            controls: {
+                LoginInput: {
+                    ...getElement(form.children.LoginInput),
+                    events: {
+                        change: (e?: Event) => {
+                            if (!e) {
+                                return;
+                            }
+                            const target = e.target as HTMLInputElement;
+                            this.setProps({
+                                formState: {
+                                    login: target.value,
+                                },
+                            });
+                        },
+                    },
+                },
+                PasswordInput: getElement(form.children.PasswordInput),
+            },
+            submitAction: {
+                SignInButton: getElement(form.children.SignInButton),
+            },
+            cancelAction: {
+                CancelButton: getElement(form.children.CancelButton),
+            },
+            submitHandler: (e: Event | undefined) => {
+                // e имеет тип `Event | undefined`
+                if (e) {
+                    e.preventDefault(); // Работает, если e — Event
+                }
+            },
+        });
+        console.log('this', this);
     }
 
     getForm() {
@@ -74,6 +78,7 @@ export class LoginPage extends Block {
             // click: onChangeLogin,
             order: 1,
             ctrlType: 'action',
+            disabled: 'true',
         });
 
         const cancelButton = new Button({
@@ -83,6 +88,7 @@ export class LoginPage extends Block {
             class: 'button full-width',
             order: 2,
             ctrlType: 'action',
+            disabled: 'true',
         });
 
         const loginInput = new ControlWrapper({
