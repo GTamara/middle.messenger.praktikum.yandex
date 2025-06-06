@@ -236,7 +236,6 @@ export default abstract class Block {
     _render() {
         this._removeEvents();
         const block = this._compile();
-
         if (this._element.children.length === 0) {
             this._element.appendChild(block);
         } else {

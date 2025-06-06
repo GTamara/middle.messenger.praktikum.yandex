@@ -4,11 +4,11 @@ export default class Input extends Block {
     constructor(props: PropsAndChildren) {
         super('input', {
             ...props,
+            autocomplete: 'new-password',
         });
     }
 
     render() {
-        // const { label } = this.props;
         return ``;
     }
 }

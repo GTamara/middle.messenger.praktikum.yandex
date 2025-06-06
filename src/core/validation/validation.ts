@@ -1,5 +1,5 @@
 import EventBus from '../event-bus';
-import { DEFAULT_VALIDATION_CONFIG, defaultValidationRules, type PropsObject, type ValidationConfig } from './validation-config';
+import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type PropsObject, type ValidationConfig } from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
@@ -13,34 +13,28 @@ export default class FormValidation {
         this.config = config;
 
         this.controlsProps = Object.values(config.controls);
-        this.formHtmlElement = document.querySelector<HTMLFormElement>('form') as HTMLFormElement;
+        this.formHtmlElement = config.form.element;
         this.controlHtmlElementsArr = this.getFormControls(this.formHtmlElement);
         this.submitBtnHtmlElement = this.getSubmitElement();
-        this.enableValidation();
     }
 
     enableValidation() {
-        console.log('enableValidation', this.config);
         this.formHtmlElement.addEventListener('submit', (e) => {
+            console.log('enableValidation function submit', this.formHtmlElement);
             e.preventDefault();
-            if (this.checkFormValidity()) {
+            if (this.isFormValid()) {
                 this.config.submitHandler(e);
             }
         });
         this.setEventListenersForFormFields();
+        this.toggleSubmitButtonState(false);
+        console.log('enableValidation function', this.formHtmlElement);
     }
 
     clearValidation() {
         this.controlsProps.forEach((control) => {
             delete control.props.invalid;
         });
-        // const fieldsArray = Array.from(formElement.querySelectorAll<HTMLElement>(this.config.inputSelector));
-
-        // fieldsArray.forEach((field) => {
-        // 	this.toggleErrorVisibility(true, field);
-        // });
-        // const submitButton = this.getSubmitElement(formElement);
-        // this.toggleButtonState(false, submitButton);
     }
 
     getFormControls(form: HTMLFormElement) {
@@ -58,80 +52,48 @@ export default class FormValidation {
     }
 
     setEventListenersForFormFields() {
-        // const controlsArray = Object.values(this.config.controls);
-        // Array.from(form.querySelectorAll<HTMLInputElement>(this.config.inputSelector));
-        // const buttonElement = this.getSubmitElement(form);
-
-        // controlsArray.forEach(ctrl => {
-        // 	ctrl.events = {
-        // 		...ctrl.events,
-
-        // 	}
-        // 	// ctrl.addEventListener('change', () => {
-        // 	// 	this.checkFieldValidity(field);
-        // 	// 	const isFormValid = fieldsArray.every((field) => field.validity.valid);
-        // 	// 	this.toggleButtonState(isFormValid, buttonElement);
-        // 	// });
-        // });
-        this.controlsProps.forEach((control) => {
-            const controlName = control.props.name ?? '';
-            if (!!controlName) {
-                control.props.pattern = defaultValidationRules[controlName].pattern;
-                control.props[`data-${DEFAULT_VALIDATION_CONFIG.errorMessageSelector}`] = defaultValidationRules[controlName].error;
-            }
-        });
-
         const controlsArray = this.controlHtmlElementsArr;
-        // const buttonElement = this.getSubmitElement();
-
         controlsArray.forEach((control) => {
+            // const nameAttr = control.getAttribute('name') ?? '';
+            // control?.setAttribute('pattern', DEFAULT_VALIDATION_RULES[nameAttr].pattern.toString());
+            // control?.setAttribute('data-error-message', DEFAULT_VALIDATION_RULES[nameAttr].error);
             control.addEventListener('change', () => {
                 if (this.isHtmlInputElement(control)) {
-                    const isFormValid = controlsArray.every((ctrl) => {
-                        if (this.isHtmlInputElement(ctrl)) {
-                            this.checkControlValidity(ctrl);
-                            return ctrl.validity.valid;
-                        }
-                        return true;
-                    });
-                    this.toggleSubmitButtonState(isFormValid);
+                    this.checkControlValidity(control);
                 }
             });
         });
     }
 
     checkControlValidity(control: HTMLInputElement) {
-        if (control.validity.valid) {
+        const nameAttr = control.getAttribute('name') ?? ''; debugger;
+        const isValid = new RegExp(DEFAULT_VALIDATION_RULES[nameAttr].pattern).test(control.value);
+        if (isValid) {
             this.toggleErrorVisibility(true, control);
-        } else {
-            if (control.dataset.errorMessage && control.validity.patternMismatch) {
-                control.setCustomValidity(control.dataset.errorMessage);
-            } else {
-                control.setCustomValidity('');
+            if (this.isFormValid()) {
+                this.toggleSubmitButtonState(true);
             }
-            this.toggleErrorVisibility(false, control, control.validationMessage);
+        } else {
+            this.toggleErrorVisibility(false, control, DEFAULT_VALIDATION_RULES[nameAttr].error);
+            this.toggleSubmitButtonState(false);
         }
     }
 
-    checkFormValidity() {
-        const isFormValid = this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
+    isFormValid() {
+        return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
             if (this.isHtmlInputElement(ctrl)) {
-                ctrl.validity.valid;
+                return ctrl.validity.valid;
             }
-            this.toggleSubmitButtonState(isFormValid);
         });
-
-        return isFormValid;
     }
 
     toggleErrorVisibility(isValid: boolean, control: HTMLElement, errorMessage: string | null = null) {
         const errorMessageElement =
-			control.parentElement?.querySelector<HTMLElement>(DEFAULT_VALIDATION_CONFIG.errorMessageSelector);
+            control.parentElement?.querySelector<HTMLElement>(DEFAULT_VALIDATION_CONFIG.errorMessageSelector);
 
         if (!errorMessageElement) {
             return;
         }
-
         if (isValid) {
             errorMessageElement.style.display = 'none';
             errorMessageElement.textContent = '';
@@ -142,20 +104,21 @@ export default class FormValidation {
     }
 
     toggleSubmitButtonState(isFormValid: boolean) {
-        // const disabledBtnClass = this.config.validationSelectors.disabledButtonClass;
         if (isFormValid) {
-            // this.config.submitAction.props.disabled = false;
-            this.submitBtnHtmlElement.setAttribute('disabled', 'true');
+            debugger;
+            this.submitBtnHtmlElement.removeAttribute('disabled');
             this.submitBtnHtmlElement.disabled = false;
         } else {
-            this.submitBtnHtmlElement.removeAttribute('disabled');
-            // this.submitBtnHtmlElement.classList.add(disabledBtnClass);
+            this.submitBtnHtmlElement.setAttribute('disabled', 'true');
             this.submitBtnHtmlElement.disabled = true;
         }
     };
 
     getSubmitElement(): HTMLInputElement {
-        const submitBtnHtmlElement = this.formHtmlElement.querySelector<HTMLInputElement>('type="submit"');
+        const submitBtnHtmlElement =
+            this.formHtmlElement.querySelector<HTMLInputElement>(
+                DEFAULT_VALIDATION_CONFIG.submitButtonSelector,
+            );
         if (submitBtnHtmlElement) {
             return submitBtnHtmlElement;
         }

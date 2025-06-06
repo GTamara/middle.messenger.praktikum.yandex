@@ -21,6 +21,7 @@ export default class FormElement extends Block {
         super('form', {
             ...props,
             class: 'form',
+            // novalidate: true
         });
     }
 

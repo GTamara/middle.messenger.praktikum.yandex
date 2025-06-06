@@ -83,6 +83,6 @@ document.addEventListener('click', (e: MouseEvent) => {
     if (page) {
         navigate(page);
         e.preventDefault();
-        e.stopImmediatePropagation();
+        // e.stopImmediatePropagation();
     }
 });

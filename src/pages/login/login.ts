@@ -3,16 +3,11 @@ import Block, { type Props } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
 import { getElement } from '../../helper-functions';
 
-// type FormControl = {
-// 	label: string;
-// 	type?: 'submit' | 'button';
-// 	color?: 'primary' | 'basic';
-// 	class?: string;
-// 	[key: string]: () => void;
-// };
-
 export class LoginPage extends Block {
-    validationService;
+    validationService: FormValidation;
+    form: Block;
+    passwordControlProps: Block;
+    loginControlProps: Block;
 
     constructor(props = {}) {
         super('app-login-page', {
@@ -29,16 +24,105 @@ export class LoginPage extends Block {
         this.setChildren({
             Form: this.getForm(),
         });
+        this.form = getElement(this.children.Form);
+        this.passwordControlProps = getElement(this.form.children.PasswordInput).children['Control'] as Block;
+        this.loginControlProps = getElement(this.form.children.LoginInput).children['Control'] as Block;
 
-        const form = getElement(this.children.Form);
-        debugger;
-        this.validationService = new FormValidation({
-            form,
+        this.validationService = new FormValidation(this.getValidationConfig(this.form));
+        this.validationService.enableValidation();
+    }
+
+    getForm() {
+        const signInButton = new Button({
+            label: 'Sign in',
+            type: 'submit',
+            color: 'primary',
+            class: 'button full-width',
+            order: 1,
+            ctrlType: 'action',
+            click: ((e: Event) => {
+                console.log('click button');
+            }),
+        });
+
+        const cancelButton = new Button({
+            label: 'Cancel',
+            type: 'button',
+            color: 'basic',
+            class: 'button full-width',
+            order: 2,
+            ctrlType: 'action',
+        });
+
+        const loginInput = new ControlWrapper({
+            label: 'Login',
+            order: 1,
+            ctrlType: 'control',
+
+            Control: new Input({
+                name: 'login',
+                type: 'text',
+                required: true,
+                autocomplete: 'off',
+                input: ((e: Event) => {
+                    console.log('login input');
+                    this.setValue(e, this.loginControlProps);
+                }),
+            }),
+        });
+
+        const passwordInput = new ControlWrapper({
+            label: 'Password',
+            order: 2,
+            ctrlType: 'control',
+
+            Control: new Input({
+                name: 'password',
+                type: 'password',
+                required: true,
+                autocomplete: 'off',
+                input: ((e: Event) => {
+                    this.setValue(e, this.passwordControlProps);
+                }),
+            }),
+        });
+
+        return new FormElement({
+            submit: () => {
+                console.log('submit');
+                console.log({
+                    login: this.loginControlProps.props.value,
+                    password: this.passwordControlProps.props.value,
+                });
+            },
+            SignInButton: signInButton,
+            CancelButton: cancelButton,
+            LoginInput: loginInput,
+            PasswordInput: passwordInput,
+        });
+    }
+
+    setValue(e: Event, controlProps: Block) {
+        const target = e.target as HTMLInputElement;
+        controlProps.setProps({
+            value: target.value,
+        });
+    }
+
+    getValidationConfig(form: Block) {
+        return {
+            form: {
+                ...form,
+                element: form.element as HTMLFormElement,
+            },
             controls: {
                 LoginInput: {
-                    ...getElement(form.children.LoginInput),
+                    ...getElement(
+                        getElement(form.children.LoginInput).children['Control'],
+                    ),
                     events: {
                         change: (e?: Event) => {
+                            console.log('change');
                             if (!e) {
                                 return;
                             }
@@ -51,7 +135,24 @@ export class LoginPage extends Block {
                         },
                     },
                 },
-                PasswordInput: getElement(form.children.PasswordInput),
+                PasswordInput: {
+                    ...getElement(
+                        getElement(form.children.PasswordInput).children['Control'],
+                    ),
+                    events: {
+                        change: (e?: Event) => {
+                            if (!e) {
+                                return;
+                            }
+                            const target = e.target as HTMLInputElement;
+                            this.setProps({
+                                formState: {
+                                    password: target.value,
+                                },
+                            });
+                        },
+                    },
+                },
             },
             submitAction: {
                 SignInButton: getElement(form.children.SignInButton),
@@ -60,66 +161,11 @@ export class LoginPage extends Block {
                 CancelButton: getElement(form.children.CancelButton),
             },
             submitHandler: (e: Event | undefined) => {
-                // e имеет тип `Event | undefined`
                 if (e) {
-                    e.preventDefault(); // Работает, если e — Event
+                    e.preventDefault();
                 }
             },
-        });
-        console.log('this', this);
-    }
-
-    getForm() {
-        const signInButton = new Button({
-            label: 'Sign in',
-            type: 'submit',
-            color: 'primary',
-            class: 'button full-width',
-            // click: onChangeLogin,
-            order: 1,
-            ctrlType: 'action',
-            disabled: 'true',
-        });
-
-        const cancelButton = new Button({
-            label: 'Cancel',
-            type: 'button',
-            color: 'basic',
-            class: 'button full-width',
-            order: 2,
-            ctrlType: 'action',
-            disabled: 'true',
-        });
-
-        const loginInput = new ControlWrapper({
-            label: 'Login',
-            order: 1,
-            ctrlType: 'control',
-            Control: new Input({
-                name: 'login',
-                type: 'text',
-                required: true,
-            }),
-        });
-
-        const passwordInput = new ControlWrapper({
-            label: 'Password',
-            order: 2,
-            ctrlType: 'control',
-            Control: new Input({
-                name: 'password',
-                type: 'password',
-                required: true,
-            }),
-        });
-
-        return new FormElement({
-            submit: () => console.log(this.props.formState),
-            SignInButton: signInButton,
-            CancelButton: cancelButton,
-            LoginInput: loginInput,
-            PasswordInput: passwordInput,
-        });
+        };
     }
 
     componentDidUpdate(oldProps: Props, newProps: Props): boolean {
@@ -141,18 +187,18 @@ export class LoginPage extends Block {
 
     render() {
         return `
-			{{#> FormLayout }}
-				{{#> Card }}
-					<div class="login">
-						<h2 class="card__title">
-							Sign in
-						</h2>
-						{{{ Form}}}
-						{{> Link label="Sigh up" page="register" }}
-					</div>
-				{{/ Card}}
-			{{/ FormLayout}}
-		`;
+            {{#> FormLayout }}
+                {{#> Card }}
+                    <div class="login">
+                        <h2 class="card__title">
+                            Sign in
+                        </h2>
+                        {{{ Form}}}
+                        {{> Link label="Sigh up" page="register" }}
+                    </div>
+                {{/ Card}}
+            {{/ FormLayout}}
+        `;
     }
 }
 

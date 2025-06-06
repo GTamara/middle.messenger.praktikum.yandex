@@ -27,6 +27,7 @@ export default class ControlWrapper extends Block {
 			{{#if isIconPresent}}
 				<span class="material-icons input-icon">${icon}</span>
 			{{/if}}
+			<error-message></error-message>
 		`;
     }
 }
