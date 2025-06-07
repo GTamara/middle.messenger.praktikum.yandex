@@ -54,9 +54,8 @@ export default class FormElement extends Block {
         return `
 			${controlsTemplate}
 			
-			<div class="login__actions">
+			<div class="form__actions">
 				${actionsTemplate}
-
 			</div>
     	`;
     }

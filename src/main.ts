@@ -6,10 +6,11 @@ import * as Layout from './layout';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
+
 import registerComponent from './core/registerComponent';
 
 const pages = {
-    'register': Pages.Register,
+    'register': Pages.RegisterPage,
     'login': Pages.LoginPage,
     'chat': [
         Pages.ChatPage, {
@@ -24,7 +25,7 @@ const pages = {
     ],
     'profile': Pages.ProfilePage,
     'edit-profile': [ Pages.EditProfileDataPage ],
-    'change-password': [ Pages.ChangePasswordPage ],
+    'change-password': Pages.ChangePasswordPage,
     'navigation': Pages.NavigationPage,
     'server-error': [ Pages.ServerErrorPage ],
     'client-error': [ Pages.ClientErrorPage ],
@@ -59,7 +60,7 @@ function navigate(page: string) {
     // @ts-ignore
 
     const container = document.getElementById('app')!;
-    if (page !== 'login') {
+    if (page !== 'login' && page !== 'register' && page !== 'change-password' ) {
         let source; let context;
         Array.isArray(pages[page]) ?
             [source, context] = pages[page] :

@@ -46,6 +46,13 @@ type ValidationRules = {
 	[fieldName: string]: ValidationRule;
 };
 
+type FormState = {
+    [fieldName: string]: string;
+}
+
+// export type SetPropsFn = <T extends PropsObject>(props: DeepPartial<T>) => void;
+export type SetPropsFn = (obj: { formState: FormState }) => void;
+
 export const DEFAULT_VALIDATION_CONFIG = {
     disabledButtonClass: 'disabled',
     invalidAttribute: 'invalid',
