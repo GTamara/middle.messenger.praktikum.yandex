@@ -183,12 +183,12 @@ export class ChangePasswordPage extends Block {
         return `
             {{#> FormLayout }}
                 {{#> Card }}
+                    {{> GoBackButton color="primary" page="profile" }}
                     <div class="page-container">
                         <h2 class="card__title">
-                            Sign in
+                            Change password
                         </h2>
                         {{{ Form}}}
-                        {{> Link label="Sign up" page="register" }}
                     </div>
                 {{/ Card}}
             {{/ FormLayout}}

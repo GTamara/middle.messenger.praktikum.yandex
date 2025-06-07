@@ -24,7 +24,7 @@ const pages = {
         },
     ],
     'profile': Pages.ProfilePage,
-    'edit-profile': [ Pages.EditProfileDataPage ],
+    'edit-profile': Pages.EditProfileDataPage,
     'change-password': Pages.ChangePasswordPage,
     'navigation': Pages.NavigationPage,
     'server-error': [ Pages.ServerErrorPage ],
@@ -60,7 +60,11 @@ function navigate(page: string) {
     // @ts-ignore
 
     const container = document.getElementById('app')!;
-    if (page !== 'login' && page !== 'register' && page !== 'change-password' ) {
+    if (page !== 'login' &&
+        page !== 'register' &&
+        page !== 'change-password' &&
+        page !== 'edit-profile'
+    ) {
         let source; let context;
         Array.isArray(pages[page]) ?
             [source, context] = pages[page] :
