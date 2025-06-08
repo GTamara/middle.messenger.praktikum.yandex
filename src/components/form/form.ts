@@ -1,7 +1,7 @@
 import Block, { type Children } from '../../core/block';
 import { EFormCOntrolType as EFormControlType } from './types';
 
-type FormControlProps = {
+export type FormControlProps = {
     submit: () => void;
 } & Record<string,
     | Block

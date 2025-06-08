@@ -70,7 +70,7 @@ export class RegisterPage extends Block {
             order: 1,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('click Sign in button');
+                console.log('click Sign in button', e);
             }),
         });
 
@@ -82,7 +82,7 @@ export class RegisterPage extends Block {
             order: 2,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('click Cancel button');
+                console.log('click Cancel button', e);
             }),
         });
 
@@ -277,43 +277,6 @@ export class RegisterPage extends Block {
                     'repeatPassword',
                     this.setProps.bind(this),
                 ),
-                // LoginInput: {
-                //     ...getElement(
-                //         getElement(form.children.LoginInput).children['Control'],
-                //     ),
-                //     events: {
-                //         change: (e?: Event) => {
-                //             console.log('change');
-                //             if (!e) {
-                //                 return;
-                //             }
-                //             const target = e.target as HTMLInputElement;
-                //             this.setProps({
-                //                 formState: {
-                //                     login: target.value,
-                //                 },
-                //             });
-                //         },
-                //     },
-                // },
-                // PasswordInput: {
-                //     ...getElement(
-                //         getElement(form.children.PasswordInput).children['Control'],
-                //     ),
-                //     events: {
-                //         change: (e?: Event) => {
-                //             if (!e) {
-                //                 return;
-                //             }
-                //             const target = e.target as HTMLInputElement;
-                //             this.setProps({
-                //                 formState: {
-                //                     password: target.value,
-                //                 },
-                //             });
-                //         },
-                //     },
-                // },
             },
             submitAction: {
                 RegisterButton: getElement(form.children.RegisterButton),

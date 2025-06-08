@@ -1,4 +1,4 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
+import { Button, ControlWrapper, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputValidationConfig, getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
@@ -19,17 +19,10 @@ export class ChatPage extends Block {
     messageControlProps: Block;
     searchControlProps: Block;
 
-    constructor(props = {}) {
+    constructor(props: ChatProps) {
         super('app-chat-page', {
             ...props,
-            formState: {
-                // login: '',
-                // password: '',
-                // errors: {
-                //     login: '',
-                //     password: '',
-                // },
-            },
+            formState: {},
             SearchInput: new ControlWrapper({
                 label: 'Search',
                 icon: 'search',
@@ -70,7 +63,7 @@ export class ChatPage extends Block {
             order: 1,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('click "Send" button from component. It might be additional actions here');
+                console.log('click "Send" button from component. It might be additional actions here', e);
             }),
         });
 

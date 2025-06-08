@@ -8,7 +8,13 @@ type ComponentMetaData = {
 	props: Props;
 }
 
-export type ComponentProp = string | boolean | Block | (() => void);
+export type ComponentProp = string
+    | boolean
+    | Block
+    | (() => void)
+    | {
+        [key: string]: ComponentProp;
+    };
 
 export type PropsAndChildren = {
 	[key: string]: ComponentProp | any;
@@ -88,13 +94,13 @@ export default abstract class Block {
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                value.forEach((obj) => {
-                    if (value instanceof Block) {
-                        children[key] = value;
+                value.forEach((element) => {
+                    if (element instanceof Block) {
+                        children[key] = element;
                     } else if (typeof value === 'function') {
-                        events[key] = value;
+                        events[key] = element;
                     } else {
-                        props[key] = value;
+                        props[key] = element;
                     }
                 });
                 return;
@@ -115,7 +121,7 @@ export default abstract class Block {
         this.componentDidMount();
     }
 
-    componentDidMount(oldProps?: Props) { }
+    componentDidMount() {/* -- */}
 
     dispatchComponentDidMount() {
         this.eventBus.emit(EBlockEvents.FLOW_CDM);
@@ -129,8 +135,8 @@ export default abstract class Block {
         this._render();
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props) {
-        return true;
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+        return oldProps === newProps || true;
     }
 
     setProps = (nextProps: Props) => {

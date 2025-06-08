@@ -7,9 +7,19 @@ import * as Layout from './layout';
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
 
-import registerComponent from './core/registerComponent';
+import registerComponent, { type BlockConstructable } from './core/registerComponent';
+import type { ControlWrapperProps } from './components/input-wrapper/input-wrapper';
+import type { ProfileDataItemProps } from './pages/profile/components/profile-data-item/profile-data-item';
+import type { ChatListItemProps } from './pages/chat/components/chat-list-item/chat-list-item';
+import type { ChatMessageItemProps } from './pages/chat/components/chat-message-item/chat-message-item';
+import type { MessageFormProps } from './pages/chat/components/message-form/message-form';
+import type { ButtonProps } from './components/button/button';
+import type { InputProps } from './components/input/input';
+import type { FormControlProps } from './components/form/form';
+import type Block from './core/block';
 
-const pages = {
+type Constructor<T = {}> = new (...args: any[]) => T;
+const pages: Record<string, string | Constructor> = {
     'register': Pages.RegisterPage,
     'login': Pages.LoginPage,
     'chat': Pages.ChatPage,
@@ -28,19 +38,16 @@ const pages = {
     'edit-profile': Pages.EditProfileDataPage,
     'change-password': Pages.ChangePasswordPage,
     'navigation': Pages.NavigationPage,
-    'server-error': [ Pages.ServerErrorPage ],
-    'client-error': [ Pages.ClientErrorPage ],
-
-    //   'list': [ Pages.ListPage, {
-    //     cats: [
-    //       {name: 'cat-1', avatar: cat1},
-    //       {name: 'cat-2', avatar: cat2, active: true},
-    //       {name: 'cat-3', avatar: cat3},
-    //     ],
-    //     showDialog: true
-    //   }],
-    //   'nav': [ Pages.NavigatePage ]
+    'server-error': Pages.ServerErrorPage,
+    'client-error': Pages.ClientErrorPage,
 };
+
+console.log(Object.entries({
+    ...Components,
+    ...Layout,
+    ...ChatComponents,
+    ...ProfileComponents,
+}));
 
 Object.entries({
     ...Components,
@@ -50,24 +57,33 @@ Object.entries({
 })
     .forEach(([name, template]) => {
         if (typeof template === 'function') {
-            registerComponent(template);
-            // Handlebars.registerPartial(name, template);
-            return;
+            if (template instanceof ProfileComponents.ProfileDataItem) {
+                registerComponent(template as BlockConstructable<ProfileDataItemProps>);
+            } else if (template instanceof ChatComponents.ChatListItem) {
+                registerComponent(template as BlockConstructable<ChatListItemProps>);
+            } else if (template instanceof ChatComponents.ChatMessageItem) {
+                registerComponent(template as BlockConstructable<ChatMessageItemProps>);
+            } else if (template instanceof ChatComponents.MessageForm) {
+                registerComponent(template as BlockConstructable<MessageFormProps>);
+            } else if (template instanceof Components.Button) {
+                registerComponent(template as BlockConstructable<ButtonProps>);
+            } else if (template instanceof Components.Input) {
+                registerComponent(template as BlockConstructable<InputProps>);
+            } else if (template instanceof Components.ControlWrapper) {
+                registerComponent(template as BlockConstructable<ControlWrapperProps>);
+            } else if (template instanceof Components.FormElement) {
+                registerComponent(template as BlockConstructable<FormControlProps>);
+            }
+        } else if (typeof template === 'string') {
+            Handlebars.registerPartial(name, template);
+        } else {
+            throw new Error('Unknown component');
         }
-        Handlebars.registerPartial(name, template);
     });
 
 function navigate(page: string) {
-    // @ts-ignore
-
     const container = document.getElementById('app')!;
-    if (page !== 'login' &&
-        page !== 'register' &&
-        page !== 'change-password' &&
-        page !== 'edit-profile' &&
-        page !== 'profile' &&
-        page !== 'chat'
-    ) {
+    if (typeof (pages[page]) === 'string') {
         let source; let context;
         Array.isArray(pages[page]) ?
             [source, context] = pages[page] :
@@ -78,10 +94,11 @@ function navigate(page: string) {
         return;
     }
 
-    // @ts-ignore
-    const Component = pages[page];
-    const component = new Component({});
-    container?.replaceChildren(component.getContent());
+    if (typeof pages[page] === 'function') {
+        const Component = pages[page];
+        const component = new Component();
+        container?.replaceChildren((component as Block).getContent());
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
@@ -91,6 +108,5 @@ document.addEventListener('click', (e: MouseEvent) => {
     if (page) {
         navigate(page);
         e.preventDefault();
-        // e.stopImmediatePropagation();
     }
 });

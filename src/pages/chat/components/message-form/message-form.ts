@@ -1,6 +1,6 @@
 import Block from '../../../../core/block';
 
-type MessageFormProps = {
+export type MessageFormProps = {
     submit: () => void;
     SendButton: Block;
     MessageInput: Block;

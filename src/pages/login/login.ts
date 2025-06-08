@@ -21,7 +21,7 @@ export class LoginPage extends Block {
     passwordControlProps: Block;
     loginControlProps: Block;
 
-    constructor(props = {}) {
+    constructor(props: LoginPageProps) {
         super('app-login-page', {
             ...props,
             formState: {
@@ -53,7 +53,7 @@ export class LoginPage extends Block {
             order: 1,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('click "Sign in" button from component. It might be additional actions here');
+                console.log('click "Sign in" button from component. It might be additional actions here', e);
             }),
         });
 
@@ -222,13 +222,3 @@ export class LoginPage extends Block {
         `;
     }
 }
-
-const onChangeLogin = () => { };
-// const value = (e.target as HTMLInputElement).value;
-// this.setProps({
-// 	formState: {
-// 		...this.props.formState,
-// 		login: value,
-// 	},
-// });
-

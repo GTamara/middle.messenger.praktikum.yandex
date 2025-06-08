@@ -1,10 +1,8 @@
 import Block from '../../../../core/block';
 
-type ChatListItemProps = {
+export type ChatListItemProps = {
     name: string;
-    // submit: () => void;
-    // Control: Block;
-    // Action: Block;
+    click: () => void;
 }
 
 export default class ChatListItem extends Block {
