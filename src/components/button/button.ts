@@ -1,4 +1,4 @@
-import Block, { type Props, type PropsAndChildren } from '../../core/block';
+import Block from '../../core/block';
 
 type ButtonProps = {
     label?: string;
@@ -12,14 +12,13 @@ type ButtonProps = {
 }
 
 export default class Button extends Block {
-    constructor(props: PropsAndChildren) {
+    constructor(props: ButtonProps) {
         super('button', {
             ...props,
         });
     }
 
     render() {
-        debugger;
         const { label, icon } = this.props;
 
         return `

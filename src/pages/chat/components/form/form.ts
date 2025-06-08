@@ -1,4 +1,4 @@
-import Block, { type Children } from '../../core/block';
+import Block, { type Children } from '../../../../core/block';
 import { EFormCOntrolType as EFormControlType } from './types';
 
 type FormControlProps = {
@@ -21,7 +21,6 @@ export default class FormElement extends Block {
         super('form', {
             ...props,
             class: 'form',
-            // novalidate: true
         });
     }
 

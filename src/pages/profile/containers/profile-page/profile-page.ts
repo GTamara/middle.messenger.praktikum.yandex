@@ -1,8 +1,4 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
 import Block from '../../../../core/block';
-import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../../../helper-functions';
 import { ProfileDataItem } from '../../components';
 
 type EditProfileDataPageProps = {

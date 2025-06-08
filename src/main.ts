@@ -30,16 +30,6 @@ const pages = {
     'navigation': Pages.NavigationPage,
     'server-error': [ Pages.ServerErrorPage ],
     'client-error': [ Pages.ClientErrorPage ],
-
-    //   'list': [ Pages.ListPage, {
-    //     cats: [
-    //       {name: 'cat-1', avatar: cat1},
-    //       {name: 'cat-2', avatar: cat2, active: true},
-    //       {name: 'cat-3', avatar: cat3},
-    //     ],
-    //     showDialog: true
-    //   }],
-    //   'nav': [ Pages.NavigatePage ]
 };
 
 Object.entries({
@@ -78,9 +68,8 @@ function navigate(page: string) {
         return;
     }
 
-    // @ts-ignore
     const Component = pages[page];
-    const component = new Component({});
+    const component = new Component({} as any);
     container?.replaceChildren(component.getContent());
 }
 

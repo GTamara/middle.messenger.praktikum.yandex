@@ -58,7 +58,7 @@ export class ChangePasswordPage extends Block {
             order: 1,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('save password click');
+                console.log('save password click', e);
             }),
         });
 
