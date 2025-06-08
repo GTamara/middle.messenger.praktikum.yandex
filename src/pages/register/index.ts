@@ -1,2 +1,5 @@
-import './register.pcss'
-export { default as Register } from './register.hbs?raw';
+import './register.pcss';
+export { RegisterPage as default } from './register';
+
+// import './login.pcss';
+// export { LoginPage as default } from './login';

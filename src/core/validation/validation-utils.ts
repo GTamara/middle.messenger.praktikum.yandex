@@ -1,0 +1,48 @@
+import { getElement, getWrappedInputElement } from '../../helper-functions';
+import type { SetPropsFn, ValidationConfig } from './validation-config';
+
+export const getWrappedTextInputValidationConfig = <T>(
+    wrapperElement: T,
+    stateField: string,
+    setPropsFn: SetPropsFn,
+) => {
+    return {
+        ...getWrappedInputElement(wrapperElement),
+        events: {
+            change: (e?: Event) => {
+                if (!e) {
+                    return;
+                }
+                const target = e.target as HTMLInputElement;
+                setPropsFn({
+                    formState: {
+                        [stateField]: target.value,
+                    },
+                });
+            },
+        },
+    };
+};
+
+export const getTextInputValidationConfig = <T>(
+    element: T,
+    stateField: string,
+    setPropsFn: SetPropsFn,
+) => {
+    return {
+        ...getElement(element),
+        events: {
+            change: (e?: Event) => {
+                if (!e) {
+                    return;
+                }
+                const target = e.target as HTMLInputElement;
+                setPropsFn({
+                    formState: {
+                        [stateField]: target.value,
+                    },
+                });
+            },
+        },
+    };
+};

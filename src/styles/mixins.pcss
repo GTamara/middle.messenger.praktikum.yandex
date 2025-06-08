@@ -1,46 +1,62 @@
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @define-mixin flex-layout {
     display: flex;
     flex-direction: column;
 }
 
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @define-mixin basic-button-styles {
 	background-color: var(--color-basic-background);
 	box-shadow:
-		rgba(0, 0, 0, .1) 0 -25px 18px -14px inset,
-		rgba(0, 0, 0, .1) 0 1px 2px,
-		rgba(0, 0, 0, .1) 0 2px 4px,
-		rgba(0, 0, 0, .1) 0 2px 8px, 
-		rgba(0, 0, 0, .1) 0 4px 16px;
+		rgb(0 0 0 / 10%) 0 -25px 18px -14px inset,
+		rgb(0 0 0 / 10%) 0 1px 2px,
+		rgb(0 0 0 / 10%) 0 2px 4px,
+		rgb(0 0 0 / 10%) 0 2px 8px, 
+		rgb(0 0 0 / 10%) 0 4px 16px;
 
 	&:hover {
 		box-shadow:
-			rgba(0, 0, 0, .15) 0 -25px 18px -14px inset,
-			rgba(0, 0, 0, .15) 0 1px 2px, 
-			rgba(0, 0, 0, .15) 0 2px 4px,
-			rgba(0, 0, 0, .1) 0 1px 8px, 
-			rgba(0, 0, 0, .1) 0 1px 16px,
-			rgba(0, 0, 0, .1) 0 1px 32px;
+			rgb(0 0 0 / 15%) 0 -25px 18px -14px inset,
+			rgb(0 0 0 / 15%) 0 1px 2px, 
+			rgb(0 0 0 / 15%) 0 2px 4px,
+			rgb(0 0 0 / 10%) 0 1px 8px, 
+			rgb(0 0 0 / 10%) 0 1px 16px,
+			rgb(0 0 0 / 10%) 0 1px 32px;
 		color: var(--color-basic-font)
 	}
 }
 
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @define-mixin primary-button-styles {
 	background-color: var(--color-accent-background);
 	box-shadow:
-		rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,
-		rgba(44, 187, 99, .15) 0 1px 2px,
-		rgba(44, 187, 99, .15) 0 2px 4px,
-		rgba(44, 187, 99, .15) 0 2px 8px, 
-		rgba(44, 187, 99, .15) 0 4px 16px;
+		rgb(44 187 99 / 20%) 0 -25px 18px -14px inset,
+		rgb(44 187 99 / 15%) 0 1px 2px,
+		rgb(44 187 99 / 15%) 0 2px 4px,
+		rgb(44 187 99 / 15%) 0 2px 8px, 
+		rgb(44 187 99 / 15%) 0 4px 16px;
 
 	&:hover {
 		box-shadow:
-			rgba(44, 187, 99, .35) 0 -25px 18px -14px inset,
-			rgba(44, 187, 99, .25) 0 1px 2px, 
-			rgba(44, 187, 99, .25) 0 2px 4px,
-			rgba(44, 187, 99, .25) 0 1px 8px, 
-			rgba(44, 187, 99, .25) 0 1px 16px,
-			rgba(44, 187, 99, .25) 0 4px 32px;
+			rgb(44 187 99 / 35%) 0 -25px 18px -14px inset,
+			rgb(44 187 99 / 25%) 0 1px 2px, 
+			rgb(44 187 99 / 25%) 0 2px 4px,
+			rgb(44 187 99 / 25%) 0 1px 8px, 
+			rgb(44 187 99 / 25%) 0 1px 16px,
+			rgb(44 187 99 / 25%) 0 4px 32px;
 		color: var(--color-basic-font)
 	}
+}
+
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
+@define-mixin disabled-button-styles {
+    background-color: var(--color-disabled-background, #e0e0e0) !important;
+    box-shadow:
+        rgb(150 150 150 / 20%) 0 -25px 18px -14px inset,
+        rgb(150 150 150 / 10%) 0 1px 2px,
+        rgb(150 150 150 / 10%) 0 2px 4px,
+        rgb(150 150 150 / 10%) 0 2px 8px, 
+        rgb(150 150 150 / 10%) 0 4px 16px !important;
+    cursor: not-allowed !important;
+    color: var(--color-disabled-font, #a0a0a0) !important;
 }

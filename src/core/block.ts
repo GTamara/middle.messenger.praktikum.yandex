@@ -1,0 +1,292 @@
+import EventBus from './event-bus';
+import { nanoid } from 'nanoid';
+import Handlebars from 'handlebars';
+import { EBlockEvents } from './types';
+
+type ComponentMetaData = {
+	tagName: string;
+	props: Props;
+}
+
+export type ComponentProp = string | boolean | Block | (() => void);
+
+export type PropsAndChildren = {
+	[key: string]: ComponentProp | any;
+}
+
+export type Children = {
+	[key: string]: Block | Block[];
+}
+
+export type Props = {
+	[key: string]: string | boolean | any;
+}
+
+type Events = {
+	[key: string]: () => void;
+}
+
+// Нельзя создавать экземпляр данного класса
+export default abstract class Block {
+    _element: HTMLElement;
+    _meta: ComponentMetaData;
+    _id = nanoid(6);
+    eventBus: EventBus<EBlockEvents>;
+    EBlockEvents = EBlockEvents;
+    children: Children;
+    props: ComponentMetaData['props'];
+    events: Events;
+
+    constructor(tagName = 'div', propsWithChildren = {}) {
+        this.eventBus = new EventBus();
+
+        const { props, children, events } = this._getChildrenAndProps(propsWithChildren);
+        this.children = children;
+        this.props = this._makePropsProxy(props);
+        this.events = events;
+
+        this._meta = {
+            tagName,
+            props,
+        };
+        this._element = this._createDocumentElement(tagName);
+        this._registerEvents(this.eventBus);
+        this.eventBus.emit(EBlockEvents.INIT);
+    }
+
+    _registerEvents(eventBus: EventBus<string>) {
+        eventBus.on(EBlockEvents.INIT, this.init.bind(this));
+        eventBus.on(EBlockEvents.FLOW_CDM, this._componentDidMount.bind(this));
+        eventBus.on(EBlockEvents.FLOW_CDU, this._componentDidUpdate.bind(this));
+        eventBus.on(EBlockEvents.FLOW_RENDER, this._render.bind(this));
+    }
+
+    _createResources() {
+        const { props } = this._meta;
+
+        if (typeof props.className === 'string') {
+            const classes = props.className.split(' ');
+            this._element.classList.add(...classes);
+        }
+
+        if (typeof props ==='object') {
+            Object.entries(props).forEach(([attrName, attrValue]) => {
+                this._element.setAttribute(attrName, attrValue.toString());
+            });
+        }
+    }
+
+    init() {
+        this._createResources();
+        this.eventBus.emit(EBlockEvents.FLOW_RENDER);
+    }
+
+    _getChildrenAndProps(propsAndChildren: PropsAndChildren) {
+        const children: Children = {};
+        const props: Props = {};
+        const events: Events = {};
+
+        Object.entries(propsAndChildren).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                value.forEach((obj) => {
+                    if (value instanceof Block) {
+                        children[key] = value;
+                    } else if (typeof value === 'function') {
+                        events[key] = value;
+                    } else {
+                        props[key] = value;
+                    }
+                });
+                return;
+            }
+            if (value instanceof Block) {
+                children[key] = value;
+            } else if (typeof value === 'function') {
+                events[key] = value;
+            } else {
+                props[key] = value;
+            }
+        });
+
+        return { children, props, events };
+    }
+
+    _componentDidMount() {
+        this.componentDidMount();
+    }
+
+    componentDidMount(oldProps?: Props) { }
+
+    dispatchComponentDidMount() {
+        this.eventBus.emit(EBlockEvents.FLOW_CDM);
+    }
+
+    _componentDidUpdate(oldProps: Props, newProps: Props) {
+        const response = this.componentDidUpdate(oldProps, newProps);
+        if (!response) {
+            return;
+        }
+        this._render();
+    }
+
+    componentDidUpdate(oldProps: Props, newProps: Props) {
+        return true;
+    }
+
+    setProps = (nextProps: Props) => {
+        if (!nextProps) {
+            return;
+        }
+
+        Object.assign(this.props, nextProps);
+    };
+
+    setChildren = (children: Children) => {
+        if (!children) {
+            return;
+        }
+
+        Object.assign(this.children, children);
+        this.eventBus.emit(EBlockEvents.FLOW_CDU);
+    };
+
+    //     setChildren = (children: Children) => {
+    //     if (!children) {
+    //         return;
+    //     }
+
+    //     Object.assign(this.children, children);
+    //     this.eventBus.emit(EBlockEvents.FLOW_CDU);
+    // };
+
+    get element() {
+        return this._element;
+    }
+
+    _addEvents() {
+        Object.entries(this.events).forEach(([eventName, value]) => {
+            this._element.addEventListener(eventName, value);
+        });
+    }
+
+    _removeEvents() {
+        Object.entries(this.events).forEach(([eventName, value]) => {
+            this._element.removeEventListener(eventName, value);
+        });
+    }
+
+    _compile() {
+        const propsAndStubs: { [key: string]: string | string[] | boolean } = { ...this.props };
+
+        Object.entries(this.children).forEach(([key, child]) => {
+            if (Array.isArray(child)) {
+                propsAndStubs[key] = child.map(
+                    (component) => `<div data-id="${component._id}"></div>`,
+                );
+            } else {
+                propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
+            }
+        });
+
+        const fragment: HTMLTemplateElement = this._createDocumentElement<HTMLTemplateElement>('template');
+        const template = Handlebars.compile(this.render());
+        fragment.innerHTML = template(propsAndStubs);
+
+        Object.values(this.children).forEach((child) => {
+            if (Array.isArray(child)) {
+                child.forEach((component) => {
+                    const stub = fragment.content.querySelector(
+                        `[data-id="${component._id}"]`,
+                    );
+
+                    stub?.replaceWith(component.getContent());
+                });
+            } else {
+                const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
+
+                stub?.replaceWith(child.getContent());
+            }
+        });
+
+        /**
+		 * Заменяем заглушки на компоненты
+		 */
+        // Object.keys(this.children).forEach(childKey => {
+        // 	/**
+        // 	 * Ищем заглушку по id
+        // 	 */
+        // 	const stub = fragment.content.querySelector(`[data-id="${propsAndStubs[childKey].id}"]`);
+
+        // 	if (!stub) {
+        // 		return;
+        // 	}
+
+        // 	// const stubChilds = stub.childNodes.length ? stub.childNodes : [];
+
+        // 	/**
+        // 	 * Заменяем заглушку на component._element
+        // 	 */
+        // 	const content = component.getContent();
+        // 	stub.replaceWith(content);
+        // });
+
+        return fragment.content;
+    }
+
+    _render() {
+        this._removeEvents();
+        const block = this._compile();
+        if (this._element.children.length === 0) {
+            this._element.appendChild(block);
+        } else {
+            this._element.replaceChildren(block);
+        }
+
+        this._addEvents();
+    }
+
+    render() {
+        return '';
+    }
+
+    getContent() {
+        return this.element;
+    }
+
+    _makePropsProxy(props: PropsAndChildren) {
+        const eventBus = this.eventBus;
+        const emitBind = eventBus.emit.bind(eventBus);
+
+        return new Proxy(props as any, {
+            get(target, prop) {
+                const value = target[prop];
+                return typeof value === 'function' ? value.bind(target) : value;
+            },
+            set(target, prop, value) {
+                const oldTarget = { ...target };
+                target[prop] = value;
+
+                // Запускаем обновление компоненты
+                // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
+                emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
+                return true;
+            },
+            deleteProperty() {
+                throw new Error('Нет доступа');
+            },
+        });
+    }
+
+    _createDocumentElement<T extends HTMLElement>(tagName: string): T {
+        // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
+        return document.createElement(tagName) as T;
+    }
+
+    show() {
+        this.getContent().style.display = 'block';
+    }
+
+    hide() {
+        this.getContent().style.display = 'none';
+    }
+}

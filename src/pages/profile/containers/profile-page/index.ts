@@ -1,2 +1,2 @@
-import './profile-page.pcss'
-export { default as ProfilePage } from './profile-page.hbs?raw';
+import './profile-page.pcss';
+export { ProfilePage as default } from './profile-page';

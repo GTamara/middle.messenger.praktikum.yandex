@@ -1,2 +1,2 @@
-import './edit-profile-data-page.pcss'
-export { default as EditProfileDataPage } from './edit-profile-data-page.hbs?raw';
+import './edit-profile-data-page.pcss';
+export { EditProfileDataPage as default } from './edit-profile-data-page';

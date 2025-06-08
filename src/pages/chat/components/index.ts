@@ -1,1 +1,3 @@
 export { ChatListItem } from './chat-list-item';
+export { ChatMessageItem } from './chat-message-item';
+export { MessageForm } from './message-form';
