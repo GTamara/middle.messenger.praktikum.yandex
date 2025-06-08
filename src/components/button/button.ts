@@ -1,6 +1,6 @@
 import Block from '../../core/block';
 
-type ButtonProps = {
+export type ButtonProps = {
     label?: string;
     type?: 'submit' | 'button';
     color?: 'primary' | 'basic';

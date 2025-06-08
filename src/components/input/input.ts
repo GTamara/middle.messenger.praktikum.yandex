@@ -1,6 +1,6 @@
 import Block from '../../core/block';
 
-type InputProps = {
+export type InputProps = {
     name: string;
     type: string;
     autocomplete: string;

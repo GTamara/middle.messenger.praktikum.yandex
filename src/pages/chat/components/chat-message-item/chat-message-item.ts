@@ -1,10 +1,9 @@
 import Block from '../../../../core/block';
 
-type ChatMessageItemProps = {
-    // name: string;
-    // submit: () => void;
-    // Control: Block;
-    // Action: Block;
+export type ChatMessageItemProps = {
+    text: string;
+    date: string;
+    owner: string;
 }
 
 export default class ChatMessageItem extends Block {

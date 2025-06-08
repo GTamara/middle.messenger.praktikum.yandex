@@ -1,9 +1,37 @@
+import type { ButtonProps } from '../components/button/button';
+import type { FormControlProps } from '../components/form/form';
+import type { InputProps } from '../components/input/input';
+import type { ChatListItemProps } from '../pages/chat/components/chat-list-item/chat-list-item';
+import type { ChatMessageItemProps } from '../pages/chat/components/chat-message-item/chat-message-item';
+import type { MessageFormProps } from '../pages/chat/components/message-form/message-form';
+import type { ProfileDataItemProps } from '../pages/profile/components/profile-data-item/profile-data-item';
 import Block from './block';
 import Handlebars, { type HelperOptions } from 'handlebars';
 
-interface BlockConstructable<P> {
+export interface BlockConstructable<P> {
 	new(props: P): Block;
 }
+
+type AllComponentProps =
+    // string
+    // | BlockConstructable<ControlWrapperProps>
+    // | BlockConstructable<ProfileDataItemProps>
+    // | BlockConstructable<ChatListItemProps>
+    // | BlockConstructable<ChatMessageItemProps>
+    // | BlockConstructable<MessageFormProps>
+    // | BlockConstructable<ButtonProps>
+    // | BlockConstructable<InputProps>
+    // | BlockConstructable<FormControlProps>
+    // // PropsAndChildren
+    | ProfileDataItemProps
+    | ChatListItemProps
+    | ChatMessageItemProps
+    | MessageFormProps
+    | ButtonProps
+    | InputProps
+    | FormControlProps
+
+// type BlockConstructable = new (props: AllComponentProps) => Block;
 
 export default function registerComponent<Props>(
     Component: BlockConstructable<Props>,

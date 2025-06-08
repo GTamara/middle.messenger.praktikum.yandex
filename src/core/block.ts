@@ -8,7 +8,13 @@ type ComponentMetaData = {
 	props: Props;
 }
 
-export type ComponentProp = string | boolean | Block | (() => void);
+export type ComponentProp = string
+    | boolean
+    | Block
+    | (() => void)
+    | {
+        [key: string]: ComponentProp;
+    };
 
 export type PropsAndChildren = {
 	[key: string]: ComponentProp | any;
