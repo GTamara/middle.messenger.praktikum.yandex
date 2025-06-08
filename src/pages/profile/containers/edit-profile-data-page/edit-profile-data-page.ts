@@ -30,7 +30,7 @@ export class EditProfileDataPage extends Block {
     phoneControlProps: Block;
 
     constructor(props: EditProfileDataPageProps) {
-        super('app-change-password-page', {
+        super('app-edit-profile-data-page', {
             ...props,
             formState: {
                 email: '',
@@ -176,8 +176,7 @@ export class EditProfileDataPage extends Block {
 
         return new FormElement({
             submit: () => {
-                console.log('submit');
-                console.log({
+                console.log('submit', {
                     email: this.emailControlProps.props.value,
                     login: this.loginControlProps.props.value,
                     first_name: this.firstNameControlProps.props.value,

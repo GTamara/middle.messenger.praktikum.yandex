@@ -7,7 +7,7 @@ type ControlWraooerProps = {
 } & PropsAndChildren;
 
 export default class ControlWrapper extends Block {
-    constructor(props: ControlWraooerProps) {// debugger
+    constructor(props: ControlWraooerProps) {
         super('app-control-wrapper', {
             ...props,
             class: 'group',
@@ -17,15 +17,14 @@ export default class ControlWrapper extends Block {
 
     render() {
         const { label, icon } = this.props;
-        const isIconPresent = !!icon;
 
         return `
 			{{{  Control }}}
 			<span class="highlight"></span>
 			<span class="bar"></span>
 			<label>${label}</label>
-			{{#if isIconPresent}}
-				<span class="material-icons input-icon">${icon}</span>
+			{{#if ${!!icon}}}
+				<span class="material-icons input-icon">{{icon}}</span>
 			{{/if}}
 			<error-message></error-message>
 		`;

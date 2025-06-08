@@ -20,7 +20,6 @@ export default class FormValidation {
 
     enableValidation() {
         this.formHtmlElement.addEventListener('submit', (e) => {
-            console.log('enableValidation function submit', this.formHtmlElement);
             e.preventDefault();
             if (this.isFormValid()) {
                 this.config.submitHandler(e);
@@ -28,7 +27,6 @@ export default class FormValidation {
         });
         this.setEventListenersForFormFields();
         this.toggleSubmitButtonState(false);
-        console.log('enableValidation function', this.formHtmlElement);
     }
 
     clearValidation() {
@@ -66,7 +64,7 @@ export default class FormValidation {
     }
 
     checkControlValidity(control: HTMLInputElement) {
-        const nameAttr = control.getAttribute('name') ?? ''; debugger;
+        const nameAttr = control.getAttribute('name') ?? '';
         const isValid = new RegExp(DEFAULT_VALIDATION_RULES[nameAttr].pattern).test(control.value);
         if (isValid) {
             this.toggleErrorVisibility(true, control);
@@ -105,7 +103,6 @@ export default class FormValidation {
 
     toggleSubmitButtonState(isFormValid: boolean) {
         if (isFormValid) {
-            debugger;
             this.submitBtnHtmlElement.removeAttribute('disabled');
             this.submitBtnHtmlElement.disabled = false;
         } else {

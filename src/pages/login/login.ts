@@ -53,7 +53,7 @@ export class LoginPage extends Block {
             order: 1,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('click button');
+                console.log('click "Sign in" button from component. It might be additional actions here');
             }),
         });
 
@@ -101,8 +101,7 @@ export class LoginPage extends Block {
 
         return new FormElement({
             submit: () => {
-                console.log('submit');
-                console.log({
+                console.log('submit', {
                     login: this.loginControlProps.props.value,
                     password: this.passwordControlProps.props.value,
                 });

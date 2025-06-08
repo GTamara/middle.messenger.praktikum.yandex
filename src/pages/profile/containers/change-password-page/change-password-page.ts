@@ -121,8 +121,7 @@ export class ChangePasswordPage extends Block {
 
         return new FormElement({
             submit: () => {
-                console.log('submit');
-                console.log({
+                console.log('submit', {
                     oldPassword: this.oldPasswordControlProps.props.value,
                     newPassword: this.newPasswordControlProps.props.value,
                 });

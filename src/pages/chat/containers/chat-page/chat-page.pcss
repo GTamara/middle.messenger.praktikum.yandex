@@ -20,7 +20,24 @@
 		background-color: azure;
 	}
 
-	&__messages-list {
+	&__users-list {
 		flex-grow: 1;
 	}
+}
+
+.chat {
+    @mixin flex-layout;
+
+    &__header-title {
+        display: block;
+    }
+
+    &__content {
+        flex-grow: 1;
+    }
+
+    &__footer {
+        display: block;
+        padding: 12px 8px;
+    }
 }

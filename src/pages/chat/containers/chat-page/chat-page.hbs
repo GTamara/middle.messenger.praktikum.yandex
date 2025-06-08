@@ -1,19 +1,44 @@
 <div class="chat-container">
-	<div class="chat-container__messages">
-		{{> Link label="Profile >" page="profile" }}
-		{{> Input name="search" label="Search" icon="search" type="text" }}
+    <div class="chat-container__messages">
+        {{> Link label="Profile >" page="profile" }}
 
-		<div class="chat-container__messages-list">
-			{{#each items}}
-			{{> ChatListItem item=this}}
-			{{/each}}
-		</div>
-	</div>
-	<div class="chat-container__selected-chat-content">
-		<div class="chat-container__header__title">
-			Chat
-		</div>
-	</div>
+        {{{ SearchInput }}}
 
-	{{!-- {{> SendMessageForm}} --}}
+        <div class="chat-container__messages-list">
+            {{#each items}}
+            {{> ChatListItem item=this}}
+            {{/each}}
+        </div>
+    </div>
+    <div class="chat-container__selected-chat-content chat">
+        <div class="chat__header-title">
+            Current selected chat
+        </div>
+        <div class="chat__content"></div>
+        <div class="chat__footer">
+            {{{ Form }}}
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chat-container">
+    <div class="chat-container__messages">
+        {{> Link label="Profile >" page="profile" }}
+        {{> Input name="search" label="Search" icon="search" type="text" }}
+
+        <div class="chat-container__users-list">
+            {{#each items}}
+            {{> ChatListItem item=this}}
+            {{/each}}
+        </div>
+    </div>
+    <div class="chat-container__selected-chat-content">
+        <div class="chat-container__header__title">
+            Chat
+        </div>
+    </div>
+
+    {{!-- {{> SendMessageForm}} --}}
 </div>

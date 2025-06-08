@@ -206,8 +206,7 @@ export class RegisterPage extends Block {
 
         return new FormElement({
             submit: () => {
-                console.log('submit');
-                console.log({
+                console.log('submit', {
                     email: this.emailControlProps.props.value,
                     login: this.loginControlProps.props.value,
                     first_name: this.firstNameControlProps.props.value,

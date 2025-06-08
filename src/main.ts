@@ -12,17 +12,18 @@ import registerComponent from './core/registerComponent';
 const pages = {
     'register': Pages.RegisterPage,
     'login': Pages.LoginPage,
-    'chat': [
-        Pages.ChatPage, {
-            items: [
-                { name: 'Example Name 1' },
-                { name: 'Example Name 2', active: true },
-                { name: 'Example Name 3' },
-                { name: 'Example Name 4' },
-                { name: 'Example Name 5' },
-            ],
-        },
-    ],
+    'chat': Pages.ChatPage,
+    // [
+    //     Pages.ChatPage, {
+    //         items: [
+    //             { name: 'Example Name 1' },
+    //             { name: 'Example Name 2', active: true },
+    //             { name: 'Example Name 3' },
+    //             { name: 'Example Name 4' },
+    //             { name: 'Example Name 5' },
+    //         ],
+    //     },
+    // ],
     'profile': Pages.ProfilePage,
     'edit-profile': Pages.EditProfileDataPage,
     'change-password': Pages.ChangePasswordPage,
@@ -63,7 +64,9 @@ function navigate(page: string) {
     if (page !== 'login' &&
         page !== 'register' &&
         page !== 'change-password' &&
-        page !== 'edit-profile'
+        page !== 'edit-profile' &&
+        page !== 'profile' &&
+        page !== 'chat'
     ) {
         let source; let context;
         Array.isArray(pages[page]) ?
