@@ -19,8 +19,9 @@ export default class ChatMessageItem extends Block {
     render() {
         const name = this.props.name;
         return `
-            <div class="chat-list-item">
-                {{> Avatar label="Sigh in" page="login" }}
+            <div class="message-item">
+                ${name}
+                {{> Avatar }}
                 MESSAGE
             </div>
         `;
