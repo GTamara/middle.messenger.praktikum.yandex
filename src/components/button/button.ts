@@ -30,7 +30,6 @@ export default class Button extends Block {
             {{#if ${!!icon}}}
                 <span class="material-icons">{{icon}}</span>
             {{/if}}
- 
 		`;
     }
 }
