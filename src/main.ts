@@ -8,7 +8,6 @@ import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
 
 import registerComponent, { type BlockConstructable } from './core/registerComponent';
-import Block from './core/block';
 import type { ControlWrapperProps } from './components/input-wrapper/input-wrapper';
 import type { ProfileDataItemProps } from './pages/profile/components/profile-data-item/profile-data-item';
 import type { ChatListItemProps } from './pages/chat/components/chat-list-item/chat-list-item';
@@ -17,6 +16,7 @@ import type { MessageFormProps } from './pages/chat/components/message-form/mess
 import type { ButtonProps } from './components/button/button';
 import type { InputProps } from './components/input/input';
 import type { FormControlProps } from './components/form/form';
+import type Block from './core/block';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 const pages: Record<string, string | Constructor> = {
@@ -94,9 +94,11 @@ function navigate(page: string) {
         return;
     }
 
-    const Component = pages[page];
-    const component = new Component();
-    container?.replaceChildren(component.getContent());
+    if (typeof pages[page] === 'function') {
+        const Component = pages[page];
+        const component = new Component();
+        container?.replaceChildren((component as Block).getContent());
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => navigate('navigation'));

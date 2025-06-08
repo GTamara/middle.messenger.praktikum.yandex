@@ -1,4 +1,4 @@
-import Block, { type ComponentProp, type PropsAndChildren } from '../../../../core/block';
+import Block, { type ComponentProp } from '../../../../core/block';
 
 export type ProfileDataItemProps = {
     label: string;
