@@ -22,7 +22,8 @@
 		"noFallthroughCasesInSwitch": true,
 		"sourceMap": true,
 		"noUncheckedSideEffectImports": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "strictNullChecks": true
 	},
 	"include": [
 		"src"
