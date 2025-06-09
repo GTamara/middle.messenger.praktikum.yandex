@@ -1,9 +1,9 @@
 import EventBus from '../event-bus';
-import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type PropsObject, type ValidationConfig } from './validation-config';
+import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type AttrsObject, type ValidationConfig } from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
-    controlsProps: { props: PropsObject }[];
+    controlsProps: { attrs: AttrsObject }[];
     formHtmlElement: HTMLFormElement;
     controlHtmlElementsArr: HTMLElement[];
     submitBtnHtmlElement: HTMLInputElement;
@@ -31,14 +31,14 @@ export default class FormValidation {
 
     clearValidation() {
         this.controlsProps.forEach((control) => {
-            delete control.props.invalid;
+            delete control.attrs.invalid;
         });
     }
 
     getFormControls(form: HTMLFormElement) {
         const controlHtmlElementsArr: HTMLElement[] = [];
         Object.values(this.config.controls).forEach((ctrl) => {
-            const controlName = ctrl.props.name;
+            const controlName = ctrl.attrs.name;
             const controlElement = form.querySelector<HTMLElement>(`[name="${controlName}"]`);
             if (controlElement) {
                 controlHtmlElementsArr.push(controlElement);

@@ -1,5 +1,4 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import type { FormControlProps } from '../../components/form/form';
 import Block, { type PropsAndChildren } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
 import { getWrappedTextInputValidationConfig } from '../../core/validation/validation-utils';
@@ -208,13 +207,13 @@ export class RegisterPage extends Block {
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    email: this.emailControlProps.props.value,
-                    login: this.loginControlProps.props.value,
-                    first_name: this.firstNameControlProps.props.value,
-                    second_name: this.lastNameControlProps.props.value,
-                    phone: this.phoneControlProps.props.value,
-                    password: this.passwordControlProps.props.value,
-                    repeatPassword: this.repeatPasswordControlProps.props.value,
+                    email: this.emailControlProps.attrs.value,
+                    login: this.loginControlProps.attrs.value,
+                    first_name: this.firstNameControlProps.attrs.value,
+                    second_name: this.lastNameControlProps.attrs.value,
+                    phone: this.phoneControlProps.attrs.value,
+                    password: this.passwordControlProps.attrs.value,
+                    repeatPassword: this.repeatPasswordControlProps.attrs.value,
                 });
             },
             SignUpButton: signUpButton,

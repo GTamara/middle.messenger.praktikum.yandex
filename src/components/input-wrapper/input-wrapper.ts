@@ -17,7 +17,7 @@ export default class ControlWrapper extends Block<ControlWrapperProps> {
     }
 
     render() {
-        const { label, icon } = this.props;
+        const { label, icon } = this.attrs;
 
         return `
 			{{{  Control }}}

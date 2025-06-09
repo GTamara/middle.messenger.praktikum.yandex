@@ -177,12 +177,12 @@ export class EditProfileDataPage extends Block {
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    email: this.emailControlProps.props.value,
-                    login: this.loginControlProps.props.value,
-                    first_name: this.firstNameControlProps.props.value,
-                    second_name: this.lastNameControlProps.props.value,
-                    display_name: this.displayNameControlProps.props.value,
-                    phone: this.phoneControlProps.props.value,
+                    email: this.emailControlProps.attrs.value,
+                    login: this.loginControlProps.attrs.value,
+                    first_name: this.firstNameControlProps.attrs.value,
+                    second_name: this.lastNameControlProps.attrs.value,
+                    display_name: this.displayNameControlProps.attrs.value,
+                    phone: this.phoneControlProps.attrs.value,
                 });
             },
             EmailInput: emailInput,

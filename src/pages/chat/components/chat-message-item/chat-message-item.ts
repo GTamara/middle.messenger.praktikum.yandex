@@ -12,12 +12,11 @@ export default class ChatMessageItem extends Block<ChatMessageItemProps> {
         super('app-chat-message-item', {
             ...props,
             class: 'chat-message-item',
-            // novalidate: true
         });
     }
 
     render() {
-        const name = this.props.name;
+        const name = this.attrs.name;
         return `
             <div class="message-item">
                 ${name}

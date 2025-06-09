@@ -78,7 +78,7 @@ export class ChatPage extends Block {
         return new MessageForm({
             submit: () => {
                 console.log('submit', {
-                    message: this.messageControlProps.props.value,
+                    message: this.messageControlProps.attrs.value,
                 });
             },
             SendButton: sendButton,
@@ -144,5 +144,3 @@ export class ChatPage extends Block {
         `;
     }
 }
-// {{{ MessageInput }}}
-

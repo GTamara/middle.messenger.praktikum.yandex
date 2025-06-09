@@ -15,7 +15,7 @@ export default class ProfileDataItem extends Block<ProfileDataItemProps> {
     }
 
     render() {
-        const { label, value } = this.props;
+        const { label, value } = this.attrs;
         return `
         	<div class="profile-data-item__label">
                 ${label}

@@ -1,26 +1,26 @@
 export type ValidationConfig = {
 	form: {
 		element: HTMLFormElement;
-		props: PropsObject;
+		attrs: AttrsObject;
 	};
 	controls: {
 		[key: string]: {
-			props: PropsObject;
+			attrs: AttrsObject;
 			events?: { [key: string]: <T extends Event | undefined>(e?: T) => void; };
 		};
 	};
 	// Кнопка submit
 	submitAction: {
-		[key: string]: { props: PropsObject };
+		[key: string]: { attrs: AttrsObject };
 	};
 	// Кнопка отмены
 	cancelAction?: {
-		[key: string]: { props: PropsObject };
+		[key: string]: { attrs: AttrsObject };
 	};
 	submitHandler: <T extends Event | undefined>(e?: T) => void;
 };
 
-export type PropsObject = {
+export type AttrsObject = {
 	// element: string;
 	name?: string;
 	invalid?: string;

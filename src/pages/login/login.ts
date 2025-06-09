@@ -102,8 +102,8 @@ export class LoginPage extends Block {
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    login: this.loginControlProps.props.value,
-                    password: this.passwordControlProps.props.value,
+                    login: this.loginControlProps.attrs.value,
+                    password: this.passwordControlProps.attrs.value,
                 });
             },
             SignInButton: signInButton,
