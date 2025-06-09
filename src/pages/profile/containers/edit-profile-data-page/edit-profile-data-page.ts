@@ -2,7 +2,8 @@ import { Button, ControlWrapper, FormElement, Input } from '../../../../componen
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../../../helper-functions';
+import { getWrappedInputElement } from '../../../../helper-functions';
+import { getElement } from '../../../../utils';
 
 type EditProfileDataPageProps = {
     Form: {
@@ -53,7 +54,6 @@ export class EditProfileDataPage extends Block {
         this.phoneControlProps = getWrappedInputElement(this.form.children.PhoneInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -91,6 +91,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.emailControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -106,6 +109,9 @@ export class EditProfileDataPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.loginControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -123,6 +129,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.firstNameControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -138,6 +147,9 @@ export class EditProfileDataPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.lastNameControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -155,6 +167,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.displayNameControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -170,6 +185,9 @@ export class EditProfileDataPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.phoneControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });

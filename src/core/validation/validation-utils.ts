@@ -1,4 +1,5 @@
-import { getElement, getWrappedInputElement } from '../../helper-functions';
+import { getWrappedInputElement } from '../../helper-functions';
+import { getElement } from '../../utils';
 import type { SetPropsFn } from './validation-config';
 
 export const getWrappedTextInputPropsForValidation = <T>(

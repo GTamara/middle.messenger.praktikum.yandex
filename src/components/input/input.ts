@@ -7,6 +7,7 @@ export type InputProps = {
     required?: boolean;
     icon?: string;
     input?: (e: Event) => void;
+    change?: (e: Event) => void;
 };
 
 export default class Input extends Block<InputProps> {

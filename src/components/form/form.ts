@@ -2,7 +2,7 @@ import Block, { type Children } from '../../core/block';
 import { EFormCOntrolType as EFormControlType } from './types';
 
 export type FormControlProps = {
-    submit: () => void;
+    submit: (e?: Event | undefined) => void;
 } & Record<string,
     | Block
     | {

@@ -1,4 +1,5 @@
 import Block from '../../core/block';
+import { areObjectsDeepEqual } from '../../utils';
 
 export type ButtonProps = {
     label?: string;
@@ -16,6 +17,11 @@ export default class Button extends Block<ButtonProps> {
         super('button', {
             ...props,
         });
+    }
+
+    componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
+        console.log('componentDidUpdate', oldProps !== newProps, oldProps, newProps);
+        return !areObjectsDeepEqual(oldProps, newProps);
     }
 
     render() {

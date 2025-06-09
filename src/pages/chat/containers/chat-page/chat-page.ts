@@ -3,7 +3,7 @@ import type { ControlWrapperProps } from '../../../../components/input-wrapper/i
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { getElement } from '../../../../helper-functions';
+import { getElement } from '../../../../utils';
 import { MessageForm } from '../../components';
 
 type ChatProps = {
@@ -43,7 +43,6 @@ export class ChatPage extends Block {
         this.messageControlProps = getElement(this.form.children.MessageInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
 
         this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
             this.children.SearchInput as Block,
@@ -72,6 +71,9 @@ export class ChatPage extends Block {
             input: ((e: Event) => {
                 console.log('message input event', (e.target as HTMLInputElement).value);
                 this.setValue(e, this.messageControlProps);
+            }),
+            change: ((e: Event) => {
+                this.validationService.checkControlValidity(e.target as HTMLInputElement);
             }),
         });
 

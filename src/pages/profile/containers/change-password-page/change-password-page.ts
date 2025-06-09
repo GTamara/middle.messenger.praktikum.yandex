@@ -2,7 +2,8 @@ import { Button, ControlWrapper, FormElement, Input } from '../../../../componen
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../../../helper-functions';
+import { getWrappedInputElement } from '../../../../helper-functions';
+import { getElement } from '../../../../utils';
 
 type ChangePasswordPageProps = {
     Form: {
@@ -46,7 +47,6 @@ export class ChangePasswordPage extends Block {
         this.repeatPasswordControlProps = getWrappedInputElement(this.form.children.RepeatPasswordInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -84,6 +84,9 @@ export class ChangePasswordPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.oldPasswordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -100,6 +103,9 @@ export class ChangePasswordPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.newPasswordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -115,6 +121,9 @@ export class ChangePasswordPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.repeatPasswordControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });

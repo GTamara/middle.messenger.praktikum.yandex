@@ -2,7 +2,8 @@ import { Button, ControlWrapper, FormElement, Input } from '../../components';
 import Block, { type Attrs } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../helper-functions';
+import { getWrappedInputElement } from '../../helper-functions';
+import { getElement } from '../../utils';
 
 type LoginPageProps = {
     Form: {
@@ -41,7 +42,6 @@ export class LoginPage extends Block {
         this.loginControlProps = getWrappedInputElement(this.form.children.LoginInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -80,6 +80,9 @@ export class LoginPage extends Block {
                     console.log('login input');
                     this.setValue(e, this.loginControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -96,11 +99,17 @@ export class LoginPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.passwordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
         return new FormElement({
-            submit: () => {
+            submit: (e?: Event) => {
+                if (!!e) {
+                    e.preventDefault();
+                }
                 console.log('submit', {
                     login: this.loginControlProps.attrs.value,
                     password: this.passwordControlProps.attrs.value,
@@ -137,25 +146,6 @@ export class LoginPage extends Block {
                     'password',
                     this.setProps.bind(this),
                 ),
-                // LoginInput: {
-                //     ...getElement(
-                //         getElement(form.children.LoginInput).children['Control'],
-                //     ),
-                //     events: {
-                //         change: (e?: Event) => {
-                //             console.log('change');
-                //             if (!e) {
-                //                 return;
-                //             }
-                //             const target = e.target as HTMLInputElement;
-                //             this.setProps({
-                //                 formState: {
-                //                     login: target.value,
-                //                 },
-                //             });
-                //         },
-                //     },
-                // },
             },
             submitAction: {
                 SignInButton: getElement(form.children.SignInButton),

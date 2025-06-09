@@ -135,7 +135,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         if (!nextAttrs) {
             return;
         }
-
+        console.log('setProps', nextAttrs, this.attrs);
         Object.assign(this.attrs, nextAttrs);
     };
 
