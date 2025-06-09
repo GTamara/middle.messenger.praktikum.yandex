@@ -2,7 +2,7 @@ import { Button, ControlWrapper, Input } from '../../../../components';
 import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getTextInputValidationConfig, getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
+import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { getElement } from '../../../../helper-functions';
 import { MessageForm } from '../../components';
 
@@ -45,7 +45,7 @@ export class ChatPage extends Block {
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
         this.validationService.enableValidation();
 
-        this.searchControlProps = getWrappedTextInputValidationConfig<Block>(
+        this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
             this.children.SearchInput as Block,
             'search',
             this.setProps.bind(this),
@@ -100,7 +100,7 @@ export class ChatPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                MessageInput: getTextInputValidationConfig<Block>(
+                MessageInput: getTextInputPropsForValidation<Block>(
                     form.children.MessageInput as Block,
                     'message',
                     this.setProps.bind(this),

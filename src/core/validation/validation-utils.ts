@@ -1,7 +1,7 @@
 import { getElement, getWrappedInputElement } from '../../helper-functions';
 import type { SetPropsFn } from './validation-config';
 
-export const getWrappedTextInputValidationConfig = <T>(
+export const getWrappedTextInputPropsForValidation = <T>(
     wrapperElement: T,
     stateField: string,
     setPropsFn: SetPropsFn,
@@ -24,7 +24,7 @@ export const getWrappedTextInputValidationConfig = <T>(
     };
 };
 
-export const getTextInputValidationConfig = <T>(
+export const getTextInputPropsForValidation = <T>(
     element: T,
     stateField: string,
     setPropsFn: SetPropsFn,

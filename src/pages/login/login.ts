@@ -1,8 +1,8 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
 import Block, { type Attrs } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../core/validation/validation-utils';
-import { getElement } from '../../helper-functions';
+import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
+import { getElement, getWrappedInputElement } from '../../helper-functions';
 
 type LoginPageProps = {
     Form: {
@@ -37,8 +37,8 @@ export class LoginPage extends Block {
             Form: this.getForm(),
         });
         this.form = getElement(this.children.Form);
-        this.passwordControlProps = getElement(this.form.children.PasswordInput).children['Control'] as Block;
-        this.loginControlProps = getElement(this.form.children.LoginInput).children['Control'] as Block;
+        this.passwordControlProps = getWrappedInputElement(this.form.children.PasswordInput);
+        this.loginControlProps = getWrappedInputElement(this.form.children.LoginInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
         this.validationService.enableValidation();
@@ -127,12 +127,12 @@ export class LoginPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                LoginInput: getWrappedTextInputValidationConfig<Block>(
+                LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
                     this.setProps.bind(this),
                 ),
-                PasswordInput: getWrappedTextInputValidationConfig<Block>(
+                PasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PasswordInput as Block,
                     'password',
                     this.setProps.bind(this),
@@ -151,24 +151,6 @@ export class LoginPage extends Block {
                 //             this.setProps({
                 //                 formState: {
                 //                     login: target.value,
-                //                 },
-                //             });
-                //         },
-                //     },
-                // },
-                // PasswordInput: {
-                //     ...getElement(
-                //         getElement(form.children.PasswordInput).children['Control'],
-                //     ),
-                //     events: {
-                //         change: (e?: Event) => {
-                //             if (!e) {
-                //                 return;
-                //             }
-                //             const target = e.target as HTMLInputElement;
-                //             this.setProps({
-                //                 formState: {
-                //                     password: target.value,
                 //                 },
                 //             });
                 //         },

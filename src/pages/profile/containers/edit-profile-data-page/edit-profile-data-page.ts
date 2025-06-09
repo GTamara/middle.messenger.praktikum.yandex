@@ -1,7 +1,7 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
+import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { getElement, getWrappedInputElement } from '../../../../helper-functions';
 
 type EditProfileDataPageProps = {
@@ -210,32 +210,32 @@ export class EditProfileDataPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                EmailInput: getWrappedTextInputValidationConfig<Block>(
+                EmailInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.EmailInput as Block,
                     'email',
                     this.setProps.bind(this),
                 ),
-                LoginInput: getWrappedTextInputValidationConfig<Block>(
+                LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
                     this.setProps.bind(this),
                 ),
-                FirstNameInput: getWrappedTextInputValidationConfig<Block>(
+                FirstNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.FirstNameInput as Block,
                     'name',
                     this.setProps.bind(this),
                 ),
-                LastNameInput: getWrappedTextInputValidationConfig<Block>(
+                LastNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LastNameInput as Block,
                     'second_name',
                     this.setProps.bind(this),
                 ),
-                DisplayNameInput: getWrappedTextInputValidationConfig<Block>(
+                DisplayNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.DisplayNameInput as Block,
                     'display_name',
                     this.setProps.bind(this),
                 ),
-                PhoneInput: getWrappedTextInputValidationConfig<Block>(
+                PhoneInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PhoneInput as Block,
                     'phone',
                     this.setProps.bind(this),

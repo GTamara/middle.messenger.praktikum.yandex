@@ -1,7 +1,7 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
+import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { getElement, getWrappedInputElement } from '../../../../helper-functions';
 
 type ChangePasswordPageProps = {
@@ -148,17 +148,17 @@ export class ChangePasswordPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                OldPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                OldPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.OldPasswordInput as Block,
                     'oldPassword',
                     this.setProps.bind(this),
                 ),
-                NewPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                NewPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.NewPasswordInput as Block,
                     'newPassword',
                     this.setProps.bind(this),
                 ),
-                RepeatPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                RepeatPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.RepeatPasswordInput as Block,
                     'repeatPassword',
                     this.setProps.bind(this),
