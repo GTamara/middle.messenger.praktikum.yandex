@@ -5,55 +5,47 @@ import { EBlockEvents } from './types';
 
 type ComponentMetaData = {
 	tagName: string;
-	props: Props;
+	attrs: Attrs;
 }
 
-export type ComponentProp = string
-    | boolean
-    | Block
-    | (() => void)
-    | {
-        [key: string]: ComponentProp;
-    };
+export type PropsAndChildren = Record<string, ComponentProp | any>
+export type Children = Record<string, Block | Block[]>
 
-export type PropsAndChildren = {
-	[key: string]: ComponentProp | any;
-}
-
-export type Children = {
-	[key: string]: Block | Block[];
-}
-
-export type Props = {
-	[key: string]: string | boolean | any;
-}
+export type Attrs = Record<string, string | boolean | any>
 
 type Events = {
 	[key: string]: () => void;
 }
 
+type ValuesOf<T> = T[keyof T];
+
+export type ComponentProp =
+    | ValuesOf<Children>
+    | ValuesOf<Attrs>
+    | ValuesOf<Events>;
+
 // Нельзя создавать экземпляр данного класса
-export default abstract class Block {
+export default abstract class Block<P extends Record<string, any> = Record<string, any>> {
     _element: HTMLElement;
     _meta: ComponentMetaData;
     _id = nanoid(6);
     eventBus: EventBus<EBlockEvents>;
     EBlockEvents = EBlockEvents;
     children: Children;
-    props: ComponentMetaData['props'];
+    attrs: ComponentMetaData['attrs'];
     events: Events;
 
-    constructor(tagName = 'div', propsWithChildren = {}) {
+    constructor(tagName = 'div', propsWithChildren: P) {
         this.eventBus = new EventBus();
 
-        const { props, children, events } = this._getChildrenAndProps(propsWithChildren);
+        const { attrs, children, events } = this._getChildrenAndProps(propsWithChildren);
         this.children = children;
-        this.props = this._makePropsProxy(props);
+        this.attrs = this._makePropsProxy(attrs);
         this.events = events;
 
         this._meta = {
             tagName,
-            props,
+            attrs,
         };
         this._element = this._createDocumentElement(tagName);
         this._registerEvents(this.eventBus);
@@ -68,15 +60,15 @@ export default abstract class Block {
     }
 
     _createResources() {
-        const { props } = this._meta;
+        const { attrs } = this._meta;
 
-        if (typeof props.className === 'string') {
-            const classes = props.className.split(' ');
+        if (typeof attrs.className === 'string') {
+            const classes = attrs.className.split(' ');
             this._element.classList.add(...classes);
         }
 
-        if (typeof props ==='object') {
-            Object.entries(props).forEach(([attrName, attrValue]) => {
+        if (typeof attrs ==='object') {
+            Object.entries(attrs).forEach(([attrName, attrValue]) => {
                 this._element.setAttribute(attrName, attrValue.toString());
             });
         }
@@ -89,7 +81,7 @@ export default abstract class Block {
 
     _getChildrenAndProps(propsAndChildren: PropsAndChildren) {
         const children: Children = {};
-        const props: Props = {};
+        const attrs: Attrs = {} as Attrs;
         const events: Events = {};
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
@@ -100,7 +92,7 @@ export default abstract class Block {
                     } else if (typeof value === 'function') {
                         events[key] = element;
                     } else {
-                        props[key] = element;
+                        attrs[key] = element;
                     }
                 });
                 return;
@@ -110,11 +102,11 @@ export default abstract class Block {
             } else if (typeof value === 'function') {
                 events[key] = value;
             } else {
-                props[key] = value;
+                attrs[key] = value;
             }
         });
 
-        return { children, props, events };
+        return { children, attrs, events };
     }
 
     _componentDidMount() {
@@ -127,7 +119,7 @@ export default abstract class Block {
         this.eventBus.emit(EBlockEvents.FLOW_CDM);
     }
 
-    _componentDidUpdate(oldProps: Props, newProps: Props) {
+    _componentDidUpdate(oldProps: P, newProps: P) {
         const response = this.componentDidUpdate(oldProps, newProps);
         if (!response) {
             return;
@@ -135,16 +127,16 @@ export default abstract class Block {
         this._render();
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+    componentDidUpdate(oldProps: P, newProps: P): boolean {
         return oldProps === newProps || true;
     }
 
-    setProps = (nextProps: Props) => {
-        if (!nextProps) {
+    setProps = (nextAttrs: Attrs) => {
+        if (!nextAttrs) {
             return;
         }
-
-        Object.assign(this.props, nextProps);
+        console.log('setProps', nextAttrs, this.attrs);
+        Object.assign(this.attrs, nextAttrs);
     };
 
     setChildren = (children: Children) => {
@@ -182,7 +174,7 @@ export default abstract class Block {
     }
 
     _compile() {
-        const propsAndStubs: { [key: string]: string | string[] | boolean } = { ...this.props };
+        const propsAndStubs: { [key: string]: string | string[] | boolean } = { ...this.attrs };
 
         Object.entries(this.children).forEach(([key, child]) => {
             if (Array.isArray(child)) {

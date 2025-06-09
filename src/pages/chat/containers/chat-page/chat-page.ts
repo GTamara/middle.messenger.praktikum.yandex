@@ -1,23 +1,21 @@
 import { Button, ControlWrapper, Input } from '../../../../components';
+import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getTextInputValidationConfig, getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
-import { getElement } from '../../../../helper-functions';
+import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { getElement } from '../../../../utils';
 import { MessageForm } from '../../components';
 
 type ChatProps = {
-    Form: {
-        children: {
-
-        };
-    };
+    SearchInput: ControlWrapper;
+    Form: MessageForm;
 }
 
 export class ChatPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: MessageForm;
     messageControlProps: Block;
-    searchControlProps: Block;
+    searchControlProps: Block<ControlWrapperProps>;
 
     constructor(props: ChatProps) {
         super('app-chat-page', {
@@ -45,16 +43,15 @@ export class ChatPage extends Block {
         this.messageControlProps = getElement(this.form.children.MessageInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
 
-        this.searchControlProps = getWrappedTextInputValidationConfig<Block>(
+        this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
             this.children.SearchInput as Block,
             'search',
             this.setProps.bind(this),
         );
     }
 
-    getForm() {
+    getForm(): MessageForm {
         const sendButton = new Button({
             type: 'submit',
             color: 'primary',
@@ -75,12 +72,15 @@ export class ChatPage extends Block {
                 console.log('message input event', (e.target as HTMLInputElement).value);
                 this.setValue(e, this.messageControlProps);
             }),
+            change: ((e: Event) => {
+                this.validationService.checkControlValidity(e.target as HTMLInputElement);
+            }),
         });
 
         return new MessageForm({
             submit: () => {
                 console.log('submit', {
-                    message: this.messageControlProps.props.value,
+                    message: this.messageControlProps.attrs.value,
                 });
             },
             SendButton: sendButton,
@@ -102,7 +102,7 @@ export class ChatPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                MessageInput: getTextInputValidationConfig<Block>(
+                MessageInput: getTextInputPropsForValidation<Block>(
                     form.children.MessageInput as Block,
                     'message',
                     this.setProps.bind(this),
@@ -146,5 +146,3 @@ export class ChatPage extends Block {
         `;
     }
 }
-// {{{ MessageInput }}}
-

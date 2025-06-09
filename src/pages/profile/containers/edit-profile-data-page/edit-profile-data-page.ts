@@ -1,8 +1,9 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../../../helper-functions';
+import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { getWrappedInputElement } from '../../../../helper-functions';
+import { getElement } from '../../../../utils';
 
 type EditProfileDataPageProps = {
     Form: {
@@ -53,7 +54,6 @@ export class EditProfileDataPage extends Block {
         this.phoneControlProps = getWrappedInputElement(this.form.children.PhoneInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -91,6 +91,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.emailControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -106,6 +109,9 @@ export class EditProfileDataPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.loginControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -123,6 +129,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.firstNameControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -138,6 +147,9 @@ export class EditProfileDataPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.lastNameControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -155,6 +167,9 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.displayNameControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -171,18 +186,21 @@ export class EditProfileDataPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.phoneControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    email: this.emailControlProps.props.value,
-                    login: this.loginControlProps.props.value,
-                    first_name: this.firstNameControlProps.props.value,
-                    second_name: this.lastNameControlProps.props.value,
-                    display_name: this.displayNameControlProps.props.value,
-                    phone: this.phoneControlProps.props.value,
+                    email: this.emailControlProps.attrs.value,
+                    login: this.loginControlProps.attrs.value,
+                    first_name: this.firstNameControlProps.attrs.value,
+                    second_name: this.lastNameControlProps.attrs.value,
+                    display_name: this.displayNameControlProps.attrs.value,
+                    phone: this.phoneControlProps.attrs.value,
                 });
             },
             EmailInput: emailInput,
@@ -210,32 +228,32 @@ export class EditProfileDataPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                EmailInput: getWrappedTextInputValidationConfig<Block>(
+                EmailInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.EmailInput as Block,
                     'email',
                     this.setProps.bind(this),
                 ),
-                LoginInput: getWrappedTextInputValidationConfig<Block>(
+                LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
                     this.setProps.bind(this),
                 ),
-                FirstNameInput: getWrappedTextInputValidationConfig<Block>(
+                FirstNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.FirstNameInput as Block,
                     'name',
                     this.setProps.bind(this),
                 ),
-                LastNameInput: getWrappedTextInputValidationConfig<Block>(
+                LastNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LastNameInput as Block,
                     'second_name',
                     this.setProps.bind(this),
                 ),
-                DisplayNameInput: getWrappedTextInputValidationConfig<Block>(
+                DisplayNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.DisplayNameInput as Block,
                     'display_name',
                     this.setProps.bind(this),
                 ),
-                PhoneInput: getWrappedTextInputValidationConfig<Block>(
+                PhoneInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PhoneInput as Block,
                     'phone',
                     this.setProps.bind(this),

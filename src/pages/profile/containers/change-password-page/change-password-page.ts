@@ -1,8 +1,9 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
-import { getElement, getWrappedInputElement } from '../../../../helper-functions';
+import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { getWrappedInputElement } from '../../../../helper-functions';
+import { getElement } from '../../../../utils';
 
 type ChangePasswordPageProps = {
     Form: {
@@ -18,7 +19,7 @@ type ChangePasswordPageProps = {
 
 export class ChangePasswordPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: FormElement;
     oldPasswordControlProps: Block;
     newPasswordControlProps: Block;
     repeatPasswordControlProps: Block;
@@ -38,15 +39,14 @@ export class ChangePasswordPage extends Block {
             },
         });
         this.setChildren({
-            Form: this.getForm(),
+            Form: this.getForm() as Block<Record<string, any>>,
         });
-        this.form = getElement(this.children.Form);
+        this.form = getElement(this.children.Form) as FormElement;
         this.oldPasswordControlProps = getWrappedInputElement(this.form.children.OldPasswordInput);
         this.newPasswordControlProps = getWrappedInputElement(this.form.children.NewPasswordInput);
         this.repeatPasswordControlProps = getWrappedInputElement(this.form.children.RepeatPasswordInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -84,6 +84,9 @@ export class ChangePasswordPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.oldPasswordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -99,6 +102,9 @@ export class ChangePasswordPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.newPasswordControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -116,14 +122,17 @@ export class ChangePasswordPage extends Block {
                 input: ((e: Event) => {
                     this.setValue(e, this.repeatPasswordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    oldPassword: this.oldPasswordControlProps.props.value,
-                    newPassword: this.newPasswordControlProps.props.value,
+                    oldPassword: this.oldPasswordControlProps.attrs.value,
+                    newPassword: this.newPasswordControlProps.attrs.value,
                 });
             },
             OldPasswordInput: oldPasswordInput,
@@ -148,17 +157,17 @@ export class ChangePasswordPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                OldPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                OldPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.OldPasswordInput as Block,
                     'oldPassword',
                     this.setProps.bind(this),
                 ),
-                NewPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                NewPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.NewPasswordInput as Block,
                     'newPassword',
                     this.setProps.bind(this),
                 ),
-                RepeatPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                RepeatPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.RepeatPasswordInput as Block,
                     'repeatPassword',
                     this.setProps.bind(this),

@@ -1,17 +1,19 @@
 enum EMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    PATCH = 'PATCH',
+    DELETE = 'DELETE',
 }
 
 type Options = {
-  method: EMethod;
-  data?: any;
+    method: EMethod;
+    data?: any;
 };
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
+
+type HTTPMethod = <R = unknown>(url: string, options?: Options) => Promise<R>;
 
 export class HTTPTransport {
     private apiUrl: string = '';
@@ -19,30 +21,38 @@ export class HTTPTransport {
         this.apiUrl = `https://ya-praktikum.tech/api/v2/${apiPath}`;
     }
 
-    get<TResponse>(
+    get: HTTPMethod = (
         url: string,
         options: OptionsWithoutMethod = {},
-    ): Promise<TResponse> {
-        return this.request<TResponse>(`${this.apiUrl}${url}`, {
+    ) => {
+        return this.request(`${this.apiUrl}${url}`, {
             ...options,
             method: EMethod.GET,
         });
-    }
+    };
 
-    post<TResponse>(
+    post: HTTPMethod = (
         url: string,
         options: OptionsWithoutMethod = {},
-    ): Promise<TResponse> {
-        return this.request<TResponse>(`${this.apiUrl}${url}`, {
+    ) => {
+        return this.request(`${this.apiUrl}${url}`, {
             ...options,
             method: EMethod.POST,
         });
-    }
+    };
 
-    async request<TResponse>(
+    delete: HTTPMethod = (url, options: OptionsWithoutMethod = {}) => (
+        this.request(url, { ...options, method: EMethod.DELETE })
+    );
+
+    put: HTTPMethod = (url, options: OptionsWithoutMethod = {}) => (
+        this.request(url, { ...options, method: EMethod.PUT })
+    );
+
+    async request(
         url: string,
         options: Options = { method: EMethod.GET },
-    ): Promise<TResponse> {
+    ) {
         const { method, data } = options;
         const response = await fetch(url, {
             method,
@@ -61,6 +71,6 @@ export class HTTPTransport {
             ?.includes('application/json');
         const resultData = (await isJson) ? response.json() : null;
 
-        return resultData as unknown as TResponse;
+        return resultData;
     }
 }

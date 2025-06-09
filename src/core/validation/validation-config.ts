@@ -1,26 +1,28 @@
+import type Block from '../block';
+
 export type ValidationConfig = {
 	form: {
 		element: HTMLFormElement;
-		props: PropsObject;
+		attrs: AttrsObject;
 	};
 	controls: {
 		[key: string]: {
-			props: PropsObject;
+			attrs: AttrsObject;
 			events?: { [key: string]: <T extends Event | undefined>(e?: T) => void; };
 		};
 	};
 	// Кнопка submit
 	submitAction: {
-		[key: string]: { props: PropsObject };
+		[key: string]: Block;
 	};
 	// Кнопка отмены
 	cancelAction?: {
-		[key: string]: { props: PropsObject };
+		[key: string]: Block;
 	};
 	submitHandler: <T extends Event | undefined>(e?: T) => void;
 };
 
-export type PropsObject = {
+export type AttrsObject = {
 	// element: string;
 	name?: string;
 	invalid?: string;
@@ -74,6 +76,10 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Некорректный email. Пример: example@domain.com',
     },
     password: {
+        pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
+        error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
+    },
+    repeatPassword: {
         pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
         error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
     },

@@ -1,21 +1,21 @@
 import Block from '../../../../core/block';
 
 export type ChatListItemProps = {
+    class: string;
     name: string;
     click: () => void;
 }
 
-export default class ChatListItem extends Block {
+export default class ChatListItem extends Block<ChatListItemProps> {
     constructor(props: ChatListItemProps) {
         super('app-chat-list-item', {
             ...props,
             class: 'chat-list-item',
-            // novalidate: true
         });
     }
 
     render() {
-        const name = this.props.name;
+        const name = this.attrs.name;
         return `
             <div class="chat-list-item {{#if active}}chat-list-item_active{{/if}}">
                 {{> Avatar label="Sigh in" page="login" }}

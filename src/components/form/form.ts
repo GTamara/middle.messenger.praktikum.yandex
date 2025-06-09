@@ -2,7 +2,7 @@ import Block, { type Children } from '../../core/block';
 import { EFormCOntrolType as EFormControlType } from './types';
 
 export type FormControlProps = {
-    submit: () => void;
+    submit: (e?: Event | undefined) => void;
 } & Record<string,
     | Block
     | {
@@ -12,9 +12,10 @@ export type FormControlProps = {
         Control: Block;
     }
 	| (() => void)
+    | any
 >;
 
-export default class FormElement extends Block {
+export default class FormElement extends Block<FormControlProps> {
     EFormCOntrolType = EFormControlType;
 
     constructor(props: FormControlProps) {
@@ -29,19 +30,18 @@ export default class FormElement extends Block {
         return Object.entries(array)
             .filter(([_, value]) => {
                 if (Array.isArray(value)) {
-                    return value[0].props.ctrlType === type;
+                    return value[0].attrs.ctrlType === type;
                 } else {
-                    return value.props.ctrlType === type;
+                    return value.attrs.ctrlType === type;
                 }
             })
             .sort(([_, a], [__, b]) => {
-                debugger;
                 // Извлекаем объект (или первый элемент массива)
                 const aItem = Array.isArray(a) ? a[0] : a;
                 const bItem = Array.isArray(b) ? b[0] : b;
 
                 // Сортируем по `props.order` (по возрастанию)
-                return (aItem.props.order || 0) - (bItem.props.order || 0);
+                return (aItem.attrs.order || 0) - (bItem.attrs.order || 0);
             })
             .map(([key, _]) => key)
             .map((control) => `{{{ ${control} }}}`)

@@ -6,7 +6,7 @@ export type ProfileDataItemProps = {
     [key: string]: ComponentProp;
 }
 
-export default class ProfileDataItem extends Block {
+export default class ProfileDataItem extends Block<ProfileDataItemProps> {
     constructor(props: ProfileDataItemProps) {
         super('li', {
             ...props,
@@ -15,7 +15,7 @@ export default class ProfileDataItem extends Block {
     }
 
     render() {
-        const { label, value } = this.props;
+        const { label, value } = this.attrs;
         return `
         	<div class="profile-data-item__label">
                 ${label}

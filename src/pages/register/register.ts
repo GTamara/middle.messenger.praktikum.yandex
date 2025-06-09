@@ -1,8 +1,9 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import Block, { type Props } from '../../core/block';
+import Block, { type PropsAndChildren } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
-import { getWrappedTextInputValidationConfig } from '../../core/validation/validation-utils';
-import { getElement } from '../../helper-functions';
+import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
+import { getWrappedInputElement } from '../../helper-functions';
+import { getElement } from '../../utils';
 
 type RegisterPageProps = {
     Form: {
@@ -22,7 +23,7 @@ type RegisterPageProps = {
 
 export class RegisterPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: FormElement;
     passwordControlProps: Block;
     loginControlProps: Block;
     emailControlProps: Block;
@@ -48,9 +49,9 @@ export class RegisterPage extends Block {
         this.setChildren({
             Form: this.getForm(),
         });
-        this.form = getElement(this.children.Form);
-        this.passwordControlProps = getElement(this.form.children.PasswordInput).children['Control'] as Block;
-        this.loginControlProps = getElement(this.form.children.LoginInput).children['Control'] as Block;
+        this.form = getElement(this.children.Form) as FormElement;
+        this.passwordControlProps = getWrappedInputElement<Block>(this.form.children.PasswordInput);
+        this.loginControlProps = getWrappedInputElement<Block>(this.form.children.LoginInput);
         this.emailControlProps = getElement(this.form.children.EmailInput).children['Control'] as Block;
         this.firstNameControlProps = getElement(this.form.children.FirstNameInput).children['Control'] as Block;
         this.lastNameControlProps = getElement(this.form.children.LastNameInput).children['Control'] as Block;
@@ -58,7 +59,6 @@ export class RegisterPage extends Block {
         this.repeatPasswordControlProps = getElement(this.form.children.RepeatPasswordInput).children['Control'] as Block;
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.validationService.enableValidation();
     }
 
     getForm() {
@@ -100,6 +100,9 @@ export class RegisterPage extends Block {
                     console.log('email input');
                     this.setValue(e, this.emailControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -117,6 +120,9 @@ export class RegisterPage extends Block {
                     console.log('login input');
                     this.setValue(e, this.loginControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -126,13 +132,16 @@ export class RegisterPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'name',
+                name: 'first_name',
                 type: 'text',
                 required: true,
                 autocomplete: 'given-name',
                 input: ((e: Event) => {
                     console.log('name input');
                     this.setValue(e, this.firstNameControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -151,6 +160,9 @@ export class RegisterPage extends Block {
                     console.log('last name input');
                     this.setValue(e, this.lastNameControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -168,6 +180,9 @@ export class RegisterPage extends Block {
                     console.log('phone input');
                     this.setValue(e, this.phoneControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
@@ -183,6 +198,9 @@ export class RegisterPage extends Block {
                 autocomplete: 'off',
                 input: ((e: Event) => {
                     this.setValue(e, this.passwordControlProps);
+                }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
@@ -201,19 +219,22 @@ export class RegisterPage extends Block {
                     console.log('repeat password input');
                     this.setValue(e, this.repeatPasswordControlProps);
                 }),
+                change: ((e: Event) => {
+                    this.validationService.checkControlValidity(e.target as HTMLInputElement);
+                }),
             }),
         });
 
         return new FormElement({
             submit: () => {
                 console.log('submit', {
-                    email: this.emailControlProps.props.value,
-                    login: this.loginControlProps.props.value,
-                    first_name: this.firstNameControlProps.props.value,
-                    second_name: this.lastNameControlProps.props.value,
-                    phone: this.phoneControlProps.props.value,
-                    password: this.passwordControlProps.props.value,
-                    repeatPassword: this.repeatPasswordControlProps.props.value,
+                    email: this.emailControlProps.attrs.value,
+                    login: this.loginControlProps.attrs.value,
+                    first_name: this.firstNameControlProps.attrs.value,
+                    second_name: this.lastNameControlProps.attrs.value,
+                    phone: this.phoneControlProps.attrs.value,
+                    password: this.passwordControlProps.attrs.value,
+                    repeatPassword: this.repeatPasswordControlProps.attrs.value,
                 });
             },
             SignUpButton: signUpButton,
@@ -242,37 +263,37 @@ export class RegisterPage extends Block {
                 element: form.element as HTMLFormElement,
             },
             controls: {
-                EmailInput: getWrappedTextInputValidationConfig<Block>(
+                EmailInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.EmailInput as Block,
                     'email',
                     this.setProps.bind(this),
                 ),
-                LoginInput: getWrappedTextInputValidationConfig<Block>(
+                LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
                     this.setProps.bind(this),
                 ),
-                FirstNameInput: getWrappedTextInputValidationConfig<Block>(
+                FirstNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.FirstNameInput as Block,
                     'name',
                     this.setProps.bind(this),
                 ),
-                LastNameInput: getWrappedTextInputValidationConfig<Block>(
+                LastNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LastNameInput as Block,
                     'second_name',
                     this.setProps.bind(this),
                 ),
-                PhoneInput: getWrappedTextInputValidationConfig<Block>(
+                PhoneInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PhoneInput as Block,
                     'phone',
                     this.setProps.bind(this),
                 ),
-                PasswordInput: getWrappedTextInputValidationConfig<Block>(
+                PasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PasswordInput as Block,
                     'password',
                     this.setProps.bind(this),
                 ),
-                RepeatPasswordInput: getWrappedTextInputValidationConfig<Block>(
+                RepeatPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.RepeatPasswordInput as Block,
                     'repeatPassword',
                     this.setProps.bind(this),
@@ -308,7 +329,7 @@ export class RegisterPage extends Block {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+    componentDidUpdate(oldProps: PropsAndChildren, newProps: PropsAndChildren): boolean {
         console.log('componentDidUpdate', oldProps, newProps);
 
         // if (this.props['formState'].login !== newProps.formState.login) {

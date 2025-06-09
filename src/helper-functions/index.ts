@@ -1,6 +1,4 @@
-export const getElement = <T>(elem: T | T[]): T => {
-    return Array.isArray(elem) ? elem[0] : elem;
-};
+import { getElement } from '../utils';
 
 export const getWrappedInputElement = <T>(elem: T | readonly T[] | readonly (T | readonly T[])[]): T => {
     const result = Array.isArray(elem) ?

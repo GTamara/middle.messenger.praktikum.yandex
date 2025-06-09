@@ -1,9 +1,9 @@
 import EventBus from '../event-bus';
-import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type PropsObject, type ValidationConfig } from './validation-config';
+import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type AttrsObject, type ValidationConfig } from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
-    controlsProps: { props: PropsObject }[];
+    controlsProps: { attrs: AttrsObject }[];
     formHtmlElement: HTMLFormElement;
     controlHtmlElementsArr: HTMLElement[];
     submitBtnHtmlElement: HTMLInputElement;
@@ -16,29 +16,24 @@ export default class FormValidation {
         this.formHtmlElement = config.form.element;
         this.controlHtmlElementsArr = this.getFormControls(this.formHtmlElement);
         this.submitBtnHtmlElement = this.getSubmitElement();
-    }
 
-    enableValidation() {
-        this.formHtmlElement.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (this.isFormValid()) {
-                this.config.submitHandler(e);
-            }
-        });
-        this.setEventListenersForFormFields();
         this.toggleSubmitButtonState(false);
     }
 
-    clearValidation() {
+    enableValidation() {
+
+    }
+
+    private clearValidation() {
         this.controlsProps.forEach((control) => {
-            delete control.props.invalid;
+            delete control.attrs.invalid;
         });
     }
 
-    getFormControls(form: HTMLFormElement) {
+    private getFormControls(form: HTMLFormElement) {
         const controlHtmlElementsArr: HTMLElement[] = [];
         Object.values(this.config.controls).forEach((ctrl) => {
-            const controlName = ctrl.props.name;
+            const controlName = ctrl.attrs.name;
             const controlElement = form.querySelector<HTMLElement>(`[name="${controlName}"]`);
             if (controlElement) {
                 controlHtmlElementsArr.push(controlElement);
@@ -49,20 +44,6 @@ export default class FormValidation {
         return controlHtmlElementsArr;
     }
 
-    setEventListenersForFormFields() {
-        const controlsArray = this.controlHtmlElementsArr;
-        controlsArray.forEach((control) => {
-            // const nameAttr = control.getAttribute('name') ?? '';
-            // control?.setAttribute('pattern', DEFAULT_VALIDATION_RULES[nameAttr].pattern.toString());
-            // control?.setAttribute('data-error-message', DEFAULT_VALIDATION_RULES[nameAttr].error);
-            control.addEventListener('change', () => {
-                if (this.isHtmlInputElement(control)) {
-                    this.checkControlValidity(control);
-                }
-            });
-        });
-    }
-
     checkControlValidity(control: HTMLInputElement) {
         const nameAttr = control.getAttribute('name') ?? '';
         const isValid = new RegExp(DEFAULT_VALIDATION_RULES[nameAttr].pattern).test(control.value);
@@ -70,6 +51,7 @@ export default class FormValidation {
             this.toggleErrorVisibility(true, control);
             if (this.isFormValid()) {
                 this.toggleSubmitButtonState(true);
+                this.clearValidation();
             }
         } else {
             this.toggleErrorVisibility(false, control, DEFAULT_VALIDATION_RULES[nameAttr].error);
@@ -77,7 +59,7 @@ export default class FormValidation {
         }
     }
 
-    isFormValid() {
+    private isFormValid() {
         return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
             if (this.isHtmlInputElement(ctrl)) {
                 return ctrl.validity.valid;
@@ -85,7 +67,7 @@ export default class FormValidation {
         });
     }
 
-    toggleErrorVisibility(isValid: boolean, control: HTMLElement, errorMessage: string | null = null) {
+    private toggleErrorVisibility(isValid: boolean, control: HTMLElement, errorMessage: string | null = null) {
         const errorMessageElement =
             control.parentElement?.querySelector<HTMLElement>(DEFAULT_VALIDATION_CONFIG.errorMessageSelector);
 
@@ -101,7 +83,9 @@ export default class FormValidation {
         }
     }
 
-    toggleSubmitButtonState(isFormValid: boolean) {
+    private toggleSubmitButtonState(isFormValid: boolean) {
+        // this.config.submitAction[Object.keys(this.config.submitAction)[0]]
+        // .setProps({order: 1});
         if (isFormValid) {
             this.submitBtnHtmlElement.removeAttribute('disabled');
             this.submitBtnHtmlElement.disabled = false;
@@ -111,7 +95,7 @@ export default class FormValidation {
         }
     };
 
-    getSubmitElement(): HTMLInputElement {
+    private getSubmitElement(): HTMLInputElement {
         const submitBtnHtmlElement =
             this.formHtmlElement.querySelector<HTMLInputElement>(
                 DEFAULT_VALIDATION_CONFIG.submitButtonSelector,
@@ -122,7 +106,7 @@ export default class FormValidation {
         throw new Error('Submit button element not found');
     };
 
-    isHtmlInputElement(element: HTMLElement): element is HTMLInputElement {
+    private isHtmlInputElement(element: HTMLElement): element is HTMLInputElement {
         return element instanceof HTMLInputElement;
     }
 
