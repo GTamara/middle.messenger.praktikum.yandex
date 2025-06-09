@@ -6,7 +6,7 @@ export type ProfileDataItemProps = {
     [key: string]: ComponentProp;
 }
 
-export default class ProfileDataItem extends Block {
+export default class ProfileDataItem extends Block<ProfileDataItemProps> {
     constructor(props: ProfileDataItemProps) {
         super('li', {
             ...props,

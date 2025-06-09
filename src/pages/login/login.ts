@@ -1,5 +1,5 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import Block, { type Props } from '../../core/block';
+import Block, { type Attrs } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
 import { getWrappedTextInputValidationConfig } from '../../core/validation/validation-utils';
 import { getElement } from '../../helper-functions';
@@ -189,7 +189,7 @@ export class LoginPage extends Block {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+    componentDidUpdate(oldProps: Attrs, newProps: Attrs): boolean {
         console.log('componentDidUpdate', oldProps, newProps);
 
         // if (this.props['formState'].login !== newProps.formState.login) {

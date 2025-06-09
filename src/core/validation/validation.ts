@@ -52,9 +52,6 @@ export default class FormValidation {
     setEventListenersForFormFields() {
         const controlsArray = this.controlHtmlElementsArr;
         controlsArray.forEach((control) => {
-            // const nameAttr = control.getAttribute('name') ?? '';
-            // control?.setAttribute('pattern', DEFAULT_VALIDATION_RULES[nameAttr].pattern.toString());
-            // control?.setAttribute('data-error-message', DEFAULT_VALIDATION_RULES[nameAttr].error);
             control.addEventListener('change', () => {
                 if (this.isHtmlInputElement(control)) {
                     this.checkControlValidity(control);

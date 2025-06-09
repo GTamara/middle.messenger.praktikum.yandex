@@ -9,7 +9,7 @@ export type InputProps = {
     input?: (e: Event) => void;
 };
 
-export default class Input extends Block {
+export default class Input extends Block<InputProps> {
     constructor(props: InputProps) {
         super('input', {
             ...props,

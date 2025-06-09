@@ -1,12 +1,13 @@
 import Block from '../../../../core/block';
 
 export type ChatMessageItemProps = {
+    class: string;
     text: string;
     date: string;
     owner: string;
 }
 
-export default class ChatMessageItem extends Block {
+export default class ChatMessageItem extends Block<ChatMessageItemProps> {
     constructor(props: ChatMessageItemProps) {
         super('app-chat-message-item', {
             ...props,

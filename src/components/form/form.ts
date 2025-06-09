@@ -12,9 +12,10 @@ export type FormControlProps = {
         Control: Block;
     }
 	| (() => void)
+    | any
 >;
 
-export default class FormElement extends Block {
+export default class FormElement extends Block<FormControlProps> {
     EFormCOntrolType = EFormControlType;
 
     constructor(props: FormControlProps) {
@@ -35,7 +36,6 @@ export default class FormElement extends Block {
                 }
             })
             .sort(([_, a], [__, b]) => {
-                debugger;
                 // Извлекаем объект (или первый элемент массива)
                 const aItem = Array.isArray(a) ? a[0] : a;
                 const bItem = Array.isArray(b) ? b[0] : b;

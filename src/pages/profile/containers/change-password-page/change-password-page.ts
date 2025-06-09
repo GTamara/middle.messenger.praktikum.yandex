@@ -18,7 +18,7 @@ type ChangePasswordPageProps = {
 
 export class ChangePasswordPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: FormElement;
     oldPasswordControlProps: Block;
     newPasswordControlProps: Block;
     repeatPasswordControlProps: Block;
@@ -38,9 +38,9 @@ export class ChangePasswordPage extends Block {
             },
         });
         this.setChildren({
-            Form: this.getForm(),
+            Form: this.getForm() as Block<Record<string, any>>,
         });
-        this.form = getElement(this.children.Form);
+        this.form = getElement(this.children.Form) as FormElement;
         this.oldPasswordControlProps = getWrappedInputElement(this.form.children.OldPasswordInput);
         this.newPasswordControlProps = getWrappedInputElement(this.form.children.NewPasswordInput);
         this.repeatPasswordControlProps = getWrappedInputElement(this.form.children.RepeatPasswordInput);

@@ -1,4 +1,5 @@
 import { Button, ControlWrapper, Input } from '../../../../components';
+import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputValidationConfig, getWrappedTextInputValidationConfig } from '../../../../core/validation/validation-utils';
@@ -6,18 +7,15 @@ import { getElement } from '../../../../helper-functions';
 import { MessageForm } from '../../components';
 
 type ChatProps = {
-    Form: {
-        children: {
-
-        };
-    };
+    SearchInput: ControlWrapper;
+    Form: MessageForm;
 }
 
 export class ChatPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: MessageForm;
     messageControlProps: Block;
-    searchControlProps: Block;
+    searchControlProps: Block<ControlWrapperProps>;
 
     constructor(props: ChatProps) {
         super('app-chat-page', {
@@ -54,7 +52,7 @@ export class ChatPage extends Block {
         );
     }
 
-    getForm() {
+    getForm(): MessageForm {
         const sendButton = new Button({
             type: 'submit',
             color: 'primary',

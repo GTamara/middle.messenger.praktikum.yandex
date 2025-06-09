@@ -1,8 +1,9 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import Block, { type Props } from '../../core/block';
+import type { FormControlProps } from '../../components/form/form';
+import Block, { type PropsAndChildren } from '../../core/block';
 import FormValidation from '../../core/validation/validation';
 import { getWrappedTextInputValidationConfig } from '../../core/validation/validation-utils';
-import { getElement } from '../../helper-functions';
+import { getElement, getWrappedInputElement } from '../../helper-functions';
 
 type RegisterPageProps = {
     Form: {
@@ -22,7 +23,7 @@ type RegisterPageProps = {
 
 export class RegisterPage extends Block {
     validationService: FormValidation;
-    form: Block;
+    form: FormElement;
     passwordControlProps: Block;
     loginControlProps: Block;
     emailControlProps: Block;
@@ -48,9 +49,9 @@ export class RegisterPage extends Block {
         this.setChildren({
             Form: this.getForm(),
         });
-        this.form = getElement(this.children.Form);
-        this.passwordControlProps = getElement(this.form.children.PasswordInput).children['Control'] as Block;
-        this.loginControlProps = getElement(this.form.children.LoginInput).children['Control'] as Block;
+        this.form = getElement(this.children.Form) as FormElement;
+        this.passwordControlProps = getWrappedInputElement<Block>(this.form.children.PasswordInput);
+        this.loginControlProps = getWrappedInputElement<Block>(this.form.children.LoginInput);
         this.emailControlProps = getElement(this.form.children.EmailInput).children['Control'] as Block;
         this.firstNameControlProps = getElement(this.form.children.FirstNameInput).children['Control'] as Block;
         this.lastNameControlProps = getElement(this.form.children.LastNameInput).children['Control'] as Block;
@@ -308,7 +309,7 @@ export class RegisterPage extends Block {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+    componentDidUpdate(oldProps: PropsAndChildren, newProps: PropsAndChildren): boolean {
         console.log('componentDidUpdate', oldProps, newProps);
 
         // if (this.props['formState'].login !== newProps.formState.login) {

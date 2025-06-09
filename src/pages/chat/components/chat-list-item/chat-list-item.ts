@@ -1,11 +1,12 @@
 import Block from '../../../../core/block';
 
 export type ChatListItemProps = {
+    class: string;
     name: string;
     click: () => void;
 }
 
-export default class ChatListItem extends Block {
+export default class ChatListItem extends Block<ChatListItemProps> {
     constructor(props: ChatListItemProps) {
         super('app-chat-list-item', {
             ...props,
