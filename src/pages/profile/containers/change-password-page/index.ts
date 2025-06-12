@@ -1,2 +1,2 @@
-import './change-password-page.pcss'
-export { default as ChangePasswordPage } from './change-password-page.hbs?raw';
+import './change-password-page.pcss';
+export { ChangePasswordPage as default } from './change-password-page';

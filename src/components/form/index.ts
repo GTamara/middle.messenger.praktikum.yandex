@@ -1,2 +1,2 @@
-import './form.pcss'
-export { default as Form } from './form.hbs?raw';
+import './form.pcss';
+export { default as FormElement } from './form';

@@ -1,2 +1,2 @@
-import './go-back-button.pcss'
+import './go-back-button.pcss';
 export { default as GoBackButton } from './go-back-button.hbs?raw';

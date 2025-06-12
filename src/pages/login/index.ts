@@ -1,2 +1,2 @@
-import './login.pcss'
-export { default as Login } from './login.hbs?raw';
+import './login.pcss';
+export { LoginPage as default } from './login';

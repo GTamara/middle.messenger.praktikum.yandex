@@ -1,73 +1,68 @@
-import './styles/style.pcss'
+import './styles/style.pcss';
 import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
 import * as Layout from './layout';
+import type Block from './core/block';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
 
-const pages = {
-	'register': [Pages.Register],
-	'login': [Pages.Login],
-	'chat': [
-		Pages.ChatPage, {
-			items: [
-				{ name: 'Example Name 1' },
-				{ name: 'Example Name 2', active: true },
-				{ name: 'Example Name 3' },
-				{ name: 'Example Name 4' },
-				{ name: 'Example Name 5' },
-			],
-		},
-	],
-	'profile': [Pages.ProfilePage],
-	'edit-profile': [Pages.EditProfileDataPage],
-	'change-password': [Pages.ChangePasswordPage],
-	'navigation': [Pages.NavigationPage],
-	'server-error': [Pages.ServerErrorPage],
-	'client-error': [Pages.ClientErrorPage],
-
-	//   'list': [ Pages.ListPage, {
-	//     cats: [
-	//       {name: 'cat-1', avatar: cat1},
-	//       {name: 'cat-2', avatar: cat2, active: true},
-	//       {name: 'cat-3', avatar: cat3},
-	//     ],
-	//     showDialog: true
-	//   }],
-	//   'nav': [ Pages.NavigatePage ]
+type Constructor<T = {}> = new (...args: any[]) => T;
+const pages: Record<string, string | Constructor> = {
+    'register': Pages.RegisterPage,
+    'login': Pages.LoginPage,
+    'chat': Pages.ChatPage,
+    'profile': Pages.ProfilePage,
+    'edit-profile': Pages.EditProfileDataPage,
+    'change-password': Pages.ChangePasswordPage,
+    'navigation': Pages.NavigationPage,
+    'server-error': Pages.ServerErrorPage,
+    'client-error': Pages.ClientErrorPage,
 };
-console.log('Components', Components)
+
 Object.entries({
-	...Components,
-	...Layout,
-	...ChatComponents,
-	...ProfileComponents,
+    ...Components,
+    ...Layout,
+    ...ChatComponents,
+    ...ProfileComponents,
 })
-	.forEach(([name, template]) => {
-		Handlebars.registerPartial(name, template);
-	});
+    .forEach(([name, template]) => {
+        if (typeof template === 'function') {
+            return;
+        } else if (typeof template === 'string') {
+            Handlebars.registerPartial(name, template);
+        } else {
+            throw new Error('Unknown component');
+        }
+    });
 
 function navigate(page: string) {
-	//@ts-ignore
-	const [source, context] = pages[page];
-	const container = document.getElementById('app')!;
+    const container = document.getElementById('app')!;
+    if (typeof (pages[page]) === 'string') {
+        let source; let context;
+        Array.isArray(pages[page]) ?
+            [source, context] = pages[page] :
+            source = pages[page];
 
-	const temlpatingFunction = Handlebars.compile(source);
-	// console.log('html', temlpatingFunction(context))
-	container.innerHTML = temlpatingFunction(context);
+        const temlpatingFunction = Handlebars.compile(source);
+        container.innerHTML = temlpatingFunction(context);
+        return;
+    }
+
+    if (typeof pages[page] === 'function') {
+        const Component = pages[page];
+        const component = new Component();
+        container?.replaceChildren((component as Block).getContent());
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
 
-document.addEventListener('click', (e) => {
-	const page = (e.target as HTMLElement).getAttribute('page');
-	console.log('page', page)
-	if (page) {
-		navigate(page);
-		e.preventDefault();
-	}
-})
-
-
+document.addEventListener('click', (e: MouseEvent) => {
+    const page = (e.target as HTMLElement).getAttribute('page');
+    if (page) {
+        navigate(page);
+        e.preventDefault();
+    }
+});
