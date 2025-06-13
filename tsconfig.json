@@ -22,7 +22,8 @@
 		"noFallthroughCasesInSwitch": true,
 		"sourceMap": true,
         "noImplicitAny": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        // "strictPropertyInitialization": false
 	},
 	"include": [
 		"src"
