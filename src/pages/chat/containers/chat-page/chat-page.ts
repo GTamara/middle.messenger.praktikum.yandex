@@ -1,6 +1,7 @@
 import { Button, ControlWrapper, Input } from '../../../../components';
 import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
+import { PATHS } from '../../../../core/routing/paths';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { getElement } from '../../../../utils';
@@ -123,7 +124,7 @@ export class ChatPage extends Block {
         return `
 <div class="chat-container">
     <div class="chat-container__messages">
-        {{> Link label="Profile >" page="profile" }}
+        {{> Link href="${PATHS.profile}" label="Profile >" page="profile" }}
 
         {{{ SearchInput }}}
 

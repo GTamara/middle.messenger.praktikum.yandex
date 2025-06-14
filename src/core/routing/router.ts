@@ -1,5 +1,5 @@
 import Route from './route';
-import { isPathString, PATHS, type IBlockClass, type IRouteItem, type PathString } from './types';
+import { isPathString, type IBlockClass, type IRouteItem, type PathString } from './types';
 
 class Router {
     public routes: IRouteItem[] = [];

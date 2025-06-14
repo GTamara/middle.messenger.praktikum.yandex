@@ -1,4 +1,5 @@
 import Block from '../../../../core/block';
+import { PATHS } from '../../../../core/routing/paths';
 import { ProfileDataItem } from '../../components';
 
 type EditProfileDataPageProps = {
@@ -50,9 +51,9 @@ export class ProfilePage extends Block {
                     {{{PhoneDataItem}}}
 
                     <div class="profile-page__actions">
-                        {{> Link label="Edit profile details" page="register" }}
-                        {{> Link label="Change password" page="register" }}
-                        {{> Link label="Sign out" page="register" color="danger" }}
+                        {{> Link href="${PATHS.editProfile}" label="Edit profile details" page="register" }}
+                        {{> Link href="${PATHS.changePassword}" label="Change password" page="register" }}
+                        {{> Link href="${PATHS.login}" label="Sign out" page="register" color="danger" }}
                     </div>
                 {{/ Card}}
             {{/ ProfileLayout}}

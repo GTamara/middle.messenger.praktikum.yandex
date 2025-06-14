@@ -7,6 +7,15 @@ import type Block from './core/block';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
+import Router from './core/routing/router';
+import { APP_ROOT_ELEMNT } from './core/routing/types';
+import { PATHS } from './core/routing/paths';
+
+declare global {
+    interface Window {
+        router: any;
+    }
+}
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 const pages: Record<string, string | Constructor> = {
@@ -37,32 +46,52 @@ Object.entries({
         }
     });
 
-function navigate(page: string) {
-    const container = document.getElementById('app')!;
-    if (typeof (pages[page]) === 'string') {
-        let source; let context;
-        Array.isArray(pages[page]) ?
-            [source, context] = pages[page] :
-            source = pages[page];
+// interface WindowWithRouter extends Window {
+//     router: Router;
+// }
 
-        const temlpatingFunction = Handlebars.compile(source);
-        container.innerHTML = temlpatingFunction(context);
-        return;
-    }
+// const windowWithRouter = window as WindowWithRouter;
 
-    if (typeof pages[page] === 'function') {
-        const Component = pages[page];
-        const component = new Component();
-        container?.replaceChildren((component as Block).getContent());
-    }
-}
+window.router = new Router(APP_ROOT_ELEMNT);
+window.router
+    .use(PATHS.login, pages['login'])
+    .use(PATHS.register, pages['register'])
+    .use(PATHS.profile, pages['profile'])
+    .use(PATHS.editProfile, pages['edit-profile'])
+    .use(PATHS.changePassword, pages['change-password'])
+    .use(PATHS.chat, pages['chat'])
+    .use(PATHS.serverError, pages['server-error'])
+    .use(PATHS.clientError, pages['client-error'])
+    // .use(PATHS.cats, Pages.ListPage)
+    .use('*', pages['client-error'])
+    .start();
 
-document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
+// function navigate(page: string) {
+//     const container = document.getElementById('app')!;
+//     if (typeof (pages[page]) === 'string') {
+//         let source; let context;
+//         Array.isArray(pages[page]) ?
+//             [source, context] = pages[page] :
+//             source = pages[page];
 
-document.addEventListener('click', (e: MouseEvent) => {
-    const page = (e.target as HTMLElement).getAttribute('page');
-    if (page) {
-        navigate(page);
-        e.preventDefault();
-    }
-});
+//         const temlpatingFunction = Handlebars.compile(source);
+//         container.innerHTML = temlpatingFunction(context);
+//         return;
+//     }
+
+//     if (typeof pages[page] === 'function') {
+//         const Component = pages[page];
+//         const component = new Component();
+//         container?.replaceChildren((component as Block).getContent());
+//     }
+// }
+
+// document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
+
+// document.addEventListener('click', (e: MouseEvent) => {
+//     const page = (e.target as HTMLElement).getAttribute('page');
+//     if (page) {
+//         navigate(page);
+//         e.preventDefault();
+//     }
+// });

@@ -1,5 +1,6 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../components';
 import Block, { type PropsAndChildren } from '../../core/block';
+import { PATHS } from '../../core/routing/paths';
 import FormValidation from '../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
 import { getWrappedInputElement } from '../../helper-functions';
@@ -355,7 +356,7 @@ export class RegisterPage extends Block {
                             Sign up
                         </h2>
                         {{{ Form}}}
-                        {{> Link label="Sign in" page="login" }}
+                        {{> Link href="${PATHS.login}" label="Sign in" page="login" }}
                     </div>
                 {{/ Card}}
             {{/ FormLayout}}

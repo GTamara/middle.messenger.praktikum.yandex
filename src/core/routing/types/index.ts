@@ -1,3 +1,5 @@
+import { PATHS } from '../paths';
+
 export interface IRouteItem {
     render: () => void;
     match: (path: string) => boolean;
@@ -15,12 +17,6 @@ export interface IBlockClass {
     new (props: any): IBlock;
 }
 
-export const PATHS = {
-    login: '/login',
-    cats: '/cats',
-    // pageNotFound: "**"
-} as const;
-
 export type PathString = typeof PATHS[keyof typeof PATHS];
 
 // Type Guard для проверки, что строка является PathString
@@ -29,3 +25,4 @@ export function isPathString(value: string): value is PathString {
 }
 
 export const APP_ROOT_ELEMNT = '#app';
+
