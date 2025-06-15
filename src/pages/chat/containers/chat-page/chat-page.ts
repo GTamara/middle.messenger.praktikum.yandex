@@ -1,9 +1,9 @@
 import { Button, ControlWrapper, Input } from '../../../../components';
 import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
-import { PATHS } from '../../../../core/routing/paths';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../shared/constants/routing-constants';
 import { getElement } from '../../../../utils';
 import { MessageForm } from '../../components';
 

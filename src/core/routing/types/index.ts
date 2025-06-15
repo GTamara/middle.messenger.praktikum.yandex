@@ -1,4 +1,4 @@
-import { PATHS } from '../paths';
+import { PATHS } from '../../../shared/constants/routing-constants';
 
 export interface IRouteItem {
     render: () => void;
@@ -23,6 +23,4 @@ export type PathString = typeof PATHS[keyof typeof PATHS];
 export function isPathString(value: string): value is PathString {
     return Object.values(PATHS).includes(value as PathString);
 }
-
-export const APP_ROOT_ELEMNT = '#app';
 

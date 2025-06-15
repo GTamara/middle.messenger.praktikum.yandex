@@ -6,16 +6,16 @@ class Router {
     history: History = window.history;
     static __instance: Router;
     _currentRoute: IRouteItem | null = null;
-    _rootQuery: string = '';
+    // _rootQuery: string = '#app';
 
-    constructor(rootQuery: string) {
+    constructor(private _rootQuery: string = '#app') {
         if (Router.__instance) {
             return Router.__instance;
         }
 
         this.routes = [];
         this.history = window.history;
-        this._rootQuery = rootQuery;
+        // this._rootQuery = rootQuery;
 
         Router.__instance = this;
     }

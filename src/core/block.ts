@@ -1,11 +1,11 @@
-import EventBus from './event-bus';
+import EventBus from './event-bus/event-bus';
 import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
-import { EBlockEvents } from './types';
+import { EBlockEvents } from './event-bus/types';
 
 type ComponentMetaData = {
-	tagName: string;
-	attrs: Attrs;
+    tagName: string;
+    attrs: Attrs;
 }
 
 export type PropsAndChildren = Record<string, ComponentProp | any>
@@ -14,7 +14,7 @@ export type Children = Record<string, Block | Block[]>
 export type Attrs = Record<string, string | boolean | any>
 
 type Events = {
-	[key: string]: () => void;
+    [key: string]: () => void;
 }
 
 type ValuesOf<T> = T[keyof T];
@@ -67,7 +67,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
             this._element.classList.add(...classes);
         }
 
-        if (typeof attrs ==='object') {
+        if (typeof attrs === 'object') {
             Object.entries(attrs).forEach(([attrName, attrValue]) => {
                 this._element.setAttribute(attrName, attrValue.toString());
             });
@@ -135,7 +135,6 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         if (!nextAttrs) {
             return;
         }
-        console.log('setProps', nextAttrs, this.attrs);
         Object.assign(this.attrs, nextAttrs);
     };
 
@@ -207,8 +206,8 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         });
 
         /**
-		 * Заменяем заглушки на компоненты
-		 */
+         * Заменяем заглушки на компоненты
+         */
         // Object.keys(this.children).forEach(childKey => {
         // 	/**
         // 	 * Ищем заглушку по id
@@ -269,8 +268,14 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
                 emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
                 return true;
             },
-            deleteProperty() {
-                throw new Error('Нет доступа');
+            deleteProperty(target, prop) {
+                console.log('deleteProperty', target, prop);
+                if (prop in target) {
+                    const oldTarget = { ...target };
+                    delete target[prop];
+                    emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
+                }
+                return true;
             },
         });
     }

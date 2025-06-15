@@ -5,8 +5,8 @@ export const PATHS = {
     editProfile: '/edit-profile',
     changePassword: '/change-password',
     chat: '/messenger',
-    serverError: '/500',
-    clientError: '/404',
+    serverError: '/server-error',
+    clientError: '/client-error',
 
     // pageNotFound: "**"
 } as const;

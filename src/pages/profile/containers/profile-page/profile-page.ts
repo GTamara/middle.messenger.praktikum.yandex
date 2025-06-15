@@ -1,5 +1,5 @@
 import Block from '../../../../core/block';
-import { PATHS } from '../../../../core/routing/paths';
+import { PATHS } from '../../../../shared/constants/routing-constants';
 import { ProfileDataItem } from '../../components';
 
 type EditProfileDataPageProps = {

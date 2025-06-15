@@ -1,5 +1,5 @@
 import Block from './block';
-import { EBlockEvents } from './types';
+import { EBlockEvents } from './event-bus/types';
 
 export default function renderDOM(block: Block) {
     const root = document.querySelector('#app');

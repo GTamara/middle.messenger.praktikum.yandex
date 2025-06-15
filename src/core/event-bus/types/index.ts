@@ -5,3 +5,7 @@ export enum EBlockEvents {
 	FLOW_RENDER = 'flow:render',
 };
 
+export enum EStoreEvents {
+	STORE_CHANGED = 'store:changed',
+};
+

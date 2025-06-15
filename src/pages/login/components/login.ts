@@ -1,10 +1,11 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import Block, { type Attrs } from '../../core/block';
-import { PATHS } from '../../core/routing/paths';
-import FormValidation from '../../core/validation/validation';
-import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
-import { getWrappedInputElement } from '../../helper-functions';
-import { getElement } from '../../utils';
+import { Button, ControlWrapper, FormElement, Input } from '../../../components';
+import Block, { type Attrs } from '../../../core/block';
+import FormValidation from '../../../core/validation/validation';
+import { getWrappedTextInputPropsForValidation } from '../../../core/validation/validation-utils';
+import { getWrappedInputElement } from '../../../helper-functions';
+import { PATHS } from '../../../shared/constants/routing-constants';
+import { getElement } from '../../../utils';
+import { LoginController } from '../services/login.controller';
 
 type LoginPageProps = {
     Form: {
@@ -22,6 +23,8 @@ export class LoginPage extends Block {
     form: Block;
     passwordControlProps: Block;
     loginControlProps: Block;
+
+    loginController = new LoginController();
 
     constructor(props: LoginPageProps) {
         super('app-login-page', {
@@ -107,15 +110,7 @@ export class LoginPage extends Block {
         });
 
         return new FormElement({
-            submit: (e?: Event) => {
-                if (!!e) {
-                    e.preventDefault();
-                }
-                console.log('submit', {
-                    login: this.loginControlProps.attrs.value,
-                    password: this.passwordControlProps.attrs.value,
-                });
-            },
+            submit: (event: SubmitEvent) => this.loginController.submitFormHandler(event),
             SignInButton: signInButton,
             CancelButton: cancelButton,
             LoginInput: loginInput,

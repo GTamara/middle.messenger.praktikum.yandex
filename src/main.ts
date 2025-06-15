@@ -8,8 +8,9 @@ import type Block from './core/block';
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
 import Router from './core/routing/router';
-import { APP_ROOT_ELEMNT } from './core/routing/types';
-import { PATHS } from './core/routing/paths';
+import type { Constructor } from './shared/types';
+import { APP_ROOT_ELEMNT } from './shared/constants';
+import { PATHS } from './shared/constants/routing-constants';
 
 declare global {
     interface Window {
@@ -17,7 +18,6 @@ declare global {
     }
 }
 
-type Constructor<T = {}> = new (...args: any[]) => T;
 const pages: Record<string, string | Constructor> = {
     'register': Pages.RegisterPage,
     'login': Pages.LoginPage,
@@ -46,12 +46,6 @@ Object.entries({
         }
     });
 
-// interface WindowWithRouter extends Window {
-//     router: Router;
-// }
-
-// const windowWithRouter = window as WindowWithRouter;
-
 window.router = new Router(APP_ROOT_ELEMNT);
 window.router
     .use(PATHS.login, pages['login'])
@@ -62,7 +56,6 @@ window.router
     .use(PATHS.chat, pages['chat'])
     .use(PATHS.serverError, pages['server-error'])
     .use(PATHS.clientError, pages['client-error'])
-    // .use(PATHS.cats, Pages.ListPage)
     .use('*', pages['client-error'])
     .start();
 

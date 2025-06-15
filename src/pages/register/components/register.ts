@@ -1,10 +1,11 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../components';
-import Block, { type PropsAndChildren } from '../../core/block';
-import { PATHS } from '../../core/routing/paths';
-import FormValidation from '../../core/validation/validation';
-import { getWrappedTextInputPropsForValidation } from '../../core/validation/validation-utils';
-import { getWrappedInputElement } from '../../helper-functions';
-import { getElement } from '../../utils';
+import { Button, ControlWrapper, FormElement, Input } from '../../../components';
+import Block, { type PropsAndChildren } from '../../../core/block';
+import FormValidation from '../../../core/validation/validation';
+import { getWrappedTextInputPropsForValidation } from '../../../core/validation/validation-utils';
+import { getWrappedInputElement } from '../../../helper-functions';
+import { PATHS } from '../../../shared/constants/routing-constants';
+import { getElement } from '../../../utils';
+import { RegisterController } from '../services/register.controller';
 
 type RegisterPageProps = {
     Form: {
@@ -16,7 +17,7 @@ type RegisterPageProps = {
             FirstNameInput: Block;
             LastNameInput: Block;
             PhoneInput: Block;
-            signUpButton: Block;
+            SignUpButton: Block;
             CancelButton: Block;
         };
     };
@@ -32,6 +33,7 @@ export class RegisterPage extends Block {
     lastNameControlProps: Block;
     phoneControlProps: Block;
     repeatPasswordControlProps: Block;
+    registerController: RegisterController;
 
     constructor(props: RegisterPageProps) {
         super('app-register-page', {
@@ -50,6 +52,9 @@ export class RegisterPage extends Block {
         this.setChildren({
             Form: this.getForm(),
         });
+
+        this.registerController = new RegisterController();
+
         this.form = getElement(this.children.Form) as FormElement;
         this.passwordControlProps = getWrappedInputElement<Block>(this.form.children.PasswordInput);
         this.loginControlProps = getWrappedInputElement<Block>(this.form.children.LoginInput);
@@ -227,17 +232,7 @@ export class RegisterPage extends Block {
         });
 
         return new FormElement({
-            submit: () => {
-                console.log('submit', {
-                    email: this.emailControlProps.attrs.value,
-                    login: this.loginControlProps.attrs.value,
-                    first_name: this.firstNameControlProps.attrs.value,
-                    second_name: this.lastNameControlProps.attrs.value,
-                    phone: this.phoneControlProps.attrs.value,
-                    password: this.passwordControlProps.attrs.value,
-                    repeatPassword: this.repeatPasswordControlProps.attrs.value,
-                });
-            },
+            submit: (event: SubmitEvent) => this.registerController.submitFormHandler(event),
             SignUpButton: signUpButton,
             CancelButton: cancelButton,
             EmailInput: emailInput,
@@ -310,22 +305,6 @@ export class RegisterPage extends Block {
                 if (e) {
                     e.preventDefault();
                 }
-            },
-        };
-    }
-
-    getTextInputValidationConfig(form: Block) {
-        return {
-            form: {
-                ...form,
-                element: form.element as HTMLFormElement,
-            },
-            controls: {
-                EmailInput: {
-                    ...getElement(
-                        getElement(form.children.EmailInput).children['Control'],
-                    ),
-                },
             },
         };
     }

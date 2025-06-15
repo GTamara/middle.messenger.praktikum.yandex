@@ -1,4 +1,4 @@
-import EventBus from '../event-bus';
+import EventBus from '../event-bus/event-bus';
 import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type AttrsObject, type ValidationConfig } from './validation-config';
 
 export default class FormValidation {
@@ -18,10 +18,6 @@ export default class FormValidation {
         this.submitBtnHtmlElement = this.getSubmitElement();
 
         this.toggleSubmitButtonState(false);
-    }
-
-    enableValidation() {
-
     }
 
     private clearValidation() {
@@ -59,7 +55,7 @@ export default class FormValidation {
         }
     }
 
-    private isFormValid() {
+    isFormValid() {
         return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
             if (this.isHtmlInputElement(ctrl)) {
                 return ctrl.validity.valid;
