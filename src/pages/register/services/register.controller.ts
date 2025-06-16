@@ -3,6 +3,7 @@ import { MessageService } from '../../../core/message.service';
 import { RegisterApiService } from './register-api.service';
 import { ERegisterFormFields } from '../types';
 import type Router from '../../../core/routing/router';
+import type { StoreService } from '../../../core/store/store.service';
 
 export class RegisterController {
     messageService = new MessageService();
@@ -10,6 +11,7 @@ export class RegisterController {
 
     ERegisterFormFields = ERegisterFormFields;
     router: Router;
+    private store: StoreService = window.store;
 
     constructor() {
         this.router = window.router;
@@ -38,6 +40,7 @@ export class RegisterController {
         };
         this.registerApiService.register(payload)
             .then((response) => {
+                this.store.setState('user', response);
                 console.log('response', response);
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
                 form.reset();

@@ -12,23 +12,38 @@ import { PATHS } from './shared/constants/routing-constants';
 import { RouteAccess } from './core/routing/types';
 import RouteGuard from './core/routing/route-guard';
 import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
+import { StoreService } from './core/store/store.service';
+import { UserDataService } from './shared/services/user-data/user-data.controller';
 
 declare global {
     interface Window {
         router: any;
+        store: any
     }
 }
 
+enum EPages {
+    Register = 'register',
+    Login = 'login',
+    Chat = 'messenger',
+    Profile = 'profile',
+    EditProfileData = 'edit-profile',
+    ChangePassword = 'change-password',
+    Navigation = 'navigation',
+    ServerError = 'server-error',
+    ClientError = 'client-error',
+}
+
 const pages: Record<string, string | Constructor> = {
-    'register': Pages.RegisterPage,
-    'login': Pages.LoginPage,
-    'chat': Pages.ChatPage,
-    'profile': Pages.ProfilePage,
-    'edit-profile': Pages.EditProfileDataPage,
-    'change-password': Pages.ChangePasswordPage,
-    'navigation': Pages.NavigationPage,
-    'server-error': Pages.ServerErrorPage,
-    'client-error': Pages.ClientErrorPage,
+    [EPages.Register]: Pages.RegisterPage,
+    [EPages.Login]: Pages.LoginPage,
+    [EPages.Chat]: Pages.ChatPage,
+    [EPages.Profile]: Pages.ProfilePage,
+    [EPages.EditProfileData]: Pages.EditProfileDataPage,
+    [EPages.ChangePassword]: Pages.ChangePasswordPage,
+    [EPages.Navigation]: Pages.NavigationPage,
+    [EPages.ServerError]: Pages.ServerErrorPage,
+    [EPages.ClientError]: Pages.ClientErrorPage,
 };
 
 Object.entries({
@@ -56,16 +71,20 @@ window.router = new Router(
 );
 
 window.router
-    .use(PATHS.login, pages['login'], RouteAccess.UNAUTH_ONLY)
-    .use(PATHS.register, pages['register'], RouteAccess.UNAUTH_ONLY)
-    .use(PATHS.profile, pages['profile'], RouteAccess.AUTH_ONLY)
-    .use(PATHS.editProfile, pages['edit-profile'], RouteAccess.AUTH_ONLY)
-    .use(PATHS.changePassword, pages['change-password'], RouteAccess.AUTH_ONLY)
-    .use(PATHS.chat, pages['chat'], RouteAccess.AUTH_ONLY)
-    .use(PATHS.serverError, pages['server-error'], RouteAccess.PUBLIC)
-    .use(PATHS.clientError, pages['client-error'], RouteAccess.PUBLIC)
-    .use('*', pages['client-error'], RouteAccess.PUBLIC)
+    .use(PATHS.login, pages[EPages.Login], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.register, pages[EPages.Register], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.profile, pages[EPages.Profile], RouteAccess.AUTH_ONLY)
+    .use(PATHS.editProfile, pages[EPages.EditProfileData], RouteAccess.AUTH_ONLY)
+    .use(PATHS.changePassword, pages[EPages.ChangePassword], RouteAccess.AUTH_ONLY)
+    .use(PATHS.chat, pages[EPages.Chat], RouteAccess.AUTH_ONLY)
+    .use(PATHS.serverError, pages[EPages.ServerError], RouteAccess.PUBLIC)
+    .use(PATHS.clientError, pages[EPages.ClientError], RouteAccess.PUBLIC)
+    .use('*', pages[EPages.Navigation], RouteAccess.PUBLIC)
     .start();
+
+window.store = new StoreService();
+
+new UserDataService().storeUserData();
 
 // function navigate(page: string) {
 //     const container = document.getElementById('app')!;

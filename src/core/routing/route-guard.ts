@@ -2,7 +2,7 @@ import { API_URL } from '../../app-config';
 import { RouteAccess } from './types';
 
 class RouteGuard {
-    private authState: boolean | null = null;
+    private _authState: boolean | null = null;
 
     async checkAccess(routeAccess: RouteAccess): Promise<{
         allow: boolean;
@@ -32,22 +32,22 @@ class RouteGuard {
     }
 
     async checkAuth(): Promise<boolean> {
-        if (this.authState !== null) return this.authState;
+        if (this._authState !== null) return this._authState;
 
         try {
             const response = await fetch(`${API_URL}auth/user`, {
                 credentials: 'include'
             });
-            this.authState = response.ok;
-            return this.authState;
+            this._authState = response.ok;
+            return this._authState;
         } catch {
-            this.authState = false;
+            this._authState = false;
             return false;
         }
     }
 
     resetAuthCache(): void {
-        this.authState = null;
+        this._authState = null;
     }
 }
 
