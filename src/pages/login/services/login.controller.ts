@@ -43,7 +43,7 @@ export class LoginController {
 
             })
             .then(() => {
-                this.router.go('/chats');
+                this.router.go('/messenger');
             })
             .catch((error) => {
                 console.log('login error', error);

@@ -1,3 +1,5 @@
+// Swagger types
+
 export interface SignUpRequest {
     first_name: string;
     second_name: string;

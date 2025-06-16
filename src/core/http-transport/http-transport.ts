@@ -1,3 +1,5 @@
+import { API_URL } from '../../app-config';
+
 enum EMethod {
     GET = 'GET',
     POST = 'POST',
@@ -25,7 +27,7 @@ type HTTPMethod = <R = unknown, P = unknown>(url: string, payload?: P, options?:
     => Promise<R>;
 
 export class HTTPTransport {
-    private apiUrl: string = 'https://ya-praktikum.tech/api/v2/';
+    // private API_URL: string = 'https://ya-praktikum.tech/api/v2/';
 
     get: HTTPMethod = (
         url,
@@ -33,7 +35,7 @@ export class HTTPTransport {
         options = {},
     ) => {
         return this.request(
-            `${this.apiUrl}${url}`,
+            `${API_URL}${url}`,
             payload,
             {
                 ...options,
@@ -48,7 +50,7 @@ export class HTTPTransport {
         options = {},
     ) => {
         return this.request(
-            `${this.apiUrl}${url}`,
+            `${API_URL}${url}`,
             payload,
             {
                 ...options,

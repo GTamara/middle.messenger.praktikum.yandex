@@ -2,12 +2,18 @@ import { type SignUpRequest } from '../../../core/http-transport/api-types';
 import { MessageService } from '../../../core/message.service';
 import { RegisterApiService } from './register-api.service';
 import { ERegisterFormFields } from '../types';
+import type Router from '../../../core/routing/router';
 
 export class RegisterController {
     messageService = new MessageService();
     registerApiService = new RegisterApiService();
 
     ERegisterFormFields = ERegisterFormFields;
+    router: Router;
+
+    constructor() {
+        this.router = window.router;
+    }
 
     submitFormHandler(event: SubmitEvent) {
         event.preventDefault(); debugger;
@@ -35,6 +41,11 @@ export class RegisterController {
                 console.log('response', response);
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
                 form.reset();
+                // 1. Сбрасываем кеш авторизации
+                this.router.guard.resetAuthCache();
+
+                // 2. Перенаправляем на роут для авторизованных
+                this.router.go(this.router.config.authRedirect);
                 submitButton.disabled = true;
             })
             .catch((error) => {

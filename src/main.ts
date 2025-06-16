@@ -3,14 +3,15 @@ import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
 import * as Layout from './layout';
-import type Block from './core/block';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
 import Router from './core/routing/router';
 import type { Constructor } from './shared/types';
-import { APP_ROOT_ELEMNT } from './shared/constants';
 import { PATHS } from './shared/constants/routing-constants';
+import { RouteAccess } from './core/routing/types';
+import RouteGuard from './core/routing/route-guard';
+import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 
 declare global {
     interface Window {
@@ -46,17 +47,24 @@ Object.entries({
         }
     });
 
-window.router = new Router(APP_ROOT_ELEMNT);
+const guard = new RouteGuard();
+
+window.router = new Router(
+    guard,
+    REDIRECT_CONFIG,
+    APP_ROOT_ELEMNT,
+);
+
 window.router
-    .use(PATHS.login, pages['login'])
-    .use(PATHS.register, pages['register'])
-    .use(PATHS.profile, pages['profile'])
-    .use(PATHS.editProfile, pages['edit-profile'])
-    .use(PATHS.changePassword, pages['change-password'])
-    .use(PATHS.chat, pages['chat'])
-    .use(PATHS.serverError, pages['server-error'])
-    .use(PATHS.clientError, pages['client-error'])
-    .use('*', pages['client-error'])
+    .use(PATHS.login, pages['login'], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.register, pages['register'], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.profile, pages['profile'], RouteAccess.AUTH_ONLY)
+    .use(PATHS.editProfile, pages['edit-profile'], RouteAccess.AUTH_ONLY)
+    .use(PATHS.changePassword, pages['change-password'], RouteAccess.AUTH_ONLY)
+    .use(PATHS.chat, pages['chat'], RouteAccess.AUTH_ONLY)
+    .use(PATHS.serverError, pages['server-error'], RouteAccess.PUBLIC)
+    .use(PATHS.clientError, pages['client-error'], RouteAccess.PUBLIC)
+    .use('*', pages['client-error'], RouteAccess.PUBLIC)
     .start();
 
 // function navigate(page: string) {

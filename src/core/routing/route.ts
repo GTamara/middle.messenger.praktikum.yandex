@@ -1,16 +1,27 @@
-import type { IBlock, IBlockClass, IRouteItem } from './types';
+import { RouteAccess, type IBlock, type IBlockClass, type IRouteItem } from './types';
 
 class Route implements IRouteItem {
-    private _block: IBlock | null;
+    private _block: IBlock | null = null;
     private _props: Record<string, any>;
     private _blockClass: IBlockClass;
     private _pathname: string;
+    RouteAccess = RouteAccess;
+    access: RouteAccess;
 
-    constructor(pathname: string, view: IBlockClass, props: Record<string, any>) {
-        this._pathname = pathname;
+    constructor(
+        pathname: string,
+        view: IBlockClass,
+        props: Record<string, any>,
+        access: RouteAccess = RouteAccess.PUBLIC,
+    ) {
+        this._pathname = pathname; // Сохраняем и в приватное поле, если оно используется
         this._blockClass = view;
-        this._block = null;
         this._props = props;
+        this.access = access;
+    }
+
+    public get pathname(): string { // Реализуем как getter
+        return this._pathname;
     }
 
     navigate(pathname: string) {
@@ -22,7 +33,7 @@ class Route implements IRouteItem {
 
     leave() {
         if (this._block) {
-            // this._block.hide();
+            this._block.hide();
         }
     }
 
@@ -44,7 +55,7 @@ class Route implements IRouteItem {
             this._block = new this._blockClass({});
         }
 
-        // this._block.show();
+        this._block.show();
         this._renderDom(this._props.rootQuery, this._block);
         this._block.componentDidMount();
     }

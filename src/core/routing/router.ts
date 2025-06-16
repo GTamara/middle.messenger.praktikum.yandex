@@ -1,27 +1,43 @@
 import Route from './route';
-import { isPathString, type IBlockClass, type IRouteItem, type PathString } from './types';
+import RouteGuard from './route-guard';
+import { isPathString, RouteAccess, type IBlockClass, type IRouteItem, type PathString, type RedirectConfig } from './types';
 
 class Router {
-    public routes: IRouteItem[] = [];
-    history: History = window.history;
     static __instance: Router;
-    _currentRoute: IRouteItem | null = null;
-    // _rootQuery: string = '#app';
 
-    constructor(private _rootQuery: string = '#app') {
+    routes: IRouteItem[] = [];
+    history: History = window.history;
+
+    _currentRoute: IRouteItem | null = null;
+    _rootQuery;
+
+    constructor(
+        public readonly guard: RouteGuard,
+        public readonly config: RedirectConfig,
+        rootQuery = '#app',
+    ) {
         if (Router.__instance) {
             return Router.__instance;
         }
 
         this.routes = [];
         this.history = window.history;
-        // this._rootQuery = rootQuery;
+        this._rootQuery = rootQuery;
 
         Router.__instance = this;
     }
 
-    use(pathname: PathString, blockClass: IBlockClass) {
-        const route = new Route(pathname, blockClass, { rootQuery: this._rootQuery });
+    use(
+        pathname: PathString,
+        blockClass: IBlockClass,
+        access: RouteAccess = RouteAccess.PUBLIC,
+    ): this {
+        const route = new Route(
+            pathname,
+            blockClass,
+            { rootQuery: this._rootQuery },
+            access, // Передаём access напрямую, без преобразования в config
+        );
         this.routes.push(route);
         return this;
     }
@@ -42,10 +58,20 @@ class Router {
         this._onRoute(window.location.pathname);
     }
 
-    _onRoute(pathname: string) {
+    async _onRoute(pathname: string) {
         const route: IRouteItem | undefined = this.getRoute(pathname);
 
         if (!route) {
+            return;
+        }
+
+        // Проверяем доступ через RouteGuard
+        const { allow, requiredAuth } = await this.guard.checkAccess(
+            route.access,
+        );
+
+        if (!allow) {
+            this.go(requiredAuth ? this.config.unauthRedirect : this.config.authRedirect);
             return;
         }
 

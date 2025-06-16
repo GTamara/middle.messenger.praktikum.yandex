@@ -1,5 +1,5 @@
 import Block from '../../core/block';
-import { areObjectsDeepEqual } from '../../utils';
+import { areObjectsDeepEqual } from '../../shared/utils';
 
 export type ButtonProps = {
     label?: string;

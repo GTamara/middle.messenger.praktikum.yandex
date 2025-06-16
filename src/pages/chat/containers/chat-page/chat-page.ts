@@ -4,7 +4,7 @@ import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
-import { getElement } from '../../../../utils';
+import { getElement } from '../../../../shared/utils';
 import { MessageForm } from '../../components';
 
 type ChatProps = {
