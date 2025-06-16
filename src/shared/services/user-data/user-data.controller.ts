@@ -9,7 +9,7 @@ export class UserDataService {
     storeUserData() {
         return this.userDataApiService.getUserData()
             .then((data) => {
-                this.store.setState('user', data);
+                this.store.setState('user', data); debugger;
                 console.log('User data', data);
             })
             .catch((e: Error) => {

@@ -1,7 +1,8 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
+import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../shared/constants/routing-constants';
 import { getWrappedInputElement } from '../../../../shared/helper-functions';
 import { getElement } from '../../../../shared/utils';
 
@@ -27,6 +28,10 @@ export class ChangePasswordPage extends Block {
     constructor(props: ChangePasswordPageProps) {
         super('app-change-password-page', {
             ...props,
+            goBackButton: new GoBackButton({
+                routerLink: PATHS.profile,
+                color: 'primary',
+            }),
             formState: {
                 oldPassword: '',
                 newPassword: '',
@@ -191,7 +196,7 @@ export class ChangePasswordPage extends Block {
         return `
             {{#> FormLayout }}
                 {{#> Card }}
-                    {{> GoBackButton color="primary" page="profile" }}
+                    {{{goBackButton}}}
                     <div class="page-container">
                         <h2 class="card__title">
                             Change password

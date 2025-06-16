@@ -1,6 +1,9 @@
-import Block from '../../../../core/block';
-import { PATHS } from '../../../../shared/constants/routing-constants';
-import { ProfileDataItem } from '../../components';
+import { GoBackButton } from '../../../../../components';
+import Block from '../../../../../core/block';
+import type { UserResponse } from '../../../../../core/http-transport/swagger-types';
+import { PATHS } from '../../../../../shared/constants/routing-constants';
+import { ProfileDataItem } from '../../../components';
+import { ProfilePageController } from '../services/profile-page.controller';
 
 type EditProfileDataPageProps = {
     Form: {
@@ -16,21 +19,30 @@ type EditProfileDataPageProps = {
 }
 
 export class ProfilePage extends Block {
+    profilePageController: ProfilePageController;
+
     constructor(props: EditProfileDataPageProps) {
         super('app-profile-page', {
             ...props,
+            goBackButton: new GoBackButton({
+                routerLink: PATHS.chat,
+                color: 'primary',
+            }),
         });
+        this.profilePageController = new ProfilePageController();
         this.setChildren(this.getChildren());
     }
 
     getChildren() {
+        const userData: UserResponse | null = this.profilePageController.userData;
+        console.log('userData', userData);
         return {
-            EmailDataItem: new ProfileDataItem({ label: 'E-mail', value: 'email@email.ru' }),
-            LoginDataItem: new ProfileDataItem({ label: 'Login', value: 'login_123' }),
-            NameDataItem: new ProfileDataItem({ label: 'Name', value: 'John' }),
-            LastNameDataItem: new ProfileDataItem({ label: 'Last name', value: 'Doe' }),
-            NicknameDataItem: new ProfileDataItem({ label: 'Nickname', value: 'John Doe' }),
-            PhoneDataItem: new ProfileDataItem({ label: 'Phone', value: '+7 000 123 45 67' }),
+            EmailDataItem: new ProfileDataItem({ label: 'E-mail', value: userData?.email ?? '' }),
+            LoginDataItem: new ProfileDataItem({ label: 'Login', value: userData?.login ?? '' }),
+            NameDataItem: new ProfileDataItem({ label: 'Name', value: userData?.first_name ?? '' }),
+            LastNameDataItem: new ProfileDataItem({ label: 'Last name', value: userData?.second_name ?? '' }),
+            NicknameDataItem: new ProfileDataItem({ label: 'Nickname', value: userData?.display_name ?? '' }),
+            PhoneDataItem: new ProfileDataItem({ label: 'Phone', value: userData?.phone ?? '' }),
         };
     }
 
@@ -38,7 +50,7 @@ export class ProfilePage extends Block {
         return `
             {{#> ProfileLayout }}
                 {{#> Card class='full-width gap-2' }}
-                    {{> GoBackButton color="primary" page="chat" }}
+                     {{{goBackButton}}}
                     <div class="profile-page__container">
                         {{> Avatar size="large" }}
                     </div>

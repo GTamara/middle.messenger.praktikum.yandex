@@ -1,7 +1,8 @@
-import { Button, ControlWrapper, FormElement, Input } from '../../../../components';
+import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../components';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../shared/constants/routing-constants';
 import { getWrappedInputElement } from '../../../../shared/helper-functions';
 import { getElement } from '../../../../shared/utils';
 
@@ -41,6 +42,10 @@ export class EditProfileDataPage extends Block {
                 displayName: '',
                 phone: '',
             },
+            goBackButton: new GoBackButton({
+                routerLink: PATHS.profile,
+                color: 'primary',
+            }),
         });
         this.setChildren({
             Form: this.getForm(),
@@ -277,7 +282,7 @@ export class EditProfileDataPage extends Block {
         return `
             {{#> FormLayout }}
                 {{#> Card }}
-                    {{> GoBackButton color="primary" page="profile" }}
+                    {{{goBackButton}}}
                     <div class="page-container">
                         <h2 class="card__title">
                             Edit profile details

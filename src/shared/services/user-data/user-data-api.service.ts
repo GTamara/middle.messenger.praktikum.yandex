@@ -1,4 +1,4 @@
-import type { UserResponse } from '../../../core/http-transport/api-types';
+import type { UserResponse } from '../../../core/http-transport/swagger-types';
 import { HTTPTransport } from '../../../core/http-transport/http-transport';
 
 export class UserDataApiService {

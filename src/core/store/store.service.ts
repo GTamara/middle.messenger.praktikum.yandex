@@ -4,6 +4,19 @@ import type { EStoreEvents } from '../event-bus/types';
 
 export class StoreService extends EventBus<EStoreEvents> {
     private static _state: Map<string, any> = new Map<string, any>();
+    static __instance: StoreService;
+    constructor() {
+        super();
+        if (StoreService.__instance) {
+            return StoreService.__instance;
+        }
+
+        // this.routes = [];
+        // this.history = window.history;
+        // this._rootQuery = rootQuery;
+
+        StoreService.__instance = this;
+    }
 
     getState() {
         return StoreService._state;
@@ -17,24 +30,26 @@ export class StoreService extends EventBus<EStoreEvents> {
         if (typeof path !== 'string') {
             throw new Error('path must be a string');
         }
+        StoreService._state.set(path, value);
         const obj = this.getObjectFromPath(path, value);
         return this.merge(object as Indexed, obj);
     }
 
     private getObjectFromPath(path: string, value: any): Record<string, any> {
-        const arraySegments = path.split('.');
+        return StoreService._state.get(path);
+        // const arraySegments = path.split('.');
 
-        return arraySegments.reduceRight((acc, segment, index) => {
-            if (index === arraySegments.length - 1) {
-                acc[segment] = value;
-            } else {
-                acc = {
-                    [segment]: acc,
-                };
-            }
+        // return arraySegments.reduceRight((acc, segment, index) => {
+        //     if (index === arraySegments.length - 1) {
+        //         acc[segment] = value;
+        //     } else {
+        //         acc = {
+        //             [segment]: acc,
+        //         };
+        //     }
 
-            return acc;
-        }, {} as Indexed);
+        //     return acc;
+        // }, {} as Indexed);
     }
 
     private merge(lhs: Indexed, rhs: Indexed): Indexed {

@@ -14,7 +14,7 @@ export type Children = Record<string, Block | Block[]>
 export type Attrs = Record<string, string | boolean | any>
 
 type Events = {
-    [key: string]: () => void;
+    [key: string]: (e?: any) => void;
 }
 
 type ValuesOf<T> = T[keyof T];
@@ -144,6 +144,19 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         }
 
         Object.assign(this.children, children);
+        this.eventBus.emit(EBlockEvents.FLOW_CDU);
+    };
+
+    setEvents = (nextEvents: Events) => {
+        if (
+            !nextEvents ||
+            !Object.keys(nextEvents).length ||
+            !Object.values(nextEvents).every((value) => (typeof value === 'function'))
+        ) {
+            console.error('Некорректный тип события');
+            return;
+        }
+        Object.assign(this.events, nextEvents);
         this.eventBus.emit(EBlockEvents.FLOW_CDU);
     };
 
@@ -286,7 +299,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
     }
 
     show() {
-        this.getContent().style.display = 'block';
+        this.getContent().style.display = '';
     }
 
     hide() {

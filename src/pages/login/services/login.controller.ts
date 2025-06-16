@@ -1,4 +1,4 @@
-import type { SignInRequest } from '../../../core/http-transport/api-types';
+import type { SignInRequest } from '../../../core/http-transport/swagger-types';
 import { MessageService } from '../../../core/message.service';
 import Router from '../../../core/routing/router';
 import { ELoginFormFields } from '../types';

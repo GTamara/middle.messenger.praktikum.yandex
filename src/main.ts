@@ -14,6 +14,12 @@ import RouteGuard from './core/routing/route-guard';
 import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 import { StoreService } from './core/store/store.service';
 import { UserDataService } from './shared/services/user-data/user-data.controller';
+import type { UserResponse } from './core/http-transport/swagger-types';
+
+type InitialState = {
+    user: UserResponse | null;
+    [key: string]: any;
+};
 
 declare global {
     interface Window {
@@ -34,6 +40,11 @@ enum EPages {
     ClientError = 'client-error',
 }
 
+window.store = new StoreService();
+const initialState: InitialState = {
+    user: null,
+};
+
 const pages: Record<string, string | Constructor> = {
     [EPages.Register]: Pages.RegisterPage,
     [EPages.Login]: Pages.LoginPage,
@@ -46,22 +57,6 @@ const pages: Record<string, string | Constructor> = {
     [EPages.ClientError]: Pages.ClientErrorPage,
 };
 
-Object.entries({
-    ...Components,
-    ...Layout,
-    ...ChatComponents,
-    ...ProfileComponents,
-})
-    .forEach(([name, template]) => {
-        if (typeof template === 'function') {
-            return;
-        } else if (typeof template === 'string') {
-            Handlebars.registerPartial(name, template);
-        } else {
-            throw new Error('Unknown component');
-        }
-    });
-
 const guard = new RouteGuard();
 
 window.router = new Router(
@@ -70,21 +65,38 @@ window.router = new Router(
     APP_ROOT_ELEMNT,
 );
 
-window.router
-    .use(PATHS.login, pages[EPages.Login], RouteAccess.UNAUTH_ONLY)
-    .use(PATHS.register, pages[EPages.Register], RouteAccess.UNAUTH_ONLY)
-    .use(PATHS.profile, pages[EPages.Profile], RouteAccess.AUTH_ONLY)
-    .use(PATHS.editProfile, pages[EPages.EditProfileData], RouteAccess.AUTH_ONLY)
-    .use(PATHS.changePassword, pages[EPages.ChangePassword], RouteAccess.AUTH_ONLY)
-    .use(PATHS.chat, pages[EPages.Chat], RouteAccess.AUTH_ONLY)
-    .use(PATHS.serverError, pages[EPages.ServerError], RouteAccess.PUBLIC)
-    .use(PATHS.clientError, pages[EPages.ClientError], RouteAccess.PUBLIC)
-    .use('*', pages[EPages.Navigation], RouteAccess.PUBLIC)
-    .start();
+new UserDataService()
+    .storeUserData()
+    .then((data) => {
+        console.log('storeUserData', data);
+        Object.entries({
+            ...Components,
+            ...Layout,
+            ...ChatComponents,
+            ...ProfileComponents,
+        })
+            .forEach(([name, template]) => {
+                if (typeof template === 'function') {
+                    return;
+                } else if (typeof template === 'string') {
+                    Handlebars.registerPartial(name, template);
+                } else {
+                    throw new Error('Unknown component');
+                }
+            });
 
-window.store = new StoreService();
-
-new UserDataService().storeUserData();
+        window.router
+            .use(PATHS.login, pages[EPages.Login], RouteAccess.UNAUTH_ONLY)
+            .use(PATHS.register, pages[EPages.Register], RouteAccess.UNAUTH_ONLY)
+            .use(PATHS.profile, pages[EPages.Profile], RouteAccess.AUTH_ONLY)
+            .use(PATHS.editProfile, pages[EPages.EditProfileData], RouteAccess.AUTH_ONLY)
+            .use(PATHS.changePassword, pages[EPages.ChangePassword], RouteAccess.AUTH_ONLY)
+            .use(PATHS.chat, pages[EPages.Chat], RouteAccess.AUTH_ONLY)
+            .use(PATHS.serverError, pages[EPages.ServerError], RouteAccess.PUBLIC)
+            .use(PATHS.clientError, pages[EPages.ClientError], RouteAccess.PUBLIC)
+            .use('*', pages[EPages.Navigation], RouteAccess.PUBLIC)
+            .start();
+    });
 
 // function navigate(page: string) {
 //     const container = document.getElementById('app')!;

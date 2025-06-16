@@ -1,4 +1,4 @@
-import { type SignUpRequest } from '../../../core/http-transport/api-types';
+import { type SignUpRequest } from '../../../core/http-transport/swagger-types';
 import { MessageService } from '../../../core/message.service';
 import { RegisterApiService } from './register-api.service';
 import { ERegisterFormFields } from '../types';
