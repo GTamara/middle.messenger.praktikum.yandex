@@ -1,24 +1,25 @@
-import { type SignUpRequest } from '../../../core/http-transport/swagger-types';
-import { MessageService } from '../../../core/message.service';
+import { type SignUpRequest, type UserResponse } from '../../../core/http-transport/swagger-types';
+import { NotificationService } from '../../../core/notification.service';
 import { RegisterApiService } from './register-api.service';
 import { ERegisterFormFields } from '../types';
 import type Router from '../../../core/routing/router';
 import type { StoreService } from '../../../core/store/store.service';
+import type { StoreState } from '../../../shared/types';
 
 export class RegisterController {
-    messageService = new MessageService();
+    messageService = new NotificationService();
     registerApiService = new RegisterApiService();
 
     ERegisterFormFields = ERegisterFormFields;
     router: Router;
-    private store: StoreService = window.store;
+    private store: StoreService<StoreState> = window.store;
 
     constructor() {
         this.router = window.router;
     }
 
     submitFormHandler(event: SubmitEvent) {
-        event.preventDefault(); debugger;
+        event.preventDefault();
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 
@@ -29,7 +30,6 @@ export class RegisterController {
         submitButton.disabled = true;
 
         const formData = new FormData(form);
-        // const data = Object.fromEntries(formData.entries());
         const payload: SignUpRequest = {
             first_name: formData.get(ERegisterFormFields.FIRST_NAME) as string,
             second_name: formData.get(ERegisterFormFields.SECOND_NAME) as string,
@@ -40,8 +40,7 @@ export class RegisterController {
         };
         this.registerApiService.register(payload)
             .then((response) => {
-                this.store.setState('user', response);
-                console.log('response', response);
+                this.store.setState('user', response as UserResponse);
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
                 form.reset();
                 // 1. Сбрасываем кеш авторизации
@@ -58,9 +57,4 @@ export class RegisterController {
                 );
             });
     }
-
-    //     public getUser() {
-    //     UserAPI.getUser()
-    //              .then(data => store.set('user', data);
-    //   }
 }

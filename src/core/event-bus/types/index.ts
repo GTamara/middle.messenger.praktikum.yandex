@@ -7,5 +7,6 @@ export enum EBlockEvents {
 
 export enum EStoreEvents {
 	STORE_CHANGED = 'store:changed',
+    UPDATED = 'store:updated',
 };
 

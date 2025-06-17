@@ -1,4 +1,4 @@
-export class MessageService {
+export class NotificationService {
     showSuccessMessage(message: string) {
         alert(message); // или кастомное уведомление
     }
@@ -9,7 +9,7 @@ export class MessageService {
 
     getErrorMessage(error: unknown): string {
         if (error instanceof Response) {
-            return `Ошибка сервера: ${error.status}`;
+            return `Ошибка: ${error.status}`;
         }
         return 'Произошла ошибка при отправке формы';
     }

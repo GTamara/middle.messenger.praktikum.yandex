@@ -21,14 +21,10 @@ type RequestOptionsWithMethod = RequestOptions & {
     method: EMethod;
 };
 
-// type OptionsWithoutMethod = Omit<RequestOptions, 'method'>;
-
 type HTTPMethod = <R = unknown, P = unknown>(url: string, payload?: P, options?: RequestOptions)
     => Promise<R>;
 
 export class HTTPTransport {
-    // private API_URL: string = 'https://ya-praktikum.tech/api/v2/';
-
     get: HTTPMethod = (
         url,
         payload,
@@ -68,7 +64,11 @@ export class HTTPTransport {
     );
 
     put: HTTPMethod = (url, payload, options = {}) => (
-        this.request(url, payload, { ...options, method: EMethod.PUT })
+        this.request(
+            `${API_URL}${url}`,
+            payload,
+            { ...options, method: EMethod.PUT },
+        )
     );
 
     async request<R>(

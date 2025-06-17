@@ -4,6 +4,7 @@ import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
+import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
 import { getElement } from '../../../../shared/utils';
 import { MessageForm } from '../../components';
 
@@ -17,6 +18,8 @@ export class ChatPage extends Block {
     form: MessageForm;
     messageControlProps: Block;
     searchControlProps: Block<ControlWrapperProps>;
+
+    userDataService = new UserDataService();
 
     constructor(props: ChatProps) {
         super('app-chat-page', {
@@ -50,6 +53,8 @@ export class ChatPage extends Block {
             'search',
             this.setProps.bind(this),
         );
+
+        this.userDataService.storeUserData();
     }
 
     getForm(): MessageForm {

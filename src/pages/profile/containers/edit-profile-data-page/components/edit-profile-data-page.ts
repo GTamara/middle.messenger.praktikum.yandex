@@ -1,10 +1,12 @@
-import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../components';
-import Block from '../../../../core/block';
-import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { PATHS } from '../../../../shared/constants/routing-constants';
-import { getWrappedInputElement } from '../../../../shared/helper-functions';
-import { getElement } from '../../../../shared/utils';
+import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../../components';
+import Block from '../../../../../core/block';
+import FormValidation from '../../../../../core/validation/validation';
+import { getWrappedTextInputPropsForValidation } from '../../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../../shared/constants/routing-constants';
+import { getWrappedInputElement } from '../../../../../shared/helper-functions';
+import { getElement } from '../../../../../shared/utils';
+import { EditProfileDataPageController } from '../services/edit-profile-data-page.controller';
+import { EEditProfileFormFields } from '../types';
 
 type EditProfileDataPageProps = {
     Form: {
@@ -31,17 +33,19 @@ export class EditProfileDataPage extends Block {
     displayNameControlProps: Block;
     phoneControlProps: Block;
 
+    private readonly controller = new EditProfileDataPageController();
+
     constructor(props: EditProfileDataPageProps) {
         super('app-edit-profile-data-page', {
             ...props,
-            formState: {
-                email: '',
-                login: '',
-                firstName: '',
-                lastName: '',
-                displayName: '',
-                phone: '',
-            },
+            // formState: {
+            //     email: '',
+            //     login: '',
+            //     firstName: '',
+            //     lastName: '',
+            //     displayName: '',
+            //     phone: '',
+            // },
             goBackButton: new GoBackButton({
                 routerLink: PATHS.profile,
                 color: 'primary',
@@ -59,6 +63,8 @@ export class EditProfileDataPage extends Block {
         this.phoneControlProps = getWrappedInputElement(this.form.children.PhoneInput);
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
+
+        this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement);
     }
 
     getForm() {
@@ -69,9 +75,7 @@ export class EditProfileDataPage extends Block {
             class: 'button full-width',
             order: 1,
             ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('save password click', e);
-            }),
+            disabled: false,
         });
 
         const cancelButton = new Button({
@@ -81,6 +85,10 @@ export class EditProfileDataPage extends Block {
             class: 'button full-width',
             order: 2,
             ctrlType: 'action',
+            click: ((e: Event) => {
+                console.log('save password click', e);
+                this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement);
+            }),
         });
 
         const emailInput = new ControlWrapper({
@@ -89,7 +97,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'email',
+                name: EEditProfileFormFields.EMAIL,
                 type: 'email',
                 required: true,
                 autocomplete: 'off',
@@ -108,7 +116,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'login',
+                name: EEditProfileFormFields.LOGIN,
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
@@ -127,7 +135,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'firstName',
+                name: EEditProfileFormFields.FIRST_NAME,
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
@@ -146,7 +154,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'lastName',
+                name: EEditProfileFormFields.SECOND_NAME,
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
@@ -165,7 +173,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'displayName',
+                name: EEditProfileFormFields.DISPLAY_NAME,
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
@@ -184,7 +192,7 @@ export class EditProfileDataPage extends Block {
             ctrlType: 'control',
 
             Control: new Input({
-                name: 'phone',
+                name: EEditProfileFormFields.PHONE,
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
@@ -198,16 +206,7 @@ export class EditProfileDataPage extends Block {
         });
 
         return new FormElement({
-            submit: () => {
-                console.log('submit', {
-                    email: this.emailControlProps.attrs.value,
-                    login: this.loginControlProps.attrs.value,
-                    first_name: this.firstNameControlProps.attrs.value,
-                    second_name: this.lastNameControlProps.attrs.value,
-                    display_name: this.displayNameControlProps.attrs.value,
-                    phone: this.phoneControlProps.attrs.value,
-                });
-            },
+            submit: (e: SubmitEvent) => this.controller.submitFormHandler(e),
             EmailInput: emailInput,
             LoginInput: loginInput,
             FirstNameInput: firstNameInput,

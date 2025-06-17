@@ -1,20 +1,29 @@
+import type { UserResponse } from '../../../core/http-transport/swagger-types';
+import type { StoreState } from '../../types';
 import { UserDataApiService } from './user-data-api.service';
 
 export class UserDataService {
-    private data: Record<string, any> | null = null;
+    private data: UserResponse | null = null;
 
-    private store = window.store;
+    private store: StoreState = window.store as StoreState;
     private userDataApiService: UserDataApiService = new UserDataApiService();
 
-    storeUserData() {
+    storeUserData(): Promise<UserResponse> {
+        const userData = this.store.user;
+        if (userData) {
+            return Promise.resolve(userData);
+        }
         return this.userDataApiService.getUserData()
             .then((data) => {
-                this.store.setState('user', data); debugger;
+                console.log('storeUserData');
+                this.store.setState('user', data);
                 console.log('User data', data);
+                return data;
             })
-            .catch((e: Error) => {
+            .catch((e: unknown) => {
                 console.error('getUserData error', e);
                 this.store.setState('user', null);
+                throw e;
             });
     }
 }

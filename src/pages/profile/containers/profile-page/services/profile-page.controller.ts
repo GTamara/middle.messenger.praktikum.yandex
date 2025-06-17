@@ -1,21 +1,17 @@
 import type { UserResponse } from '../../../../../core/http-transport/swagger-types';
-import { MessageService } from '../../../../../core/message.service';
+import { NotificationService } from '../../../../../core/notification.service';
 import type { StoreService } from '../../../../../core/store/store.service';
+import type { StoreState } from '../../../../../shared/types';
 import { ProfileApiService } from './profile-page-api.service';
 
 export class ProfilePageController {
-    messageService = new MessageService();
+    messageService = new NotificationService();
     api = new ProfileApiService();
 
-    private store: StoreService = window.store;
+    private store: StoreService<StoreState> = window.store;
     userData: UserResponse | null;
 
     constructor() {
-        this.userData = this.store.getState().get('user');
+        this.userData = this.store.getState().user;
     }
-
-    //     public getUser() {
-    //     UserAPI.getUser()
-    //              .then(data => store.set('user', data);
-    //   }
 }

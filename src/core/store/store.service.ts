@@ -1,74 +1,33 @@
 import type { Indexed } from '../../shared/types';
 import EventBus from '../event-bus/event-bus';
-import type { EStoreEvents } from '../event-bus/types';
+import { EStoreEvents } from '../event-bus/types';
 
-export class StoreService extends EventBus<EStoreEvents> {
-    private static _state: Map<string, any> = new Map<string, any>();
-    static __instance: StoreService;
-    constructor() {
+export class StoreService<T extends Indexed> extends EventBus<EStoreEvents> {
+    private _state: T;
+    static __instance: StoreService<any>;
+    private constructor(initialState: T) {
         super();
-        if (StoreService.__instance) {
-            return StoreService.__instance;
+        this._state = initialState;
+    }
+
+    // Создаёт или возвращает существующий экземпляр
+    public static getInstance<T extends Indexed>(initialState: T): StoreService<T> {
+        if (!StoreService.__instance) {
+            StoreService.__instance = new StoreService(initialState);
         }
-
-        // this.routes = [];
-        // this.history = window.history;
-        // this._rootQuery = rootQuery;
-
-        StoreService.__instance = this;
+        return StoreService.__instance as StoreService<T>;
     }
 
-    getState() {
-        return StoreService._state;
+    getState(): T {
+        return this._state;
     }
 
-    setState(path: string, value: unknown) {
-        this.set(StoreService._state, path, value);
+    setState<K extends keyof T & string>(path: K, value: T[K]): void {
+        this._set(path, value);
     };
 
-    private set(object: Indexed | unknown, path: string, value: unknown): Indexed | any {
-        if (typeof path !== 'string') {
-            throw new Error('path must be a string');
-        }
-        StoreService._state.set(path, value);
-        const obj = this.getObjectFromPath(path, value);
-        return this.merge(object as Indexed, obj);
-    }
-
-    private getObjectFromPath(path: string, value: any): Record<string, any> {
-        return StoreService._state.get(path);
-        // const arraySegments = path.split('.');
-
-        // return arraySegments.reduceRight((acc, segment, index) => {
-        //     if (index === arraySegments.length - 1) {
-        //         acc[segment] = value;
-        //     } else {
-        //         acc = {
-        //             [segment]: acc,
-        //         };
-        //     }
-
-        //     return acc;
-        // }, {} as Indexed);
-    }
-
-    private merge(lhs: Indexed, rhs: Indexed): Indexed {
-        for (const p in rhs) {
-            if (!rhs.hasOwnProperty(p)) {
-                continue;
-            }
-
-            try {
-                if (rhs[p].constructor === Object) {
-                    // if (rhs[p].constructor === Object) {
-                    rhs[p] = this.merge(lhs[p] as Indexed, rhs[p] as Indexed);
-                } else {
-                    lhs[p] = rhs[p];
-                }
-            } catch (e) {
-                lhs[p] = rhs[p];
-            }
-        }
-        return lhs;
+    private _set<K extends keyof T & string>(path: K, value: T[K]): void {
+        this._state[path] = value;
+        this.emit(EStoreEvents.UPDATED);
     }
 }

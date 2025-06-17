@@ -9,6 +9,7 @@ export type ButtonProps = {
     order?: number;
     ctrlType?: 'action';
     icon?: string;
+    disabled?: boolean;
     click?: (e: Event) => void;
 }
 

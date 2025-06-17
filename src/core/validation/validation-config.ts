@@ -1,47 +1,47 @@
 import type Block from '../block';
 
 export type ValidationConfig = {
-	form: {
-		element: HTMLFormElement;
-		attrs: AttrsObject;
-	};
-	controls: {
-		[key: string]: {
-			attrs: AttrsObject;
-			events?: { [key: string]: <T extends Event | undefined>(e?: T) => void; };
-		};
-	};
-	// Кнопка submit
-	submitAction: {
-		[key: string]: Block;
-	};
-	// Кнопка отмены
-	cancelAction?: {
-		[key: string]: Block;
-	};
-	submitHandler: <T extends Event | undefined>(e?: T) => void;
+    form: {
+        element: HTMLFormElement;
+        attrs: AttrsObject;
+    };
+    controls: {
+        [key: string]: {
+            attrs: AttrsObject;
+            events?: { [key: string]: <T extends Event | undefined>(e?: T) => void; };
+        };
+    };
+    // Кнопка submit
+    submitAction: {
+        [key: string]: Block;
+    };
+    // Кнопка отмены
+    cancelAction?: {
+        [key: string]: Block;
+    };
+    submitHandler: <T extends Event | undefined>(e?: T) => void;
 };
 
 export type AttrsObject = {
-	// element: string;
-	name?: string;
-	invalid?: string;
-	class?: string;
-	disabled?: boolean;
-	pattern?: string;
+    // element: string;
+    name?: string;
+    invalid?: string;
+    class?: string;
+    disabled?: boolean;
+    pattern?: string;
 
-	[key: string]: string | boolean | undefined;
+    [key: string]: string | boolean | undefined;
 
 };
 
 type ValidationRule = {
-	pattern: RegExp | string;
-	error: string;
-	validate?: (value: string) => boolean; // Альтернатива pattern
+    pattern: RegExp | string;
+    error: string;
+    validate?: (value: string) => boolean; // Альтернатива pattern
 };
 
 type ValidationRules = {
-	[fieldName: string]: ValidationRule;
+    [fieldName: string]: ValidationRule;
 };
 
 type FormState = {
@@ -64,6 +64,10 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Латиница или кириллица, первая заглавная, без пробелов и цифр',
     },
     second_name: {
+        pattern: /^[A-ZА-ЯЁ][a-zа-яё-]*$/,
+        error: 'Латиница или кириллица, первая заглавная, без пробелов и цифр',
+    },
+    display_name: {
         pattern: /^[A-ZА-ЯЁ][a-zа-яё-]*$/,
         error: 'Латиница или кириллица, первая заглавная, без пробелов и цифр',
     },
