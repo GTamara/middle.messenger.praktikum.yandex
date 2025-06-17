@@ -15,9 +15,7 @@ export class UserDataService {
         }
         return this.userDataApiService.getUserData()
             .then((data) => {
-                console.log('storeUserData');
                 this.store.setState('user', data);
-                console.log('User data', data);
                 return data;
             })
             .catch((e: unknown) => {

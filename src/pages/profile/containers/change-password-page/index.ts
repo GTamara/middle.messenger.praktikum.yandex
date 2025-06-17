@@ -1,2 +1,2 @@
-import './change-password-page.pcss';
-export { ChangePasswordPage as default } from './change-password-page';
+import './components/change-password-page.pcss';
+export { ChangePasswordPage as default } from './components/change-password-page';

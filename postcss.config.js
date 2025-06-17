@@ -5,14 +5,16 @@ import nested from 'postcss-nested';
 import postcssMixins from 'postcss-mixins';
 // import cssnanoPlugin from 'cssnano';
 import postcssCombiner from 'postcss-combine-duplicated-selectors';
+import postcssMediaMinmax from 'postcss-media-minmax';
 
 export default {
 	parser: 'postcss-scss',
 	plugins: [
-		nested(),
-		autoprefixer(),
 		postcssImport(),
+        postcssMediaMinmax(),
 		postcssMixins(),
+        nested(),
+        autoprefixer(),
 		postcssCombiner(),
 		// cssnanoPlugin(),
 	],

@@ -25,7 +25,6 @@ export default class GoBackButton extends Block<GoBackButtonProps> {
             click: (e: Event) => {
                 e.preventDefault();
                 const routerLink = props.routerLink;
-                console.log('click', e);
                 if (routerLink) {
                     window.router.go(routerLink);
                 } else {
@@ -36,7 +35,6 @@ export default class GoBackButton extends Block<GoBackButtonProps> {
     }
 
     componentDidUpdate(oldProps: GoBackButtonProps, newProps: GoBackButtonProps): boolean {
-        console.log('componentDidUpdate', oldProps !== newProps, oldProps, newProps);
         return !areObjectsDeepEqual(oldProps, newProps);
     }
 

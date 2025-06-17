@@ -1,4 +1,4 @@
-import { GoBackButton } from '../../../../../components';
+import { Button, GoBackButton } from '../../../../../components';
 import Block from '../../../../../core/block';
 import type { UserResponse } from '../../../../../core/http-transport/swagger-types';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
@@ -21,7 +21,7 @@ type EditProfileDataPageProps = {
 }
 
 export class ProfilePage extends Block {
-    profilePageController: ProfilePageController = new ProfilePageController();
+    controller: ProfilePageController = new ProfilePageController();
     userData: UserResponse | null = null;
     store: StoreState = window.store as StoreState;
     userDataService: UserDataService = new UserDataService();
@@ -33,6 +33,16 @@ export class ProfilePage extends Block {
                 routerLink: PATHS.chat,
                 color: 'primary',
             }),
+            SignOutButton: new Button({
+                label: 'Sign out',
+                type: 'button',
+                color: 'warn',
+                class: 'button',
+                icon: 'logout',
+                click: (() => {
+                    this.controller.logoutHandler();
+                }),
+            }),
         });
         this.userDataService.storeUserData()
             .then((data) => {
@@ -42,7 +52,6 @@ export class ProfilePage extends Block {
     }
 
     getChildren() {
-        console.log('userData', this.userData);
         return {
             EmailDataItem: new ProfileDataItem({ label: 'E-mail', value: this.userData?.email ?? '' }),
             LoginDataItem: new ProfileDataItem({ label: 'Login', value: this.userData?.login ?? '' }),
@@ -73,7 +82,7 @@ export class ProfilePage extends Block {
                     <div class="profile-page__actions">
                         {{> Link href="${PATHS.editProfile}" label="Edit profile details" page="register" }}
                         {{> Link href="${PATHS.changePassword}" label="Change password" page="register" }}
-                        {{> Link href="${PATHS.login}" label="Sign out" page="register" color="danger" }}
+                        {{{SignOutButton}}}
                     </div>
                 {{/ Card}}
             {{/ ProfileLayout}}

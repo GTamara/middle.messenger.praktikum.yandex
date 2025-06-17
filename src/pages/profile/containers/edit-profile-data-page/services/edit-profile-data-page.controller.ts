@@ -25,11 +25,10 @@ export class EditProfileDataPageController {
 
         this.api.editProfileData(payload)
             .then((response) => {
-                console.log('response', response);
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
             })
             .catch((error) => {
-                console.log('login error', error);
+                console.error('login error', error);
                 // Обработка ошибок
                 this.messageService.showErrorMessage(
                     this.messageService.getErrorMessage(error),
@@ -60,7 +59,6 @@ export class EditProfileDataPageController {
             .then((userData) => {
                 if (userData) {
                     Object.values(EEditProfileFormFields).forEach((controlName) => {
-                        console.log(form.elements);
                         const input = form.elements.namedItem(controlName) as HTMLInputElement;
                         if (input) {
                             input.value = userData[controlName as keyof UserUpdateRequest];

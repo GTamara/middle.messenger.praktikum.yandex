@@ -4,7 +4,7 @@ import { areObjectsDeepEqual } from '../../shared/utils';
 export type ButtonProps = {
     label?: string;
     type?: 'submit' | 'button';
-    color?: 'primary' | 'basic';
+    color?: 'primary' | 'basic' | 'warn';
     class?: string;
     order?: number;
     ctrlType?: 'action';
@@ -21,7 +21,6 @@ export default class Button extends Block<ButtonProps> {
     }
 
     componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
-        console.log('componentDidUpdate', oldProps !== newProps, oldProps, newProps);
         return !areObjectsDeepEqual(oldProps, newProps);
     }
 

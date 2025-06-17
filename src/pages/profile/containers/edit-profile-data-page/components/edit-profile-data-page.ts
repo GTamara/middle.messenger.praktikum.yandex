@@ -86,7 +86,6 @@ export class EditProfileDataPage extends Block {
             order: 2,
             ctrlType: 'action',
             click: ((e: Event) => {
-                console.log('save password click', e);
                 this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement);
             }),
         });

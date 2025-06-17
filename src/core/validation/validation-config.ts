@@ -34,15 +34,9 @@ export type AttrsObject = {
 
 };
 
-type ValidationRule = {
-    pattern: RegExp | string;
-    error: string;
-    validate?: (value: string) => boolean; // Альтернатива pattern
-};
-
-type ValidationRules = {
-    [fieldName: string]: ValidationRule;
-};
+// type ValidationRules = {
+//     [fieldName: string]: ValidationRule;
+// };
 
 type FormState = {
     [fieldName: string]: string;
@@ -56,6 +50,23 @@ export const DEFAULT_VALIDATION_CONFIG = {
     invalidAttribute: 'invalid',
     errorMessageSelector: 'error-message',
     submitButtonSelector: '[type="submit"]',
+};
+
+type ValidationRule = {
+    pattern: RegExp | string;
+    error: string;
+    validate?: (value: string) => boolean; // Альтернатива pattern
+};
+
+type ValidationRules = {
+    first_name: ValidationRule;
+    second_name: ValidationRule;
+    display_name: ValidationRule;
+    login: ValidationRule;
+    email: ValidationRule;
+    password: ValidationRule;
+    phone: ValidationRule;
+    message: ValidationRule;
 };
 
 export const DEFAULT_VALIDATION_RULES: ValidationRules = {
@@ -83,10 +94,10 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
         error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
     },
-    repeatPassword: {
-        pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
-        error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
-    },
+    // repeatPassword: {
+    //     pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
+    //     error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
+    // },
     phone: {
         pattern: /^\+?\d{10,15}$/,
         error: 'От 10 до 15 цифр, может начинаться с плюса',
@@ -95,4 +106,6 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         pattern: /.+/,
         error: 'Сообщение не может быть пустым',
     },
-};
+} as const;
+
+export type ValidationRuleKeys = keyof typeof DEFAULT_VALIDATION_RULES;

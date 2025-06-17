@@ -56,9 +56,6 @@ export class LoginPage extends Block {
             class: 'button full-width',
             order: 1,
             ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('click "Sign in" button from component. It might be additional actions here', e);
-            }),
         });
 
         const cancelButton = new Button({
@@ -81,7 +78,6 @@ export class LoginPage extends Block {
                 required: true,
                 autocomplete: 'off',
                 input: ((e: Event) => {
-                    console.log('login input');
                     this.setValue(e, this.loginControlProps);
                 }),
                 change: ((e: Event) => {
@@ -100,6 +96,7 @@ export class LoginPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
                     this.setValue(e, this.passwordControlProps);
                 }),

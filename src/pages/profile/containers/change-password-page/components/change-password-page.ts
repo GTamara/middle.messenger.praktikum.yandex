@@ -1,10 +1,11 @@
-import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../components';
-import Block from '../../../../core/block';
-import FormValidation from '../../../../core/validation/validation';
-import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { PATHS } from '../../../../shared/constants/routing-constants';
-import { getWrappedInputElement } from '../../../../shared/helper-functions';
-import { getElement } from '../../../../shared/utils';
+import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../../components';
+import Block from '../../../../../core/block';
+import FormValidation from '../../../../../core/validation/validation';
+import { getWrappedTextInputPropsForValidation } from '../../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../../shared/constants/routing-constants';
+import { getWrappedInputElement } from '../../../../../shared/helper-functions';
+import { getElement } from '../../../../../shared/utils';
+import { ChangePasswordController } from '../services/change-password.controller';
 
 type ChangePasswordPageProps = {
     Form: {
@@ -24,6 +25,8 @@ export class ChangePasswordPage extends Block {
     oldPasswordControlProps: Block;
     newPasswordControlProps: Block;
     repeatPasswordControlProps: Block;
+
+    private readonly controller = new ChangePasswordController();
 
     constructor(props: ChangePasswordPageProps) {
         super('app-change-password-page', {
@@ -86,6 +89,7 @@ export class ChangePasswordPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
                     this.setValue(e, this.oldPasswordControlProps);
                 }),
@@ -105,6 +109,7 @@ export class ChangePasswordPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
                     this.setValue(e, this.newPasswordControlProps);
                 }),
@@ -124,6 +129,7 @@ export class ChangePasswordPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
                     this.setValue(e, this.repeatPasswordControlProps);
                 }),
@@ -134,12 +140,7 @@ export class ChangePasswordPage extends Block {
         });
 
         return new FormElement({
-            submit: () => {
-                console.log('submit', {
-                    oldPassword: this.oldPasswordControlProps.attrs.value,
-                    newPassword: this.newPasswordControlProps.attrs.value,
-                });
-            },
+            submit: (e: SubmitEvent) => this.controller.submitFormHandler(e),
             OldPasswordInput: oldPasswordInput,
             NewPasswordInput: newPasswordInput,
             RepeatPasswordInput: repeatPasswordInput,

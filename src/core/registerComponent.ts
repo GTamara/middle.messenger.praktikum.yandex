@@ -8,7 +8,6 @@ export interface BlockConstructable<P> {
 export default function registerComponent<Props>(
     Component: BlockConstructable<Props>,
 ) {
-    console.log('!!!!!registerComponent');
     Handlebars.registerHelper(
         Component.name,
         function(

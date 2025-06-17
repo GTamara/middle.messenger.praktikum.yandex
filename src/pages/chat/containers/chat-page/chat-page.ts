@@ -34,7 +34,6 @@ export class ChatPage extends Block {
                     type: 'text',
                     autocomplete: 'off',
                     input: ((e: Event) => {
-                        console.log('login input');
                         this.setValue(e, this.searchControlProps);
                     }),
                 }),

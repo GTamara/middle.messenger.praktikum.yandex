@@ -1,5 +1,11 @@
 import EventBus from '../event-bus/event-bus';
-import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type AttrsObject, type ValidationConfig } from './validation-config';
+import {
+    DEFAULT_VALIDATION_CONFIG,
+    DEFAULT_VALIDATION_RULES,
+    type AttrsObject,
+    type ValidationConfig,
+    type ValidationRuleKeys,
+} from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
@@ -41,8 +47,12 @@ export default class FormValidation {
     }
 
     checkControlValidity(control: HTMLInputElement) {
-        const nameAttr = control.getAttribute('name') ?? '';
-        const isValid = new RegExp(DEFAULT_VALIDATION_RULES[nameAttr].pattern).test(control.value);
+        const validationRuleAttr = control.getAttribute('validationRuleName') ?
+            control.getAttribute('validationRuleName') :
+            control.getAttribute('name') as ValidationRuleKeys;
+        // const nameAttr = control.getAttribute('name') ?? '';
+        const validationRule = DEFAULT_VALIDATION_RULES[validationRuleAttr as ValidationRuleKeys];
+        const isValid = new RegExp(validationRule.pattern).test(control.value);
         if (isValid) {
             this.toggleErrorVisibility(true, control);
             if (this.isFormValid()) {
@@ -50,7 +60,7 @@ export default class FormValidation {
                 this.clearValidation();
             }
         } else {
-            this.toggleErrorVisibility(false, control, DEFAULT_VALIDATION_RULES[nameAttr].error);
+            this.toggleErrorVisibility(false, control, validationRule.error);
             this.toggleSubmitButtonState(false);
         }
     }
@@ -73,9 +83,11 @@ export default class FormValidation {
         if (isValid) {
             errorMessageElement.style.display = 'none';
             errorMessageElement.textContent = '';
+            control.classList.remove('error');
         } else {
             errorMessageElement.style.display = 'block';
             errorMessageElement.textContent = errorMessage;
+            control.classList.add('error');
         }
     }
 

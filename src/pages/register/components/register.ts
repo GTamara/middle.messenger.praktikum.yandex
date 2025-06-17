@@ -75,9 +75,6 @@ export class RegisterPage extends Block {
             class: 'button full-width',
             order: 1,
             ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('click Sign in button', e);
-            }),
         });
 
         const cancelButton = new Button({
@@ -103,7 +100,6 @@ export class RegisterPage extends Block {
                 required: true,
                 autocomplete: 'email',
                 input: ((e: Event) => {
-                    console.log('email input');
                     this.setValue(e, this.emailControlProps);
                 }),
                 change: ((e: Event) => {
@@ -123,7 +119,6 @@ export class RegisterPage extends Block {
                 required: true,
                 autocomplete: 'off',
                 input: ((e: Event) => {
-                    console.log('login input');
                     this.setValue(e, this.loginControlProps);
                 }),
                 change: ((e: Event) => {
@@ -143,7 +138,6 @@ export class RegisterPage extends Block {
                 required: true,
                 autocomplete: 'given-name',
                 input: ((e: Event) => {
-                    console.log('name input');
                     this.setValue(e, this.firstNameControlProps);
                 }),
                 change: ((e: Event) => {
@@ -163,7 +157,6 @@ export class RegisterPage extends Block {
                 required: true,
                 autocomplete: 'family-name',
                 input: ((e: Event) => {
-                    console.log('last name input');
                     this.setValue(e, this.lastNameControlProps);
                 }),
                 change: ((e: Event) => {
@@ -183,7 +176,6 @@ export class RegisterPage extends Block {
                 required: true,
                 autocomplete: 'tel',
                 input: ((e: Event) => {
-                    console.log('phone input');
                     this.setValue(e, this.phoneControlProps);
                 }),
                 change: ((e: Event) => {
@@ -202,6 +194,7 @@ export class RegisterPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
                     this.setValue(e, this.passwordControlProps);
                 }),
@@ -221,8 +214,8 @@ export class RegisterPage extends Block {
                 type: 'password',
                 required: true,
                 autocomplete: 'off',
+                validationRuleName: 'password',
                 input: ((e: Event) => {
-                    console.log('repeat password input');
                     this.setValue(e, this.repeatPasswordControlProps);
                 }),
                 change: ((e: Event) => {
