@@ -8,8 +8,10 @@ export type InputProps = {
     required?: boolean;
     icon?: string;
     validationRuleName?: ValidationRuleKeys;
+    class?: string;
+    id?: string;
     input?: (e: Event) => void;
-    change?: (e: Event) => void;
+    change?: (e: any) => void;
 };
 
 export default class Input extends Block<InputProps> {

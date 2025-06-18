@@ -1,10 +1,12 @@
-import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../../components';
+import { Avatar, Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../../components';
+import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.types';
 import Block from '../../../../../core/block';
 import FormValidation from '../../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { getWrappedInputElement } from '../../../../../shared/helper-functions';
 import { getElement } from '../../../../../shared/utils';
+import { AvatarUploader } from '../../../components';
 import { EditProfileDataPageController } from '../services/edit-profile-data-page.controller';
 import { EEditProfileFormFields } from '../types';
 
@@ -35,6 +37,8 @@ export class EditProfileDataPage extends Block {
 
     private readonly controller = new EditProfileDataPageController();
 
+    private readonly store = window.store;
+
     constructor(props: EditProfileDataPageProps) {
         super('app-edit-profile-data-page', {
             ...props,
@@ -50,6 +54,7 @@ export class EditProfileDataPage extends Block {
                 routerLink: PATHS.profile,
                 color: 'primary',
             }),
+
         });
         this.setChildren({
             Form: this.getForm(),
@@ -64,7 +69,27 @@ export class EditProfileDataPage extends Block {
 
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
 
-        this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement);
+        this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement)
+            .then(() => {
+                this.setChildren({
+                    avatar: new Avatar({
+                        size: EAvatarSizes.LARGE,
+                        imageSrc: this.store.getState().user.avatar,
+                    }),
+                    avatarUploader: new AvatarUploader({
+                        size: EAvatarSizes.LARGE,
+                        imageSrc: this.store.getState().user.avatar,
+                        class: 'edit-profile__avatar-uploader',
+                    }),
+                });
+            });
+        console.log('this.store.getState().user.avatar', this.store.getState());
+        // this.setChildren({
+        //     avatar: this.store.getState().user.avatar,
+        // })
+        // .avatar.setProps({
+        //     imageSrc: this.store.getState().user.avatar,
+        // });
     }
 
     getForm() {
@@ -285,6 +310,8 @@ export class EditProfileDataPage extends Block {
                         <h2 class="card__title">
                             Edit profile details
                         </h2>
+                        {{{avatarUploader}}}
+                        
                         {{{ Form}}}
                     </div>
                 {{/ Card}}

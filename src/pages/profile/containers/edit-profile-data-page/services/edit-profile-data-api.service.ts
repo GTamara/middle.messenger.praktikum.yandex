@@ -1,5 +1,5 @@
 import { HTTPTransport } from '../../../../../core/http-transport/http-transport';
-import type { UserResponse, UserUpdateRequest } from '../../../../../core/http-transport/swagger-types';
+import type { UserResponse, UserUpdateRequest } from '../../../../../core/http-transport/types/swagger-types';
 
 export class EditProfileDataApiService {
     http = new HTTPTransport();

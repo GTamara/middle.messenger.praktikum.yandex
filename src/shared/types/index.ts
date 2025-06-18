@@ -1,4 +1,4 @@
-import type { UserResponse } from '../../core/http-transport/swagger-types';
+import type { UserResponse } from '../../core/http-transport/types/swagger-types';
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
 

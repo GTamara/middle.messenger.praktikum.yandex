@@ -1,6 +1,6 @@
 import Block from '../../core/block';
 import type Router from '../../core/routing/router';
-import { areObjectsDeepEqual } from '../../shared/utils';
+import isEqual from '../../shared/utils/is-equal';
 
 export type GoBackButtonProps = {
     color?: 'primary' | 'basic';
@@ -35,7 +35,7 @@ export default class GoBackButton extends Block<GoBackButtonProps> {
     }
 
     componentDidUpdate(oldProps: GoBackButtonProps, newProps: GoBackButtonProps): boolean {
-        return !areObjectsDeepEqual(oldProps, newProps);
+        return !isEqual(oldProps, newProps);
     }
 
     render() {

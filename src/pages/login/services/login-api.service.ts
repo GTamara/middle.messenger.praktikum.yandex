@@ -1,4 +1,4 @@
-import type { SignInRequest } from '../../../core/http-transport/swagger-types';
+import type { SignInRequest } from '../../../core/http-transport/types/swagger-types';
 import { HTTPTransport } from '../../../core/http-transport/http-transport';
 
 export class LoginApiService {

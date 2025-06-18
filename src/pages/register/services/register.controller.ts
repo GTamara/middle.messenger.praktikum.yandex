@@ -1,4 +1,4 @@
-import { type SignUpRequest, type UserResponse } from '../../../core/http-transport/swagger-types';
+import { type SignUpRequest, type UserResponse } from '../../../core/http-transport/types/swagger-types';
 import { NotificationService } from '../../../core/notification.service';
 import { RegisterApiService } from './register-api.service';
 import { ERegisterFormFields } from '../types';

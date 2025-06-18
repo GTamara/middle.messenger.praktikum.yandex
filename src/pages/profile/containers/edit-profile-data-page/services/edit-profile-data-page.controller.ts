@@ -1,4 +1,4 @@
-import type { UserUpdateRequest } from '../../../../../core/http-transport/swagger-types';
+import type { UserResponse, UserUpdateRequest } from '../../../../../core/http-transport/types/swagger-types';
 import { NotificationService } from '../../../../../core/notification.service';
 import { UserDataService } from '../../../../../shared/services/user-data/user-data.controller';
 import { EEditProfileFormFields } from '../types';
@@ -54,8 +54,8 @@ export class EditProfileDataPageController {
         return payload;
     }
 
-    fillFormWithStoredData(form: HTMLFormElement) {
-        this.userDataService.storeUserData()
+    fillFormWithStoredData(form: HTMLFormElement): Promise<UserResponse> {
+        return this.userDataService.storeUserData()
             .then((userData) => {
                 if (userData) {
                     Object.values(EEditProfileFormFields).forEach((controlName) => {

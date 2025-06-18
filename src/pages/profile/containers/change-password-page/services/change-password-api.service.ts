@@ -1,5 +1,5 @@
 import { HTTPTransport } from '../../../../../core/http-transport/http-transport';
-import type { ChangePasswordRequest } from '../../../../../core/http-transport/swagger-types';
+import type { ChangePasswordRequest } from '../../../../../core/http-transport/types/swagger-types';
 
 export class ChangePasswordApiService {
     http = new HTTPTransport();

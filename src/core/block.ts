@@ -69,7 +69,9 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
 
         if (typeof attrs === 'object') {
             Object.entries(attrs).forEach(([attrName, attrValue]) => {
-                this._element.setAttribute(attrName, attrValue.toString());
+                if (attrValue !== null && attrValue !== undefined) {
+                    this._element.setAttribute(attrName, attrValue.toString());
+                }
             });
         }
     }
@@ -213,7 +215,6 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
                 });
             } else {
                 const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-
                 stub?.replaceWith(child.getContent());
             }
         });

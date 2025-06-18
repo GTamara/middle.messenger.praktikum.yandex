@@ -1,4 +1,4 @@
-import type { UserResponse } from '../../../../../core/http-transport/swagger-types';
+import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
 import { NotificationService } from '../../../../../core/notification.service';
 import type { StoreService } from '../../../../../core/store/store.service';
 import type { StoreState } from '../../../../../shared/types';

@@ -24,6 +24,18 @@ type RequestOptionsWithMethod = RequestOptions & {
 type HTTPMethod = <R = unknown, P = unknown>(url: string, payload?: P, options?: RequestOptions)
     => Promise<R>;
 
+enum EPayloadType {
+    JSON = 'json',
+    FORM_DATA = 'form-data',
+    TEXT = 'text',
+    BLOB = 'blob',
+}
+
+interface RequestdHandlers<T = any> {
+    getBody: (payload: T) => BodyInit;
+    getHeaders: () => Record<string, string>;
+}
+
 export class HTTPTransport {
     get: HTTPMethod = (
         url,
@@ -79,18 +91,18 @@ export class HTTPTransport {
         const {
             method,
             headers = {},
-            // timeout = 5000,
         } = options;
-
+        const payloadType = this.detectPayloadType(payload);
+        const requestHandlers: RequestdHandlers = this.getRequestHandlersByPayloadType(payloadType);
         const response = await fetch(url, {
             method,
             credentials: 'include',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json',
+                ...requestHandlers.getHeaders(),
                 ...headers,
             },
-            body: payload ? JSON.stringify(payload) : null,
+            body: payload ? requestHandlers.getBody(payload) : null,
         });
 
         if (!response.ok) {
@@ -103,5 +115,49 @@ export class HTTPTransport {
         }
 
         return response.text() as R;
+    }
+
+    // Метод для автоматического определения типа payload
+    private detectPayloadType(payload: any): EPayloadType {
+        if (payload instanceof FormData) return EPayloadType.FORM_DATA;
+        if (typeof payload === 'string') return EPayloadType.TEXT;
+        if (payload instanceof Blob) return EPayloadType.BLOB;
+        return EPayloadType.JSON; // По умолчанию считаем JSON
+    }
+
+    private getRequestHandlersByPayloadType(type: EPayloadType): RequestdHandlers {
+        // Базовый обработчик JSON
+        const jsonHandlers: RequestdHandlers<object> = {
+            getBody: (payload) => JSON.stringify(payload),
+            getHeaders: () => ({ 'Content-Type': 'application/json' }),
+        };
+
+        // Обработчик FormData
+        const formDataHandlers: RequestdHandlers<FormData> = {
+            getBody: (payload) => payload,
+            getHeaders: () => ({}), // Для FormData заголовки установит браузер
+        };
+
+        // Обработчик простого текста
+        const textHandlers: RequestdHandlers<string> = {
+            getBody: (payload) => payload,
+            getHeaders: () => ({ 'Content-Type': 'text/plain' }),
+        };
+
+        const blobHandlers: RequestdHandlers<Blob> = {
+            getBody: (payload) => payload,
+            getHeaders: () => ({ 'Content-Type': 'application/octet-stream' }),
+        };
+
+        switch (type) {
+        case EPayloadType.FORM_DATA:
+            return formDataHandlers;
+        case EPayloadType.JSON:
+            return jsonHandlers;
+        case EPayloadType.TEXT:
+            return textHandlers;
+        case EPayloadType.BLOB:
+            return blobHandlers;
+        };
     }
 }

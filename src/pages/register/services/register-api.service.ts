@@ -1,5 +1,5 @@
 import { HTTPTransport } from '../../../core/http-transport/http-transport';
-import type { SignUpRequest, SignUpResponse } from '../../../core/http-transport/swagger-types';
+import type { SignUpRequest, SignUpResponse } from '../../../core/http-transport/types/swagger-types';
 
 export class RegisterApiService {
     http = new HTTPTransport();

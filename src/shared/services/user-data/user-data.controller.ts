@@ -1,4 +1,4 @@
-import type { UserResponse } from '../../../core/http-transport/swagger-types';
+import type { UserResponse } from '../../../core/http-transport/types/swagger-types';
 import type { StoreState } from '../../types';
 import { UserDataApiService } from './user-data-api.service';
 

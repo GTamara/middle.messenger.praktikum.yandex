@@ -1,6 +1,7 @@
-import { Button, GoBackButton } from '../../../../../components';
+import { Avatar, Button, GoBackButton } from '../../../../../components';
+import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.types';
 import Block from '../../../../../core/block';
-import type { UserResponse } from '../../../../../core/http-transport/swagger-types';
+import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../../shared/services/user-data/user-data.controller';
 import type { StoreState } from '../../../../../shared/types';
@@ -43,11 +44,18 @@ export class ProfilePage extends Block {
                     this.controller.logoutHandler();
                 }),
             }),
+            avatar: new Avatar({
+                size: EAvatarSizes.LARGE,
+                // imageSrc: props.imageSrc,
+            }),
         });
         this.userDataService.storeUserData()
             .then((data) => {
                 this.userData = data;
                 this.setChildren(this.getChildren());
+                (this.children.avatar as Block).setProps({
+                    imageSrc: this.userData.avatar,
+                });
             });
     }
 
@@ -69,7 +77,7 @@ export class ProfilePage extends Block {
                 {{#> Card class='full-width gap-2' }}
                      {{{goBackButton}}}
                     <div class="profile-page__container">
-                        {{> Avatar size="large" }}
+                        {{{avatar}}}
                     </div>
                     <h1>${userName}</h1>
                     {{{EmailDataItem}}}
