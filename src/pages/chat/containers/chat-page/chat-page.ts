@@ -1,4 +1,4 @@
-import { Button, ControlWrapper, Input } from '../../../../components';
+import { Button, ControlWrapper, Input, Popover } from '../../../../components';
 import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
 import FormValidation from '../../../../core/validation/validation';
@@ -6,11 +6,12 @@ import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation }
 import { PATHS } from '../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
 import { getElement } from '../../../../shared/utils';
-import { MessageForm } from '../../components';
+import { ChatHeaderMenu, MessageForm } from '../../components';
 
 type ChatProps = {
     SearchInput: ControlWrapper;
     Form: MessageForm;
+    popover: Block;
 }
 
 export class ChatPage extends Block {
@@ -38,6 +39,13 @@ export class ChatPage extends Block {
                     }),
                 }),
             }),
+            // popover: new Popover({
+            //     options: [
+            //         'Добавить пользователя',
+            //         'Добавить группу',
+            //     ]
+            // }),
+            chatHeaderMenu: new ChatHeaderMenu({}),
         });
         this.setChildren({
             Form: this.getForm(),
@@ -139,8 +147,12 @@ export class ChatPage extends Block {
         </div>
     </div>
     <div class="chat-container__selected-chat-content chat">
-        <div class="chat__header-title">
-            Chat
+        <div class="chat__header">
+            <div class="chat__header-title">
+                Chat
+                
+            </div>
+            {{{ chatHeaderMenu }}}
         </div>
         <div class="chat__content"></div>
         <div class="chat__footer">

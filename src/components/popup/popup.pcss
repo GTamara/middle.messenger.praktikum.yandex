@@ -1,0 +1,39 @@
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    height: 250px;
+    border: none;
+    padding: 0;
+    color: #000;
+    text-align: center;
+    background-color: #FFF;
+    transform: translate(-50%, -50%);
+        box-shadow:
+        rgb(150 150 150 / 20%) 0 -25px 18px -14px inset,
+        rgb(150 150 150 / 10%) 0 1px 2px,
+        rgb(150 150 150 / 10%) 0 2px 4px,
+        rgb(150 150 150 / 10%) 0 2px 8px, 
+        rgb(150 150 150 / 10%) 0 4px 16px !important;
+
+    &__wrapper {
+        padding: 1em;
+    }
+}
+
+dialog::backdrop {
+    background-color: rgb(0 0 0 / 70%);
+}
+
+.close-dialog-btn {
+    position: absolute;
+    inset-block-start: 2px;
+    inset-inline-end: 2px;
+    border-radius: 6px;
+    transition: background-color 0.2s linear;
+}
+
+.scroll-lock {
+    overflow: hidden;
+}

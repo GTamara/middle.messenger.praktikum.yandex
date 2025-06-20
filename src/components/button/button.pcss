@@ -1,5 +1,9 @@
 @import '../../styles/mixins.pcss';
 
+button {
+    cursor: pointer;
+}
+
 .button {
 	border-radius: 50px;
 	color: var(--color-accent);
@@ -11,6 +15,11 @@
 	outline: 0;
 	font-size: 1.1rem;
 	font-weight: 500;
+    cursor: pointer;
+
+    .button-icon {
+        pointer-events: none;
+    }
 }
 
 [color="primary"] {

@@ -10,6 +10,7 @@ export type ButtonProps = {
     ctrlType?: 'action';
     icon?: string;
     disabled?: boolean;
+    popovertarget?: string;
     click?: (e: Event) => void;
 }
 
@@ -17,6 +18,7 @@ export default class Button extends Block<ButtonProps> {
     constructor(props: ButtonProps) {
         super('button', {
             ...props,
+            // class: 'button',
         });
     }
 
@@ -33,7 +35,7 @@ export default class Button extends Block<ButtonProps> {
             {{/if}}
 			
             {{#if ${!!icon}}}
-                <span class="material-icons">{{icon}}</span>
+                <span class="button-icon material-icons">{{icon}}</span>
             {{/if}}
 		`;
     }

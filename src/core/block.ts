@@ -88,17 +88,25 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                value.forEach((element) => {
-                    if (element instanceof Block) {
-                        children[key] = element;
-                    } else if (typeof value === 'function') {
-                        events[key] = element;
-                    } else {
-                        attrs[key] = element;
-                    }
-                });
+                if (value[0] && value[0] instanceof Block) {
+                    children[key] = value;
+                } else {
+                    attrs[key] = value;
+                }
                 return;
             }
+
+            //     value.forEach((element) => {
+            //         if (element instanceof Block) {
+            //             children[key] = element;
+            //         } else if (typeof value === 'function') {
+            //             events[key] = element;
+            //         } else {
+            //             attrs[key] = element;
+            //         }
+            //     });
+            //     return;
+            // }
             if (value instanceof Block) {
                 children[key] = value;
             } else if (typeof value === 'function') {

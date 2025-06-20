@@ -1,3 +1,4 @@
+import { RESOURCES_URL } from '../../app-config';
 import Block from '../../core/block';
 import isEqual from '../../shared/utils/is-equal';
 import { EAvatarSizes } from './types/avatar.types';
@@ -34,7 +35,7 @@ export default class Avatar extends Block<AvatarProps> {
         const { size, imageSrc } = this.attrs;
 
         return `
-            <div class="avatar" style="background-image: url(${imageSrc})" size="${size}"></div>
+            <div class="avatar" style="background-image: url(${RESOURCES_URL}${imageSrc})" size="${size}"></div>
 		`;
     }
 }

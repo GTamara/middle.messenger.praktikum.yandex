@@ -6,3 +6,6 @@ export { Card } from './card';
 export { FormElement } from './form';
 export { Avatar } from './avatar';
 export { GoBackButton } from './go-back-button';
+export { Popover } from './popover';
+export { Popup } from './popup';
+export { PopoverOption } from './popover/components/popover-option';

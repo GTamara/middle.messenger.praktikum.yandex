@@ -28,6 +28,14 @@
 .chat {
     @mixin flex-layout;
 
+    &__header {
+        display: flex;
+        padding: 5px 7px;
+        border-block-end: 1px solid var(--color-medium-border);
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
     &__header-title {
         display: block;
     }

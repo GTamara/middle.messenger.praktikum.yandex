@@ -43,3 +43,19 @@ export interface ChangePasswordRequest {
     newPassword: string;
 }
 
+export interface UsersRequest {
+    users: number[];
+    chatId: number;
+}
+
+// export interface AddUserResponse {
+//     id: number;
+// }
+
+export interface CreateChatRequest {
+    title: string;
+}
+
+export interface CreateChatResponse {
+    id: number;
+}
