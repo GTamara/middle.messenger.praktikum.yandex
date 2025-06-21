@@ -3,7 +3,7 @@ import { Button } from '../button';
 
 type PopupProps = {
     title: string;
-    content: string;
+    content: Block | string;
     id: string;
     class?: string;
     closeDialogBtn?: Block;
@@ -14,7 +14,7 @@ export class Popup extends Block<PopupProps> {
         super('dialog', {
             ...props,
             id: 'myDialog',
-            class: 'dialog child',
+            class: 'dialog',
 
             closeDialogBtn: new Button({
                 icon: 'close',
@@ -23,22 +23,19 @@ export class Popup extends Block<PopupProps> {
                 click: () => {
                     const dialog = this.element as HTMLDialogElement;
                     dialog.close();
+                    document.body.classList.remove('scroll-lock');
                 },
             }),
         });
     }
 
     render() {
+        const { title } = this.attrs;
         return `
         <div class="dialog__wrapper">
             {{{closeDialogBtn}}}
-            <h2>Дока — самая добрая документация &#128579</h2>
-            <button
-                class="closeDialogBtn button-black"
-                type="button"
-            >
-                Согласен &#128156
-            </button>
+            <h2>${title}</h2>
+            {{{content}}}
         </div>
         `;
     }

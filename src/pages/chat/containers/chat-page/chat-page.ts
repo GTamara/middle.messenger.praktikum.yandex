@@ -1,12 +1,14 @@
-import { Button, ControlWrapper, Input, Popover } from '../../../../components';
+import { Button, ControlWrapper, Input } from '../../../../components';
 import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
+import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
 import { getElement } from '../../../../shared/utils';
-import { ChatHeaderMenu, MessageForm } from '../../components';
+import { ChatHeaderMenu, ChatListItem, ChatsList, MessageForm } from '../../components';
+import { ChatController } from '../../services/chat.controller';
 
 type ChatProps = {
     SearchInput: ControlWrapper;
@@ -21,6 +23,7 @@ export class ChatPage extends Block {
     searchControlProps: Block<ControlWrapperProps>;
 
     userDataService = new UserDataService();
+    private readonly controller = new ChatController();
 
     constructor(props: ChatProps) {
         super('app-chat-page', {
@@ -29,7 +32,6 @@ export class ChatPage extends Block {
             SearchInput: new ControlWrapper({
                 label: 'Search',
                 icon: 'search',
-
                 Control: new Input({
                     name: 'message',
                     type: 'text',
@@ -39,28 +41,20 @@ export class ChatPage extends Block {
                     }),
                 }),
             }),
-            // popover: new Popover({
-            //     options: [
-            //         'Добавить пользователя',
-            //         'Добавить группу',
-            //     ]
-            // }),
             chatHeaderMenu: new ChatHeaderMenu({}),
+            chatsList: new ChatsList({}),
         });
         this.setChildren({
             Form: this.getForm(),
         });
         this.form = getElement(this.children.Form);
         this.messageControlProps = getElement(this.form.children.MessageInput);
-
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-
         this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
             this.children.SearchInput as Block,
             'search',
             this.setProps.bind(this),
         );
-
         this.userDataService.storeUserData();
     }
 
@@ -72,9 +66,6 @@ export class ChatPage extends Block {
             icon: 'send',
             order: 1,
             ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('click "Send" button from component. It might be additional actions here', e);
-            }),
         });
 
         const messageInput = new Input({
@@ -139,11 +130,8 @@ export class ChatPage extends Block {
         {{> Link href="${PATHS.profile}" label="Profile >" page="profile" }}
 
         {{{ SearchInput }}}
-
         <div class="chat-container__messages-list">
-            {{#each items}}
-            {{> ChatListItem item=this}}
-            {{/each}}
+            {{{chatsList}}}
         </div>
     </div>
     <div class="chat-container__selected-chat-content chat">

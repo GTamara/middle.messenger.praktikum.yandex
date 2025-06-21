@@ -35,6 +35,12 @@ enum EPages {
 
 const initialState: StoreState = {
     user: null,
+    chat: {
+        chats: [],
+        selectedChat: {
+            data: null,
+        },
+    },
 };
 window.store = StoreService.getInstance<StoreState>(initialState);
 

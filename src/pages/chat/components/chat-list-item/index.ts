@@ -1,3 +1,3 @@
 import './chat-list-item.pcss';
-export { default as ChatListItem } from './chat-list-item';
+export { ChatListItem } from './chat-list-item';
 

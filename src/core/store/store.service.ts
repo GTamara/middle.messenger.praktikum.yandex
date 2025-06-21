@@ -24,10 +24,47 @@ export class StoreService<T extends Indexed> extends EventBus<EStoreEvents> {
 
     setState<K extends keyof T & string>(path: K, value: T[K]): void {
         this._set(path, value);
+        this.emit(EStoreEvents.UPDATED);
+        console.log('this._state', this._state);
     };
 
     private _set<K extends keyof T & string>(path: K, value: T[K]): void {
-        this._state[path] = value;
-        this.emit(EStoreEvents.UPDATED);
+        // this._state[path] = value;
+        this.merge(this._state, this.getObjectFromPath(path, value));
+    }
+
+    private merge(lhs: Indexed, rhs: Indexed): Indexed {
+        for (const p in rhs) {
+            if (!rhs.hasOwnProperty(p)) {
+                continue;
+            }
+
+            try {
+                if (rhs[p].constructor === Object) {
+                    rhs[p] = this.merge(lhs[p] as Indexed, rhs[p] as Indexed);
+                } else {
+                    lhs[p] = rhs[p];
+                }
+            } catch (e) {
+                lhs[p] = rhs[p];
+            }
+        }
+        return lhs;
+    }
+
+    private getObjectFromPath(path: string, value: any): Record<string, any> {
+        const arraySegments = path.split('.');
+
+        return arraySegments.reduceRight((acc, segment, index) => {
+            if (index === arraySegments.length - 1) {
+                acc[segment] = value;
+            } else {
+                acc = {
+                    [segment]: acc,
+                };
+            }
+
+            return acc;
+        }, {} as Indexed);
     }
 }

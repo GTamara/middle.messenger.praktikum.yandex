@@ -59,3 +59,26 @@ export interface CreateChatRequest {
 export interface CreateChatResponse {
     id: number;
 }
+
+export interface ChatsResponse {
+    id: number;
+    title: string;
+    avatar: string;
+    unread_count: number;
+    users: UserResponse[];
+}
+
+export interface FindUserRequest {
+    login: string;
+}
+
+export interface UserResponse {
+    id: number;
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    login: string;
+    email: string;
+    phone: string;
+    avatar: string;
+}
