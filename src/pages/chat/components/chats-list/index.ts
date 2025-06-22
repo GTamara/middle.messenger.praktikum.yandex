@@ -1,1 +1,2 @@
-export { ChatsList } from './chats-list';
+export { ConnectedChatsList as ChatsList } from './chats-list';
+import './chats-list.pcss';

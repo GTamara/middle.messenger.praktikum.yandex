@@ -1,7 +1,10 @@
 import { Button, ControlWrapper, FormElement, Input, Popover, Popup } from '../../../../components';
 import Block from '../../../../core/block';
+import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
+import { connect } from '../../../../core/store/connect';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import type { StoreState } from '../../../../shared/types';
 import { getElement } from '../../../../shared/utils';
 import { ChatHeaderMenuController } from './services/chat-header-menu.controller';
 
@@ -10,17 +13,23 @@ type ChatHeaderMenuProps = {
     class?: string;
     addUserPopup?: Block;
     createChatPopup?: Block;
+    id?: string;
+    disabled?: boolean;
+    // selectedChat?: ChatsResponse;
 };
 
-export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
+class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
     private readonly controller = new ChatHeaderMenuController();
     // private readonly validationService = new FormValidation();
     validationService: FormValidation | null = null;
+    store = window.store as StoreState;
 
     constructor(props: ChatHeaderMenuProps) {
         super('chat-header-menu', {
             ...props,
             class: 'chat-header-menu',
+            id: 'chatHeaderMenu',
+            disabled: true,
             popover: new Popover({
                 options: [
                     {
@@ -36,6 +45,12 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                         id: 'createChatPopup',
                     },
                     {
+                        title: 'Удалить чат',
+                        icon: 'delete',
+                        click: () => this.deleteSelectedChatClick(),
+                        id: 'deleteChatPopup',
+                    },
+                    {
                         title: 'Удалить пользователя',
                         icon: 'delete',
                         click: () => this.deleteUserClick(),
@@ -44,7 +59,6 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 ],
             }),
         });
-        console.log('ChatHeaderMenu');
     }
 
     addUserClick(): void {
@@ -77,21 +91,21 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         });
 
         this.setChildren({
-            createChatPopup: new Popup({
+            AddUserPopup: new Popup({
                 title: 'Add user',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
                         this.controller.addUserSubmitForm(event);
-                        const popup = this.children.createChatPopup as Block;
+                        const popup = this.children.AddUserPopup as Block;
                         this.closePopup(popup.element as HTMLDialogElement);
                     },
                     SubmitButton: submitButton,
-                    ChatNameInput: userLoginInput,
+                    UserLoginInput: userLoginInput,
                 }),
                 id: 'addUserPopup',
             }),
         });
-        const popup = this.children.createChatPopup as Block;
+        const popup = this.children.AddUserPopup as Block;
         const modal = popup.element as HTMLDialogElement;
         this.openModalAndLockScroll(modal);
         this.validationService = new FormValidation(
@@ -131,12 +145,12 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         });
 
         this.setChildren({
-            createChatPopup: new Popup({
+            CreateChatPopup: new Popup({
                 title: 'Создать чат',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
                         this.controller.createChatSubmitForm(event);
-                        const popup = this.children.createChatPopup as Block;
+                        const popup = this.children.CreateChatPopup as Block;
                         this.closePopup(popup.element as HTMLDialogElement);
                     },
                     SubmitButton: submitButton,
@@ -145,7 +159,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 id: 'createChatPopup',
             }),
         });
-        const popup = this.children.createChatPopup as Block;
+        const popup = this.children.CreateChatPopup as Block;
         const modal = popup.element as HTMLDialogElement;
         this.openModalAndLockScroll(modal);
         this.validationService = new FormValidation(
@@ -164,7 +178,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             order: 1,
             ctrlType: 'action',
         });
-        const chatNameInput = new ControlWrapper({
+        const userNameInput = new ControlWrapper({
             label: 'Chat name',
             order: 1,
             ctrlType: 'control',
@@ -185,23 +199,27 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         });
 
         this.setChildren({
-            deleteUserPopup: new Popup({
+            DeleteUserPopup: new Popup({
                 title: 'Удалить пользоавателя',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
                         this.controller.createChatSubmitForm(event);
-                        const popup = this.children.createChatPopup as Block;
+                        const popup = this.children.DeleteUserPopup as Block;
                         this.closePopup(popup.element as HTMLDialogElement);
                     },
                     SubmitButton: submitButton,
-                    ChatNameInput: chatNameInput,
+                    UserNameInput: userNameInput,
                 }),
-                id: 'createChatPopup',
+                id: 'deleteUserPopup',
             }),
         });
-        const popup = this.children.deleteUserPopup as Block;
+        const popup = this.children.DeleteUserPopup as Block;
         const modal = popup.element as HTMLDialogElement;
         this.openModalAndLockScroll(modal);
+    }
+
+    deleteSelectedChatClick(): void {
+        this.controller.deleteChat();
     }
 
     openModalAndLockScroll(modal: HTMLDialogElement) {
@@ -219,7 +237,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 ChatNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.ChatNameInput as Block,
                     'login',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {
@@ -243,7 +261,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 UserLoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.UserLoginInput as Block,
                     'login',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {
@@ -267,8 +285,21 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             <div class="chat-header-menu">
                 {{{popover}}}
             </div>
-            {{{addUserPopup}}}
-            {{{createChatPopup}}}
+            {{{AddUserPopup}}}
+            {{{CreateChatPopup}}}
+            {{{DeleteUserPopup}}}
         `;
     }
 }
+
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        attrs: {
+            activeChat: state?.chat?.selectedChat.data,
+            disabled: !state?.chat?.selectedChat.data,
+        },
+        children: {},
+    };
+};
+
+export const ConnectedChatHeaderMenu = connect(mapStateToProps)(ChatHeaderMenu);

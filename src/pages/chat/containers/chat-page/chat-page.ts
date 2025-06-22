@@ -1,34 +1,39 @@
 import { Button, ControlWrapper, Input } from '../../../../components';
-import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
+import { connect } from '../../../../core/store/connect';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
+import type { StoreState } from '../../../../shared/types';
 import { getElement } from '../../../../shared/utils';
-import { ChatHeaderMenu, ChatListItem, ChatsList, MessageForm } from '../../components';
+import { ChatHeaderMenu, ChatsList, MessageForm } from '../../components';
 import { ChatController } from '../../services/chat.controller';
 
-type ChatProps = {
+type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: MessageForm;
     popover: Block;
+    activeChat?: ChatsResponse | null;
+    activeChatId?: number;
+    chatsCount?: number;
 }
 
-export class ChatPage extends Block {
+class ChatPage extends Block {
     validationService: FormValidation;
     form: MessageForm;
     messageControlProps: Block;
-    searchControlProps: Block<ControlWrapperProps>;
 
     userDataService = new UserDataService();
     private readonly controller = new ChatController();
 
-    constructor(props: ChatProps) {
+    constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
-            formState: {},
+            activeChat: null,
+            activeChatId: null,
+            chatsCount: 0,
             SearchInput: new ControlWrapper({
                 label: 'Search',
                 icon: 'search',
@@ -37,12 +42,18 @@ export class ChatPage extends Block {
                     type: 'text',
                     autocomplete: 'off',
                     input: ((e: Event) => {
-                        this.setValue(e, this.searchControlProps);
+                        const searchControlProps = getWrappedTextInputPropsForValidation<Block>(
+                            this.children.SearchInput as Block,
+                            'search',
+                            this.setAttrs.bind(this),
+                        );
+                        this.setValue(e, searchControlProps);
                     }),
                 }),
             }),
             chatHeaderMenu: new ChatHeaderMenu({}),
             chatsList: new ChatsList({}),
+
         });
         this.setChildren({
             Form: this.getForm(),
@@ -50,11 +61,6 @@ export class ChatPage extends Block {
         this.form = getElement(this.children.Form);
         this.messageControlProps = getElement(this.form.children.MessageInput);
         this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
-            this.children.SearchInput as Block,
-            'search',
-            this.setProps.bind(this),
-        );
         this.userDataService.storeUserData();
     }
 
@@ -94,7 +100,7 @@ export class ChatPage extends Block {
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
@@ -109,7 +115,7 @@ export class ChatPage extends Block {
                 MessageInput: getTextInputPropsForValidation<Block>(
                     form.children.MessageInput as Block,
                     'message',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {
@@ -124,6 +130,8 @@ export class ChatPage extends Block {
     }
 
     render() {
+        const activeChat = !!(this.attrs).activeChat?.data?.id;
+        const isChatsListEmpty = this.attrs.chatsCount === 0;
         return `
 <div class="chat-container">
     <div class="chat-container__messages">
@@ -140,7 +148,7 @@ export class ChatPage extends Block {
                 Chat
                 
             </div>
-            {{{ chatHeaderMenu }}}
+            ` + (activeChat || isChatsListEmpty ? `{{{chatHeaderMenu}}}` : '') + `
         </div>
         <div class="chat__content"></div>
         <div class="chat__footer">
@@ -151,3 +159,13 @@ export class ChatPage extends Block {
         `;
     }
 }
+
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        activeChat: state?.chat?.selectedChat,
+        activeChatId: state?.chat?.selectedChat?.data?.id,
+        chatsCount: state?.chat?.chats?.length,
+    };
+};
+
+export const ConnectedChatPage = connect(mapStateToProps)(ChatPage);

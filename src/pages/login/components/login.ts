@@ -117,7 +117,7 @@ export class LoginPage extends Block {
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
@@ -132,12 +132,12 @@ export class LoginPage extends Block {
                 LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 PasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PasswordInput as Block,
                     'password',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {

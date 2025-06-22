@@ -53,7 +53,7 @@ export class ProfilePage extends Block {
             .then((data) => {
                 this.userData = data;
                 this.setChildren(this.getChildren());
-                (this.children.avatar as Block).setProps({
+                (this.children.avatar as Block).setAttrs({
                     imageSrc: this.userData.avatar,
                 });
             });

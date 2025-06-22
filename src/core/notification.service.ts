@@ -1,6 +1,6 @@
 export class NotificationService {
     showSuccessMessage(message: string) {
-        alert(message); // или кастомное уведомление
+        // alert(message); // или кастомное уведомление
     }
 
     showErrorMessage(message: string) {
@@ -9,7 +9,10 @@ export class NotificationService {
 
     getErrorMessage(error: unknown): string {
         if (error instanceof Response) {
-            return `Ошибка: ${error.status}`;
+            error.json().then((data) => {
+                console.log(data);
+                return `Ошибка: ${error.status} ${data?.reason}`;
+            });
         }
         return 'Произошла ошибка при отправке формы';
     }

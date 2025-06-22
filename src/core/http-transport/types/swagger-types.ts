@@ -82,3 +82,12 @@ export interface UserResponse {
     phone: string;
     avatar: string;
 }
+
+export interface DeleteChatRequest {
+    chatId: number;
+}
+
+export interface DeleteChatResponse {
+    userId: number;
+    result: ChatsResponse;
+}

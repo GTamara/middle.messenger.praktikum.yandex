@@ -244,7 +244,7 @@ export class EditProfileDataPage extends Block {
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
@@ -259,32 +259,32 @@ export class EditProfileDataPage extends Block {
                 EmailInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.EmailInput as Block,
                     'email',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 FirstNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.FirstNameInput as Block,
                     'name',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 LastNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LastNameInput as Block,
                     'second_name',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 DisplayNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.DisplayNameInput as Block,
                     'display_name',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 PhoneInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PhoneInput as Block,
                     'phone',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {

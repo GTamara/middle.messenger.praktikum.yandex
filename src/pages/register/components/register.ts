@@ -1,5 +1,5 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../components';
-import Block, { type PropsAndChildren } from '../../../core/block';
+import Block, { type Props } from '../../../core/block';
 import FormValidation from '../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../core/validation/validation-utils';
 import { getWrappedInputElement } from '../../../shared/helper-functions';
@@ -240,7 +240,7 @@ export class RegisterPage extends Block {
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
@@ -255,37 +255,37 @@ export class RegisterPage extends Block {
                 EmailInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.EmailInput as Block,
                     'email',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 LoginInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LoginInput as Block,
                     'login',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 FirstNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.FirstNameInput as Block,
                     'name',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 LastNameInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.LastNameInput as Block,
                     'second_name',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 PhoneInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PhoneInput as Block,
                     'phone',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 PasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.PasswordInput as Block,
                     'password',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 RepeatPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.RepeatPasswordInput as Block,
                     'repeatPassword',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {
@@ -302,7 +302,7 @@ export class RegisterPage extends Block {
         };
     }
 
-    componentDidUpdate(oldProps: PropsAndChildren, newProps: PropsAndChildren): boolean {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean {
         console.log('componentDidUpdate', oldProps, newProps);
 
         // if (this.props['formState'].login !== newProps.formState.login) {

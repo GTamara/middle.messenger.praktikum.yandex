@@ -3,6 +3,8 @@ import {
     type ChatsResponse,
     type CreateChatRequest,
     type CreateChatResponse,
+    type DeleteChatRequest,
+    type DeleteChatResponse,
     type FindUserRequest,
     type UserResponse,
     type UsersRequest,
@@ -19,10 +21,6 @@ export class ChatApiService {
         return this.http.get<ChatsResponse[]>('chats');
     }
 
-    createChat(payload: string): Promise<CreateChatResponse> {
-        return this.http.post<CreateChatResponse, CreateChatRequest>('chats', { title: payload });
-    }
-
     addUser(payload: UsersRequest): Promise<void> {
         return this.http.post<void, UsersRequest>('chats/users', payload);
     }
@@ -33,5 +31,9 @@ export class ChatApiService {
 
     getUserByLogin(login: string): Promise<UserResponse> {
         return this.http.post<UserResponse, FindUserRequest>(`user/search`, { login });
+    }
+
+    deleteChat(chatId: number): Promise<DeleteChatResponse> {
+        return this.http.delete<DeleteChatResponse, DeleteChatRequest>(`chats/${chatId}`);
     }
 }

@@ -8,6 +8,13 @@ export class PopoverOption extends Block<PopoverOptionProps> {
         super('li', {
             ...props,
             class: 'popover-option',
+            popovertargetaction: 'hide',
+            click: () => {
+                document.getElementById('addEntityPopover')?.togglePopover();
+                if (props.click) {
+                    props.click();
+                }
+            },
         });
     }
 

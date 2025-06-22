@@ -151,7 +151,7 @@ export class ChangePasswordPage extends Block {
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
@@ -166,17 +166,17 @@ export class ChangePasswordPage extends Block {
                 OldPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.OldPasswordInput as Block,
                     'oldPassword',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 NewPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.NewPasswordInput as Block,
                     'newPassword',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
                 RepeatPasswordInput: getWrappedTextInputPropsForValidation<Block>(
                     form.children.RepeatPasswordInput as Block,
                     'repeatPassword',
-                    this.setProps.bind(this),
+                    this.setAttrs.bind(this),
                 ),
             },
             submitAction: {

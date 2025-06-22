@@ -25,7 +25,6 @@ export class StoreService<T extends Indexed> extends EventBus<EStoreEvents> {
     setState<K extends keyof T & string>(path: K, value: T[K]): void {
         this._set(path, value);
         this.emit(EStoreEvents.UPDATED);
-        console.log('this._state', this._state);
     };
 
     private _set<K extends keyof T & string>(path: K, value: T[K]): void {

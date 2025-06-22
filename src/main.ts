@@ -13,6 +13,7 @@ import { RouteAccess } from './core/routing/types';
 import RouteGuard from './core/routing/route-guard';
 import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 import { StoreService } from './core/store/store.service';
+import { EStoreEvents } from './core/event-bus/types';
 
 declare global {
     interface Window {
@@ -43,6 +44,11 @@ const initialState: StoreState = {
     },
 };
 window.store = StoreService.getInstance<StoreState>(initialState);
+
+// window.store.on(EStoreEvents.UPDATED, (prevState: any, newState: any) => {
+//   console.log("prevState", prevState);
+//   console.log("newState", newState);
+// });
 
 const pages: Record<string, string | Constructor> = {
     [EPages.Register]: Pages.RegisterPage,

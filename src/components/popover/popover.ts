@@ -7,12 +7,14 @@ type PopoverProps = {
     button?: Block;
     class?: string;
     options?: PopoverOptionModel[];
+    id?: string;
 }
 
 export class Popover extends Block<PopoverProps> {
     constructor(props: PopoverProps) {
         super('app-popover', {
             ...props,
+            id: 'popoverId',
             button: new Button({
                 icon: 'more_vert',
                 color: 'basic',

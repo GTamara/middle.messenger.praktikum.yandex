@@ -38,7 +38,7 @@ export default class AvatarUploader extends Block<AvatarUploaderProps> {
     changeAvatarHandler(e: Event) {
         this.controller.uploadAvatar(e)
             .then((userData) => {
-                (this.children.avatar as Block).setProps({
+                (this.children.avatar as Block).setAttrs({
                     imageSrc: userData.avatar,
                 });
             });

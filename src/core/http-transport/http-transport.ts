@@ -69,7 +69,7 @@ export class HTTPTransport {
 
     delete: HTTPMethod = (url, payload, options = {}) => (
         this.request(
-            url,
+            `${API_URL}${url}`,
             payload,
             { ...options, method: EMethod.DELETE },
         )

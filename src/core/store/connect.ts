@@ -1,5 +1,6 @@
 import type { Indexed } from '../../shared/types';
 import isEqual from '../../shared/utils/is-equal';
+import type Block from '../block';
 import { EStoreEvents } from '../event-bus/types';
 
 // Базовый интерфейс для компонента
@@ -10,38 +11,23 @@ export interface IConnectableComponent<P extends Indexed> {
 
 // Тип конструктора компонента
 export type ConnectableComponentConstructor<P extends Indexed = Indexed> = {
-    new (...args: any[]): IConnectableComponent<P>;
+    new(...args: any[]): IConnectableComponent<P>;
 };
 
-export function connect<P extends Indexed>(mapStateToProps: (state: Indexed) => Partial<P>) {
-    return function <T extends ConnectableComponentConstructor<P>>(Component: T) {
-        // Создаем именованный класс
-        class ConnectedComponent extends Component {
-            private onChangeStoreCallback: () => void;
-
-            constructor(...args: any[]) {
-                const [ props ] = args;
+export function connect(mapStateToProps: (state: Indexed) => Indexed) {
+    return function(Component: any) {
+        // используем class expression
+        return class extends Component {
+            constructor(props: any) {
                 const store = window.store;
-                const state = mapStateToProps(store.getState());
+                super({ ...props, ...mapStateToProps(store.getState()) });
 
-                super({ ...props, ...state });
-
-                this.onChangeStoreCallback = () => {
-                    const newState = mapStateToProps(store.getState());
-                    if (!isEqual(state, newState)) {
-                        this.setProps({ ...newState });
-                    }
-                };
-
-                store.on(EStoreEvents.UPDATED, this.onChangeStoreCallback);
+                // подписываемся на событие
+                store.on(EStoreEvents.UPDATED, () => {
+                    // вызываем обновление компонента, передав данные из хранилища
+                    this.setProps({ ...mapStateToProps(store.getState()) });
+                });
             }
-
-            componentWillUnmount() {
-                super.componentWillUnmount?.();
-                window.store.off(EStoreEvents.UPDATED, this.onChangeStoreCallback);
-            }
-        }
-
-        return ConnectedComponent;
+        };
     };
 }

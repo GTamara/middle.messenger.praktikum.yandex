@@ -11,6 +11,7 @@
 		gap: 1.5rem;
 		width: 310px;
 		padding: 10px;
+        padding-inline-end: 0;
 		border-inline-end: var(--border);
 		background-color: var(--color-basic-background);
 	}
@@ -19,6 +20,10 @@
 		flex-grow: 1;
 		background-color: azure;
 	}
+
+    &__messages-list {
+        overflow-y: auto;
+    }
 }
 
 .chat {

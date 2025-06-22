@@ -13,4 +13,4 @@ export { default as ChangePasswordPage } from './profile/containers/change-passw
 export { default as EditProfileDataPage } from './profile/containers/edit-profile-data-page';
 export { default as ProfilePage } from './profile/containers/profile-page';
 
-export { default as ChatPage } from './chat/containers/chat-page';
+export { ChatPage } from './chat/containers/chat-page';

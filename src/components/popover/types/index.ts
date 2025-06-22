@@ -4,4 +4,5 @@ export type PopoverOptionModel = {
     icon?: string;
     id?: string;
     class?: string;
+    popovertargetaction?: string;
 }

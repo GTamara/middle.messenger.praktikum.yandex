@@ -2,21 +2,19 @@ import { Avatar } from '../../../../components';
 import { EAvatarSizes } from '../../../../components/avatar/types/avatar.types';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
+import { connect } from '../../../../core/store/connect';
 import type { StoreService } from '../../../../core/store/store.service';
 import type { StoreState } from '../../../../shared/types';
 import { ChatController } from '../../services/chat.controller';
-import { ChatListItem } from '../chat-list-item';
+import { ChatListItem } from '../chat-list-item/chat-list-item';
+// import { ChatListItem } from '../chat-list-item';
 
 export type ChatListProps = {
-    // class?: string;
-    // name: string;
-    // avatarImageSrc?: string;
-    // avatar?: Block;
-    // item: ChatsResponse;
-    // click?: (e: Event) => void;
+    chats?: ChatsResponse[];
+    chatListChildren?: Record<string, ChatListItem>;
 }
 
-export class ChatsList extends Block<ChatListProps> {
+class ChatsList extends Block<ChatListProps> {
     chatsList: Record<string, ChatListItem> = {};
     private readonly controller = new ChatController();
     private readonly store: StoreService<StoreState> = window.store as StoreService<StoreState>;
@@ -24,44 +22,61 @@ export class ChatsList extends Block<ChatListProps> {
     constructor(props: ChatListProps) {
         super('app-chats-list', {
             ...props,
-            // class: 'chat-list-item',
+            chats: props.chats || [],
 
         });
-        this.chatsList = this.getChats();
+        this.setComponentChildren();
     }
 
-    getChats(): Record<string, ChatListItem> {
-        const chatsList: Record<string, ChatListItem> = {};
-        this.controller.getChats()
-            .then((chats) => {
-                chats.forEach((item: ChatsResponse, index) => {
-                    chatsList[`chatListItem_${index}`] = new ChatListItem({
-                        name: item.title,
-                        item: item,
-                        avatar: new Avatar({
-                            size: EAvatarSizes.SMALL,
-                            imageSrc: item.avatar,
-                        }),
-                        click: () => {
-                            this.selectChat(item.id);
-                            this.store.setState('chat.selectedChat.data', item);
-                        },
-                    });
-                });
+    setComponentChildren() {
+        this.getChats()
+            .then(() => {
+                this.chatsList = this.getUpdatedChatsList();
                 this.setChildren(this.chatsList);
             });
+    }
+
+    getChats(): Promise<ChatsResponse[]> {
+        return this.controller.getChats();
+    }
+
+    getUpdatedChatsList() {
+        const list = this.controller.getStoredChatsList();
+        const chatsList: Record<string, ChatListItem> = {};
+        list.forEach((item: ChatsResponse, index) => {
+            const child = new ChatListItem({
+                name: item.title,
+                item: item,
+                avatar: new Avatar({
+                    size: EAvatarSizes.SMALL,
+                    imageSrc: item.avatar,
+                }),
+                click: () => this.chatItemClick(item),
+            });
+            chatsList[`chatListItem_${index}`] = child;
+            // this.children[`chatListItem_${index}`] = child;
+        });
+        // this.children = chatsList;
+        console.log('chatsList', chatsList);
+
         return chatsList;
     }
 
+    chatItemClick(item: ChatsResponse) {
+        debugger;
+        this.store.setState('chat.selectedChat.data', item);
+        this.selectChat(item.id);
+    }
+
     selectChat(id: number) {
-        Object.values(this.chatsList).forEach((item) => {
-            if (item.attrs.item.id === id) {
-                item.setProps({
+        Object.values(this.chatsList).forEach((li) => {
+            if (li.attrs.item.id === id) {
+                li.setAttrs({
                     active: true,
                 });
                 return;
             } else {
-                item.setProps({
+                li.setAttrs({
                     active: false,
                 });
             }
@@ -70,7 +85,7 @@ export class ChatsList extends Block<ChatListProps> {
 
     render() {
         return `
-        <div class="chat-container__messages-list">
+        <div class="messages-list-scroll-container">
             ${!!this.chatsList && Object.keys(this.chatsList)
         .map((item) => `{{{${item}}}}`).join('')
 }
@@ -78,3 +93,16 @@ export class ChatsList extends Block<ChatListProps> {
         `;
     }
 }
+
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        attrs: {
+            chatListChildren: state?.chat?.chatListChildren,
+        },
+        children: {
+            chats: state?.chat?.chats || [],
+        },
+    };
+};
+
+export const ConnectedChatsList = connect(mapStateToProps)(ChatsList);
