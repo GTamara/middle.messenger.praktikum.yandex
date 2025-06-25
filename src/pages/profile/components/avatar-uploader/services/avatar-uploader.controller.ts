@@ -1,10 +1,5 @@
-import { HTTPTransport } from '../../../../../core/http-transport/http-transport';
 import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
 import { AvatarUploaderApiService } from './avatar-uploader-api.service';
-
-type InputChangeEvent = Event & {
-    target: HTMLInputElement;
-};
 
 export class AvatarUploaderController {
     private readonly api = new AvatarUploaderApiService();
@@ -24,7 +19,6 @@ export class AvatarUploaderController {
         return this.api.uploadAvatar(formData)
             .then((response) => {
                 this.store.setState('user', response as UserResponse);
-                console.log('response', response);
                 return response;
             });
     }

@@ -17,10 +17,10 @@ export type ChatListItemProps = {
 
 export class ChatListItem extends Block<ChatListItemProps> {
     constructor(props: ChatListItemProps) {
-        super('app-chat-list-item', {
+        super('chat-list-item', {
             ...props,
             active: false,
-            // class: 'chat-list-item',
+            class: 'test-item',
             avatar: new Avatar({
                 size: EAvatarSizes.SMALL,
                 // imageSrc: props.avatarImageSrc,
@@ -28,34 +28,40 @@ export class ChatListItem extends Block<ChatListItemProps> {
         });
     }
 
-    render() {
-        const name = this.attrs.name;
-        const activeCatIndex = 1;
-        return `
-            <div class="chat-list-item">
-                {{{avatar}}}
-                ${name}
-                <br>
-                chat-list-item
-            </div>
-            {{#if ${activeCatIndex === 1}}}
-        dfdfgdgdfgdfgf
-      {{/if}}
-        `;
+    componentDidUpdate(
+        oldProps: Partial<ChatListItemProps>,
+        newProps: Partial<ChatListItemProps>,
+    ): boolean {
+        return super.componentDidUpdate(
+            { active: oldProps.active },
+            { active: newProps.active },
+        );
     }
 
-    // componentDidUpdate(oldProps: ChatListItemProps, newProps: ChatListItemProps): boolean {
-
-    // }
+    render() {
+        console.log('RRR');
+        const { name, item, active } = this.attrs;
+        const id = item.id;
+        const activeCatIndex = 1;
+        return `
+        <div class="chat-list-item {{#if ${active === true}}}chat-list-item__active{{/if}}"> 
+        {{{avatar}}}
+        <div class="chat-list-item__data">
+            <p class="chat-list-item__data-row">${name}</p>
+            <p class="chat-list-item__data-row">${id}</p>
+            {{#if ${activeCatIndex === 1}}}
+                dfdfgdgdfgdfgf
+            {{/if}}
+        </div>
+        
+        </div>
+        `;
+    }
 }
 
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
-        attrs: {
-            activeChat: state?.chat?.selectedChat.data,
-            activeItem: state?.chat,
-        },
-        children: {},
+        activeChat: state?.chat?.selectedChat.data,
     };
 };
 

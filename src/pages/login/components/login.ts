@@ -154,23 +154,6 @@ export class LoginPage extends Block {
         };
     }
 
-    componentDidUpdate(oldProps: Attrs, newProps: Attrs): boolean {
-        console.log('componentDidUpdate', oldProps, newProps);
-
-        // if (this.props['formState'].login !== newProps.formState.login) {
-
-        // }
-        // this.children.LoginInput.setProps({
-        // 	value: newProps.formState.login
-        // })
-        // if (oldProps.formState !== newProps.formState) {
-        // 	this.children
-        // 	return true;
-        // }
-        // return false;
-        return true;
-    }
-
     render() {
         return `
             {{#> FormLayout }}

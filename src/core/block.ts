@@ -40,7 +40,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         this.eventBus = new EventBus();
 
         const { attrs, children, events } = this._getChildrenAndProps(propsWithChildren);
-        this.children = this._makePropsProxy(children);
+        this.children = children;
         this.attrs = this._makePropsProxy(attrs);
         this.events = events;
 
@@ -96,18 +96,6 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
                 }
                 return;
             }
-
-            //     value.forEach((element) => {
-            //         if (element instanceof Block) {
-            //             children[key] = element;
-            //         } else if (typeof value === 'function') {
-            //             events[key] = element;
-            //         } else {
-            //             attrs[key] = element;
-            //         }
-            //     });
-            //     return;
-            // }
             if (value instanceof Block) {
                 children[key] = value;
             } else if (typeof value === 'function') {
@@ -138,13 +126,11 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         this._render();
     }
 
-    componentDidUpdate(oldProps: P, newProps: P): boolean {
+    componentDidUpdate(oldProps: Partial<P>, newProps: Partial<P>): boolean {
         if (oldProps === undefined) {
             return true;
         }
-
         const propsChanged = !isEqual(oldProps, newProps);
-        // const childrenChanged = !isEqual(oldProps.children, newProps.children);
         return propsChanged;
     }
 
@@ -167,7 +153,8 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         if (!newProps) {
             return;
         }
-        this.setAttrs(newProps.attrs);
+        // console.log('setProps',newProps);
+        this.setAttrs(newProps);
         this.setChildren(newProps.children);
     };
 
@@ -278,6 +265,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
 
         const fragment: HTMLTemplateElement = this._createDocumentElement<HTMLTemplateElement>('template');
         const template = Handlebars.compile(this.render());
+        fragment.innerHTML = '';
         fragment.innerHTML = template(propsAndStubs);
 
         Object.values(this.children).forEach((child) => {

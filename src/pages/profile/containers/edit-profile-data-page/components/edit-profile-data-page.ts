@@ -83,13 +83,6 @@ export class EditProfileDataPage extends Block {
                     }),
                 });
             });
-        console.log('this.store.getState().user.avatar', this.store.getState());
-        // this.setChildren({
-        //     avatar: this.store.getState().user.avatar,
-        // })
-        // .avatar.setProps({
-        //     imageSrc: this.store.getState().user.avatar,
-        // });
     }
 
     getForm() {

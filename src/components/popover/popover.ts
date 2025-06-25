@@ -7,6 +7,7 @@ type PopoverProps = {
     button?: Block;
     class?: string;
     options?: PopoverOptionModel[];
+    optionElems?: PopoverOption[];
     id?: string;
 }
 
@@ -20,29 +21,20 @@ export class Popover extends Block<PopoverProps> {
                 color: 'basic',
                 popovertarget: 'addEntityPopover',
             }),
-
+            optionElems: props?.options?.map((item) => new PopoverOption(item)) ?? [],
         });
-        this.setChildren(this.getOptionsChildren());
-    }
-
-    getOptionsChildren() {
-        const options: Record<string, PopoverOption> = {};
-        (this.attrs.options as PopoverOptionModel[]).map((item, index) => {
-            options[`popoverOption_${index}`] = new PopoverOption(item);
-        });
-        return options;
     }
 
     render() {
-        const optionsTemplateNames: string[] = (this.attrs.options as PopoverOptionModel[]).map((_, index) => `popoverOption_${index}`);
+        debugger;
         return `
            <div class="popover-content">
                 {{{button}}}
 
                 <ul id="addEntityPopover" class="popover" popover>
-                    ${optionsTemplateNames.map((option) => `
-                        {{{${option}}}}
-                    `).join('')}
+                    {{#each optionElems}}
+                        {{{ this }}}
+                    {{/each}}
                 </ul>
             </div>
         `;

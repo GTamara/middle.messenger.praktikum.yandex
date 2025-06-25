@@ -7,32 +7,44 @@ import type { StoreService } from '../../../../core/store/store.service';
 import type { StoreState } from '../../../../shared/types';
 import { ChatController } from '../../services/chat.controller';
 import { ChatListItem } from '../chat-list-item/chat-list-item';
-// import { ChatListItem } from '../chat-list-item';
 
 export type ChatListProps = {
     chats?: ChatsResponse[];
-    chatListChildren?: Record<string, ChatListItem>;
+    chatListItems?: ChatListItem[];
 }
 
 class ChatsList extends Block<ChatListProps> {
-    chatsList: Record<string, ChatListItem> = {};
     private readonly controller = new ChatController();
     private readonly store: StoreService<StoreState> = window.store as StoreService<StoreState>;
 
     constructor(props: ChatListProps) {
         super('app-chats-list', {
             ...props,
-            chats: props.chats || [],
-
+            chats: [],
         });
         this.setComponentChildren();
     }
 
     setComponentChildren() {
-        this.getChats()
+        return this.getChats()
             .then(() => {
-                this.chatsList = this.getUpdatedChatsList();
-                this.setChildren(this.chatsList);
+                const chatListData = [ ...this.controller.getStoredChatsList() ];
+                this.setChildren({
+                    chatListItems: chatListData.map((item) => {
+                        return new ChatListItem({
+                            name: item.title,
+                            item: item,
+                            avatar: new Avatar({
+                                size: EAvatarSizes.SMALL,
+                                imageSrc: item.avatar,
+                            }),
+                            click: () => {
+                                this.chatItemClick({ ...item });
+                                console.log('click', this.element);
+                            },
+                        });
+                    }),
+                });
             });
     }
 
@@ -40,41 +52,21 @@ class ChatsList extends Block<ChatListProps> {
         return this.controller.getChats();
     }
 
-    getUpdatedChatsList() {
-        const list = this.controller.getStoredChatsList();
-        const chatsList: Record<string, ChatListItem> = {};
-        list.forEach((item: ChatsResponse, index) => {
-            const child = new ChatListItem({
-                name: item.title,
-                item: item,
-                avatar: new Avatar({
-                    size: EAvatarSizes.SMALL,
-                    imageSrc: item.avatar,
-                }),
-                click: () => this.chatItemClick(item),
-            });
-            chatsList[`chatListItem_${index}`] = child;
-            // this.children[`chatListItem_${index}`] = child;
-        });
-        // this.children = chatsList;
-        console.log('chatsList', chatsList);
-
-        return chatsList;
-    }
-
     chatItemClick(item: ChatsResponse) {
-        debugger;
         this.store.setState('chat.selectedChat.data', item);
         this.selectChat(item.id);
     }
 
     selectChat(id: number) {
-        Object.values(this.chatsList).forEach((li) => {
+        if (!Array.isArray(this.children.chatListItems)) {
+            console.error('chatListItems не массив!', this.children.chatListItems);
+            return;
+        }
+        this.children.chatListItems.forEach((li) => {
             if (li.attrs.item.id === id) {
                 li.setAttrs({
                     active: true,
                 });
-                return;
             } else {
                 li.setAttrs({
                     active: false,
@@ -83,12 +75,30 @@ class ChatsList extends Block<ChatListProps> {
         });
     }
 
+    componentDidUpdate(oldProps: Partial<ChatListProps>, newProps: Partial<ChatListProps>): boolean {
+        const shouldUpdate = super.componentDidUpdate(
+            {
+                chats: oldProps?.chats,
+                chatListItems: oldProps?.chatListItems?.map((li) => li.attrs.item.id),
+            },
+            {
+                chats: newProps?.chats,
+                chatListItems: newProps?.chatListItems?.map((li) => li.attrs.item.id),
+            },
+        );
+        if (shouldUpdate) {
+            this.setComponentChildren();
+        }
+        return true;
+    }
+
     render() {
+        const { chatListItems } = this.children;
         return `
         <div class="messages-list-scroll-container">
-            ${!!this.chatsList && Object.keys(this.chatsList)
-        .map((item) => `{{{${item}}}}`).join('')
-}
+            {{#each chatListItems}}
+                {{{ this }}}
+            {{/each}}
         </div>
         `;
     }
@@ -96,12 +106,7 @@ class ChatsList extends Block<ChatListProps> {
 
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
-        attrs: {
-            chatListChildren: state?.chat?.chatListChildren,
-        },
-        children: {
-            chats: state?.chat?.chats || [],
-        },
+        chats: state?.chat?.chats || [],
     };
 };
 

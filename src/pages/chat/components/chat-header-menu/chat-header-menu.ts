@@ -14,8 +14,7 @@ type ChatHeaderMenuProps = {
     addUserPopup?: Block;
     createChatPopup?: Block;
     id?: string;
-    disabled?: boolean;
-    // selectedChat?: ChatsResponse;
+    selectedChat?: ChatsResponse;
 };
 
 class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
@@ -29,7 +28,6 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             ...props,
             class: 'chat-header-menu',
             id: 'chatHeaderMenu',
-            disabled: true,
             popover: new Popover({
                 options: [
                     {
@@ -81,9 +79,6 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 required: true,
                 autocomplete: 'off',
                 validationRuleName: 'login',
-                // input: ((e: Event) => {
-                //     this.setValue(e, this.loginControlProps);
-                // }),
                 change: ((e: Event) => {
                     this.validationService?.checkControlValidity(e.target as HTMLInputElement);
                 }),
@@ -203,9 +198,9 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 title: 'Удалить пользоавателя',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
-                        this.controller.createChatSubmitForm(event);
-                        const popup = this.children.DeleteUserPopup as Block;
-                        this.closePopup(popup.element as HTMLDialogElement);
+                        // this.controller.createChatSubmitForm(event);
+                        // const popup = this.children.DeleteUserPopup as Block;
+                        // this.closePopup(popup.element as HTMLDialogElement);
                     },
                     SubmitButton: submitButton,
                     UserNameInput: userNameInput,
@@ -293,13 +288,7 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
 }
 
 const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        attrs: {
-            activeChat: state?.chat?.selectedChat.data,
-            disabled: !state?.chat?.selectedChat.data,
-        },
-        children: {},
-    };
+    return {};
 };
 
 export const ConnectedChatHeaderMenu = connect(mapStateToProps)(ChatHeaderMenu);

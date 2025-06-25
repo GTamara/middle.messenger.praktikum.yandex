@@ -49,7 +49,6 @@ export class ChangePasswordController {
     cancelFormHandler(e: Event) {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
-        console.log('form', form);
         form.reset();
     }
 }

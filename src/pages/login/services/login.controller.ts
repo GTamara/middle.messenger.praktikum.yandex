@@ -34,14 +34,13 @@ export class LoginController {
         };
 
         this.loginApiService.login(payload)
-            .then((response) => {
+            .then((_) => {
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
                 form.reset();
                 this.router.guard.resetAuthCache();
                 this.router.go(this.router.config.authRedirect);
             })
             .catch((error) => {
-                console.log('login error', error);
                 // Обработка ошибок
                 this.messageService.showErrorMessage(
                     this.messageService.getErrorMessage(error),

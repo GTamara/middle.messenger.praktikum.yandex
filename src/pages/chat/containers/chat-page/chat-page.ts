@@ -9,14 +9,12 @@ import { UserDataService } from '../../../../shared/services/user-data/user-data
 import type { StoreState } from '../../../../shared/types';
 import { getElement } from '../../../../shared/utils';
 import { ChatHeaderMenu, ChatsList, MessageForm } from '../../components';
-import { ChatController } from '../../services/chat.controller';
 
 type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: MessageForm;
     popover: Block;
     activeChat?: ChatsResponse | null;
-    activeChatId?: number;
     chatsCount?: number;
 }
 
@@ -24,15 +22,12 @@ class ChatPage extends Block {
     validationService: FormValidation;
     form: MessageForm;
     messageControlProps: Block;
-
     userDataService = new UserDataService();
-    private readonly controller = new ChatController();
 
     constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
-            activeChat: null,
-            activeChatId: null,
+            activeChat: { data: null },
             chatsCount: 0,
             SearchInput: new ControlWrapper({
                 label: 'Search',
@@ -79,7 +74,6 @@ class ChatPage extends Block {
             type: 'text',
             autocomplete: 'off',
             input: ((e: Event) => {
-                console.log('message input event', (e.target as HTMLInputElement).value);
                 this.setValue(e, this.messageControlProps);
             }),
             change: ((e: Event) => {
@@ -130,8 +124,6 @@ class ChatPage extends Block {
     }
 
     render() {
-        const activeChat = !!(this.attrs).activeChat?.data?.id;
-        const isChatsListEmpty = this.attrs.chatsCount === 0;
         return `
 <div class="chat-container">
     <div class="chat-container__messages">
@@ -148,7 +140,7 @@ class ChatPage extends Block {
                 Chat
                 
             </div>
-            ` + (activeChat || isChatsListEmpty ? `{{{chatHeaderMenu}}}` : '') + `
+            {{{ chatHeaderMenu }}}
         </div>
         <div class="chat__content"></div>
         <div class="chat__footer">
@@ -163,7 +155,6 @@ class ChatPage extends Block {
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
         activeChat: state?.chat?.selectedChat,
-        activeChatId: state?.chat?.selectedChat?.data?.id,
         chatsCount: state?.chat?.chats?.length,
     };
 };

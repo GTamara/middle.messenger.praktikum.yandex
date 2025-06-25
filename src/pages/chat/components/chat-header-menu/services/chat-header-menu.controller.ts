@@ -53,6 +53,7 @@ export class ChatHeaderMenuController {
     }
 
     deleteChat(): Promise<void> | undefined {
+        debugger;
         const selectedChatId = this.store.getState().chat.selectedChat.data?.id;
         if (!selectedChatId) {
             this.notificationService.showSuccessMessage('Неверный идентификатор чата');
