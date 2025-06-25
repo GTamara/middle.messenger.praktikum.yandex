@@ -22,7 +22,7 @@ export class ChatApiService {
     }
 
     addUser(payload: UsersRequest): Promise<void> {
-        return this.http.post<void, UsersRequest>('chats/users', payload);
+        return this.http.put<void, UsersRequest>('chats/users', payload);
     }
 
     deleteUser(payload: UsersRequest): Promise<void> {

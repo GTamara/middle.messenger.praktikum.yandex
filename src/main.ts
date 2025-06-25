@@ -45,11 +45,6 @@ const initialState: StoreState = {
 };
 window.store = StoreService.getInstance<StoreState>(initialState);
 
-// window.store.on(EStoreEvents.UPDATED, (prevState: any, newState: any) => {
-//   console.log("prevState", prevState);
-//   console.log("newState", newState);
-// });
-
 const pages: Record<string, string | Constructor> = {
     [EPages.Register]: Pages.RegisterPage,
     [EPages.Login]: Pages.LoginPage,

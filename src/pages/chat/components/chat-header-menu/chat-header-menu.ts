@@ -1,4 +1,4 @@
-import { Button, ControlWrapper, FormElement, Input, Popover, Popup } from '../../../../components';
+import { Button, ControlWrapper, FormElement, Input, Popover, Popup, Select } from '../../../../components';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
@@ -37,6 +37,12 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                         id: 'addUserPopup',
                     },
                     {
+                        title: 'Удалить пользователя',
+                        icon: 'delete',
+                        click: () => this.removeUserClick(),
+                        id: 'deleteUserPopup',
+                    },
+                    {
                         title: 'Создать чат',
                         icon: 'add',
                         click: () => this.createChatClick(),
@@ -47,12 +53,6 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                         icon: 'delete',
                         click: () => this.deleteSelectedChatClick(),
                         id: 'deleteChatPopup',
-                    },
-                    {
-                        title: 'Удалить пользователя',
-                        icon: 'delete',
-                        click: () => this.deleteUserClick(),
-                        id: 'deleteUserPopup',
                     },
                 ],
             }),
@@ -164,51 +164,48 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         );
     }
 
-    deleteUserClick(): void {
+    async removeUserClick() {
+        debugger;
+        const usersList = await this.controller.getChatUsersList();
         const submitButton = new Button({
-            label: 'Create chat',
+            label: 'Remove user',
             type: 'submit',
             color: 'primary',
             class: 'button full-width',
             order: 1,
             ctrlType: 'action',
         });
-        const userNameInput = new ControlWrapper({
-            label: 'Chat name',
+        const userNameSelect = new ControlWrapper({
+            label: 'User login',
             order: 1,
             ctrlType: 'control',
 
-            Control: new Input({
+            Control: new Select({
                 name: 'login',
                 type: 'text',
                 required: true,
-                autocomplete: 'off',
-                validationRuleName: 'login',
-                // input: ((e: Event) => {
-                //     this.setValue(e, this.loginControlProps);
-                // }),
+                options: usersList ?? [],
                 change: ((e: Event) => {
-                    this.validationService?.checkControlValidity(e.target as HTMLInputElement);
                 }),
             }),
         });
 
         this.setChildren({
-            DeleteUserPopup: new Popup({
+            RemoveUserPopup: new Popup({
                 title: 'Удалить пользоавателя',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
-                        // this.controller.createChatSubmitForm(event);
-                        // const popup = this.children.DeleteUserPopup as Block;
-                        // this.closePopup(popup.element as HTMLDialogElement);
+                        this.controller.removeUserSubmitForm(event);
+                        const popup = this.children.RemoveUserPopup as Block;
+                        this.closePopup(popup.element as HTMLDialogElement);
                     },
                     SubmitButton: submitButton,
-                    UserNameInput: userNameInput,
+                    UserNameSelect: userNameSelect,
                 }),
                 id: 'deleteUserPopup',
             }),
         });
-        const popup = this.children.DeleteUserPopup as Block;
+        const popup = this.children.RemoveUserPopup as Block;
         const modal = popup.element as HTMLDialogElement;
         this.openModalAndLockScroll(modal);
     }
@@ -282,7 +279,7 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             </div>
             {{{AddUserPopup}}}
             {{{CreateChatPopup}}}
-            {{{DeleteUserPopup}}}
+            {{{RemoveUserPopup}}}
         `;
     }
 }

@@ -13,9 +13,6 @@ export type StoreState = {
         selectedChat: {
             data: ChatsResponse | null;
         };
-        chatListChildren: {
-            [key: string]: ChatsResponse[];
-        };
     }
     [key: string]: any;
 };

@@ -39,7 +39,6 @@ export class ChatListItem extends Block<ChatListItemProps> {
     }
 
     render() {
-        console.log('RRR');
         const { name, item, active } = this.attrs;
         const id = item.id;
         const activeCatIndex = 1;

@@ -91,3 +91,18 @@ export interface DeleteChatResponse {
     userId: number;
     result: ChatsResponse;
 }
+
+export enum ERole {
+    ADMIN = 'admin',
+    REGULAR = 'regular',
+}
+
+export interface ChatUserResponse {
+    id: number;
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    login: string;
+    avatar: string;
+    role: ERole;
+}

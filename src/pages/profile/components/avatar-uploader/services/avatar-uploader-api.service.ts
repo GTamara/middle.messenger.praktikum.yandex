@@ -6,9 +6,6 @@ export class AvatarUploaderApiService {
 
     uploadAvatar(payload: FormData): Promise<UserResponse> {
         return this.http.put<UserResponse, FormData>('user/profile/avatar', payload)
-            .then((response) => {
-                console.log(response);
-                return response;
-            });
+            .then((response) => response);
     }
 }

@@ -1,6 +1,6 @@
 import Block from '../../core/block';
-import type { DEFAULT_VALIDATION_RULES, ValidationRuleKeys } from '../../core/validation/validation-config';
-type x = keyof typeof DEFAULT_VALIDATION_RULES;
+import type { ValidationRuleKeys } from '../../core/validation/validation-config';
+
 export type InputProps = {
     name: string;
     type: string;
