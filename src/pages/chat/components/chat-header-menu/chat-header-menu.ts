@@ -90,9 +90,11 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 title: 'Add user',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
-                        this.controller.addUserSubmitForm(event);
-                        const popup = this.children.AddUserPopup as Block;
-                        this.closePopup(popup.element as HTMLDialogElement);
+                        this.processPopup(
+                            event,
+                            this.controller.addUserSubmitForm.bind(this.controller),
+                            this.children.AddUserPopup as Block,
+                        );
                     },
                     SubmitButton: submitButton,
                     UserLoginInput: userLoginInput,
@@ -144,9 +146,11 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 title: 'Создать чат',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
-                        this.controller.createChatSubmitForm(event);
-                        const popup = this.children.CreateChatPopup as Block;
-                        this.closePopup(popup.element as HTMLDialogElement);
+                        this.processPopup(
+                            event,
+                            this.controller.createChatSubmitForm.bind(this.controller),
+                            this.children.CreateChatPopup as Block,
+                        );
                     },
                     SubmitButton: submitButton,
                     ChatNameInput: chatNameInput,
@@ -195,9 +199,11 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 title: 'Удалить пользоавателя',
                 content: new FormElement({
                     submit: (event: SubmitEvent) => {
-                        this.controller.removeUserSubmitForm(event);
-                        const popup = this.children.RemoveUserPopup as Block;
-                        this.closePopup(popup.element as HTMLDialogElement);
+                        this.processPopup(
+                            event,
+                            this.controller.removeUserSubmitForm.bind(this.controller),
+                            this.children.RemoveUserPopup as Block,
+                        );
                     },
                     SubmitButton: submitButton,
                     UserNameSelect: userNameSelect,
@@ -270,6 +276,21 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
     closePopup(dialog: HTMLDialogElement) {
         dialog.close();
         document.body.classList.remove('scroll-lock');
+    }
+
+    processPopup(
+        event: SubmitEvent,
+        submitCallback: (e: SubmitEvent) => Promise<void>,
+        popup: Block,
+    ) {
+        submitCallback(event)
+            .then(() => {
+                this.closePopup(popup.element as HTMLDialogElement);
+            })
+            .catch((err) => {
+                console.log(err);
+                popup.setAttrs({ error: err ?? 'Ошибка!' });
+            });
     }
 
     render() {

@@ -19,16 +19,12 @@ export class ChatHeaderMenuController {
             .then(() => {
                 this.notificationService.showSuccessMessage('Чат создан');
                 this.chatController.getChats();
-            }).catch((error) => {
-                this.notificationService.showErrorMessage(
-                    this.notificationService.getErrorMessage(error),
-                );
-            });
+            }).catch((error) => this.processError(error));
     }
 
     addUserSubmitForm(e: SubmitEvent) {
         e.preventDefault();
-        const selectedChatData = this.store.getState().chat.selectedChat.data; debugger;
+        const selectedChatData = this.store.getState().chat.selectedChat.data;
         const loginValue = (e.target as HTMLFormElement).login.value;
         return this.seacrhUserByLogin(loginValue)
             .then((response) => {
@@ -38,11 +34,7 @@ export class ChatHeaderMenuController {
                 });
             }).then(() => {
                 this.notificationService.showSuccessMessage('Пользователь добавлен');
-            }).catch((error) => {
-                this.notificationService.showErrorMessage(
-                    this.notificationService.getErrorMessage(error),
-                );
-            });
+            }).catch((error) => this.processError(error));
     }
 
     removeUserSubmitForm(e: SubmitEvent) {
@@ -50,11 +42,7 @@ export class ChatHeaderMenuController {
         return this.chatApiService.deleteUser((e.target as HTMLFormElement).login.value)
             .then(() => {
                 this.notificationService.showSuccessMessage('Пользователь удален');
-            }).catch((error) => {
-                this.notificationService.showErrorMessage(
-                    this.notificationService.getErrorMessage(error),
-                );
-            });
+            }).catch((error) => this.processError(error));
     }
 
     deleteChat(): Promise<void> | undefined {
@@ -86,5 +74,11 @@ export class ChatHeaderMenuController {
 
     seacrhUserByLogin(login: string): Promise<UserResponse[]> {
         return this.api.seacrhUserByLogin(login);
+    }
+
+    processError(error: string) {
+        const errorMessage = this.notificationService.getErrorMessage(error);
+        this.notificationService.showErrorMessage(errorMessage);
+        return Promise.reject(errorMessage);
     }
 }

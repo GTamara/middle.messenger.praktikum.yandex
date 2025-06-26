@@ -36,4 +36,8 @@ export class ChatApiService {
     deleteChat(chatId: number): Promise<DeleteChatResponse> {
         return this.http.delete<DeleteChatResponse, DeleteChatRequest>(`chats/${chatId}`);
     }
+
+    // getWSChatToken () {
+    //     return this.http.get<string>('chats/token');
+    // }
 }

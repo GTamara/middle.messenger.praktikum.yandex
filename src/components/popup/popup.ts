@@ -7,6 +7,7 @@ type PopupProps = {
     id: string;
     class?: string;
     closeDialogBtn?: Block;
+    error?: string;
 }
 
 export class Popup extends Block<PopupProps> {
@@ -30,11 +31,15 @@ export class Popup extends Block<PopupProps> {
     }
 
     render() {
-        const { title } = this.attrs;
+        const { title, error } = this.attrs;
         return `
         <div class="dialog__wrapper">
             {{{closeDialogBtn}}}
             <h2>${title}</h2>
+            {{#if ${!!error}}}
+                <div class="dialog__error">{{ error }}</div>
+            {{/if}}
+            <br>
             {{{content}}}
         </div>
         `;
