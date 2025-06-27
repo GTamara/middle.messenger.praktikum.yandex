@@ -24,7 +24,7 @@ export class ChatHeaderMenuController {
 
     addUserSubmitForm(e: SubmitEvent) {
         e.preventDefault();
-        const selectedChatData = this.store.getState().chat.selectedChat.data;
+        const selectedChatData = this.store.getState().chat.selectedChat;
         const loginValue = (e.target as HTMLFormElement).login.value;
         return this.seacrhUserByLogin(loginValue)
             .then((response) => {
@@ -46,8 +46,7 @@ export class ChatHeaderMenuController {
     }
 
     deleteChat(): Promise<void> | undefined {
-        debugger;
-        const selectedChatId = this.store.getState().chat.selectedChat.data?.id;
+        const selectedChatId = this.store.getState().chat.selectedChat?.id;
         if (!selectedChatId) {
             this.notificationService.showSuccessMessage('Неверный идентификатор чата');
             return;
@@ -64,7 +63,7 @@ export class ChatHeaderMenuController {
     }
 
     getChatUsersList() {
-        const selectedChatId = this.store.getState().chat.selectedChat.data?.id;
+        const selectedChatId = this.store.getState().chat.selectedChat?.id;
         if (!selectedChatId) {
             this.notificationService.showSuccessMessage('Неверный идентификатор чата');
             return;

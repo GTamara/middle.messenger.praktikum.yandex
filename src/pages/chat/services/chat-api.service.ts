@@ -1,5 +1,6 @@
 import { HTTPTransport } from '../../../core/http-transport/http-transport';
 import {
+    type ChatsMessagesTokenResponse,
     type ChatsResponse,
     type CreateChatRequest,
     type CreateChatResponse,
@@ -37,7 +38,7 @@ export class ChatApiService {
         return this.http.delete<DeleteChatResponse, DeleteChatRequest>(`chats/${chatId}`);
     }
 
-    // getWSChatToken () {
-    //     return this.http.get<string>('chats/token');
-    // }
+    getWebsocketChatToken(chatId: number): Promise<ChatsMessagesTokenResponse> {
+        return this.http.post<ChatsMessagesTokenResponse>(`chats/token/${chatId}`);
+    }
 }

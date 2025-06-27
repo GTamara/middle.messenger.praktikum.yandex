@@ -32,10 +32,12 @@ export class ChatListItem extends Block<ChatListItemProps> {
         oldProps: Partial<ChatListItemProps>,
         newProps: Partial<ChatListItemProps>,
     ): boolean {
-        return super.componentDidUpdate(
+        const shouldUpdate = super.componentDidUpdate(
             { active: oldProps.active },
             { active: newProps.active },
         );
+        console.log('shouldUpdate', shouldUpdate, oldProps.active, newProps.active);
+        return shouldUpdate;
     }
 
     render() {
@@ -60,7 +62,7 @@ export class ChatListItem extends Block<ChatListItemProps> {
 
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
-        activeChat: state?.chat?.selectedChat.data,
+        activeChat: state?.chat?.selectedChat,
     };
 };
 

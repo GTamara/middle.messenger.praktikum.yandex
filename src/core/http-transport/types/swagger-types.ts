@@ -48,10 +48,6 @@ export interface UsersRequest {
     chatId: number;
 }
 
-// export interface AddUserResponse {
-//     id: number;
-// }
-
 export interface CreateChatRequest {
     title: string;
 }
@@ -106,3 +102,5 @@ export interface ChatUserResponse {
     avatar: string;
     role: ERole;
 }
+
+export type ChatsMessagesTokenResponse = {token: string};

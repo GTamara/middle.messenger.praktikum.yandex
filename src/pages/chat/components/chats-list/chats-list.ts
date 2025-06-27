@@ -53,7 +53,7 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     chatItemClick(item: ChatsResponse) {
-        this.store.setState('chat.selectedChat.data', item);
+        this.store.setState('chat.selectedChat', item);
         this.selectChat(item.id);
     }
 
@@ -110,4 +110,4 @@ const mapStateToProps = (state: Partial<StoreState>) => {
     };
 };
 
-export const ConnectedChatsList = connect(mapStateToProps)(ChatsList);
+export const ConnectedChatsList = connect(mapStateToProps)(ChatsList) as typeof ChatsList;

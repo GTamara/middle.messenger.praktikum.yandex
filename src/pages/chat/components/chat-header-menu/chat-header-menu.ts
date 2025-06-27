@@ -169,7 +169,6 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
     }
 
     async removeUserClick() {
-        debugger;
         const usersList = await this.controller.getChatUsersList();
         const submitButton = new Button({
             label: 'Remove user',

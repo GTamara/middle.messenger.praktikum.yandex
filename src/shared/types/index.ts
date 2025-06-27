@@ -10,9 +10,7 @@ export type StoreState = {
     user: UserResponse | null;
     chat: {
         chats: ChatsResponse[],
-        selectedChat: {
-            data: ChatsResponse | null;
-        };
+        selectedChat: ChatsResponse | null;
     }
-    [key: string]: any;
+    // [key: string]: any;
 };

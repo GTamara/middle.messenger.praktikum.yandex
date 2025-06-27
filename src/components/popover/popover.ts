@@ -26,7 +26,6 @@ export class Popover extends Block<PopoverProps> {
     }
 
     render() {
-        debugger;
         return `
            <div class="popover-content">
                 {{{button}}}

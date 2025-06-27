@@ -1,15 +1,14 @@
 import type { UserResponse } from '../../../core/http-transport/types/swagger-types';
+import type { StoreService } from '../../../core/store/store.service';
 import type { StoreState } from '../../types';
 import { UserDataApiService } from './user-data-api.service';
 
 export class UserDataService {
-    private data: UserResponse | null = null;
-
-    private store: StoreState = window.store as StoreState;
+    private store: StoreService<StoreState> = window.store as StoreService<StoreState>;
     private userDataApiService: UserDataApiService = new UserDataApiService();
 
     storeUserData(): Promise<UserResponse> {
-        const userData = this.store.user;
+        const userData = this.store.getState().user;
         if (userData) {
             return Promise.resolve(userData);
         }

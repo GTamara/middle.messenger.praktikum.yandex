@@ -5,29 +5,32 @@ import { connect } from '../../../../core/store/connect';
 import FormValidation from '../../../../core/validation/validation';
 import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
-import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
 import type { StoreState } from '../../../../shared/types';
 import { getElement } from '../../../../shared/utils';
-import { ChatHeaderMenu, ChatsList, MessageForm } from '../../components';
+import { ChatHeaderMenu, ChatsList, MessageForm, MessagesList } from '../../components';
 
-type ChatPageProps = {
-    SearchInput: ControlWrapper;
-    Form: MessageForm;
-    popover: Block;
-    activeChat?: ChatsResponse | null;
-    chatsCount?: number;
-}
+    type MessageFormType = InstanceType<typeof MessageForm>;
 
-class ChatPage extends Block {
-    validationService: FormValidation;
-    form: MessageForm;
-    messageControlProps: Block;
-    userDataService = new UserDataService();
+    type ChatPageProps = {
+        SearchInput: ControlWrapper;
+        Form: MessageFormType;
+        popover: Block;
+        activeChat?: ChatsResponse | null;
+        chatsCount?: number;
+        chatHeaderMenu: InstanceType<typeof ChatHeaderMenu>;
+        chatsList: InstanceType<typeof ChatsList>;
+        messagesList: InstanceType<typeof MessagesList>;
+    }
+
+class ChatPage extends Block<ChatPageProps> {
+    private readonly validationService: FormValidation;
+    form: MessageFormType;
+    private readonly messageControlProps: Block;
 
     constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
-            activeChat: { data: null },
+            activeChat: null,
             chatsCount: 0,
             SearchInput: new ControlWrapper({
                 label: 'Search',
@@ -38,9 +41,9 @@ class ChatPage extends Block {
                     autocomplete: 'off',
                     input: ((e: Event) => {
                         const searchControlProps = getWrappedTextInputPropsForValidation<Block>(
-                            this.children.SearchInput as Block,
-                            'search',
-                            this.setAttrs.bind(this),
+                                this.children.SearchInput as Block,
+                                'search',
+                                this.setAttrs.bind(this),
                         );
                         this.setValue(e, searchControlProps);
                     }),
@@ -48,18 +51,17 @@ class ChatPage extends Block {
             }),
             chatHeaderMenu: new ChatHeaderMenu({}),
             chatsList: new ChatsList({}),
-
+            messagesList: new MessagesList({}),
         });
         this.setChildren({
-            Form: this.getForm(),
+            Form: this.getForm() as Block,
         });
-        this.form = getElement(this.children.Form);
+        this.form = getElement(this.children.Form) as MessageFormType;
         this.messageControlProps = getElement(this.form.children.MessageInput);
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
-        this.userDataService.storeUserData();
+        this.validationService = new FormValidation(this.getValidationConfig(this.form as Block));
     }
 
-    getForm(): MessageForm {
+    getForm(): MessageFormType {
         const sendButton = new Button({
             type: 'submit',
             color: 'primary',
@@ -107,9 +109,9 @@ class ChatPage extends Block {
             },
             controls: {
                 MessageInput: getTextInputPropsForValidation<Block>(
-                    form.children.MessageInput as Block,
-                    'message',
-                    this.setAttrs.bind(this),
+                        form.children.MessageInput as Block,
+                        'message',
+                        this.setAttrs.bind(this),
                 ),
             },
             submitAction: {
@@ -125,36 +127,38 @@ class ChatPage extends Block {
 
     render() {
         return `
-<div class="chat-container">
-    <div class="chat-container__messages">
-        {{> Link href="${PATHS.profile}" label="Profile >" page="profile" }}
+    <div class="chat-container">
+        <div class="chat-container__messages">
+            {{> Link href="${PATHS.profile}" label="Profile >" page="profile" }}
 
-        {{{ SearchInput }}}
-        <div class="chat-container__messages-list">
-            {{{chatsList}}}
-        </div>
-    </div>
-    <div class="chat-container__selected-chat-content chat">
-        <div class="chat__header">
-            <div class="chat__header-title">
-                Chat
-                
+            {{{ SearchInput }}}
+            <div class="chat-container__messages-list">
+                {{{chatsList}}}
             </div>
-            {{{ chatHeaderMenu }}}
         </div>
-        <div class="chat__content"></div>
-        <div class="chat__footer">
-            {{{ Form }}}
+        <div class="chat-container__selected-chat-content chat">
+            <div class="chat__header">
+                <div class="chat__header-title">
+                    Chat
+                    
+                </div>
+                {{{ chatHeaderMenu }}}
+            </div>
+            <div class="chat__content">
+                {{{ messagesList }}}
+            </div>
+            <div class="chat__footer">
+                {{{ Form }}}
+            </div>
         </div>
     </div>
-</div>
-        `;
+            `;
     }
 }
 
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
-        activeChat: state?.chat?.selectedChat,
+        activeChat: state?.chat?.selectedChat?.id,
         chatsCount: state?.chat?.chats?.length,
     };
 };

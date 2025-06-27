@@ -10,3 +10,8 @@ export enum EStoreEvents {
     UPDATED = 'store:updated',
 };
 
+export enum EChatEvents {
+    MESSAGE_SENT = 'message:sent',
+    MESSAGE_RECEIVED = 'message:received',
+};
+

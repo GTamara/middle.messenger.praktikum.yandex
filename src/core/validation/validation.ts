@@ -1,4 +1,3 @@
-import EventBus from '../event-bus/event-bus';
 import {
     DEFAULT_VALIDATION_CONFIG,
     DEFAULT_VALIDATION_RULES,
@@ -13,7 +12,6 @@ export default class FormValidation {
     formHtmlElement: HTMLFormElement;
     controlHtmlElementsArr: HTMLElement[];
     submitBtnHtmlElement: HTMLInputElement;
-    eventBus = new EventBus();
 
     constructor(config: ValidationConfig) {
         this.config = config;

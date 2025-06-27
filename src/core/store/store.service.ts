@@ -22,7 +22,7 @@ export class StoreService<T extends Indexed> extends EventBus<EStoreEvents> {
         return this._state;
     }
 
-    setState<K extends keyof T & string>(path: K, value: T[K]): void {
+    setState(path: string, value: any): void {
         this._set(path, value);
         this.emit(EStoreEvents.UPDATED);
     };

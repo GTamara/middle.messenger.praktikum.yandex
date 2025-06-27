@@ -38,9 +38,7 @@ const initialState: StoreState = {
     user: null,
     chat: {
         chats: [],
-        selectedChat: {
-            data: null,
-        },
+        selectedChat: null,
     },
 };
 window.store = StoreService.getInstance<StoreState>(initialState);
