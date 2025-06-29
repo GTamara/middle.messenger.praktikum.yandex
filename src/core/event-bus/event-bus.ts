@@ -9,6 +9,20 @@ export default class EventBus<E extends string> {
         }
         this.listeners[event].push(callback);
     }
+
+    once(event: E, callback: Function) {
+        // Создаем обертку для callback
+        const onceWrapper = (...args: any[]) => {
+            // Удаляем подписку перед вызовом оригинального callback
+            this.off(event, onceWrapper);
+            // Вызываем оригинальный callback
+            callback(...args);
+        };
+
+        // Подписываем обертку на событие
+        this.on(event, onceWrapper);
+    }
+
     off(event: E, callback: Function) {
         if (!this.listeners[event]) {
             throw new Error(`Нет события: ${event}`);
@@ -19,8 +33,8 @@ export default class EventBus<E extends string> {
     }
     emit<T extends any[] = []>(event: E, ...args: T) {
         if (!this.listeners[event]) {
+            console.error(`Нет события: ${event}`);
             return;
-            // throw new Error(`Нет события: ${event}`);
         }
         this.listeners[event].forEach(function(listener) {
             listener(...args);

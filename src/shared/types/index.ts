@@ -11,6 +11,5 @@ export type StoreState = {
     chat: {
         chats: ChatsResponse[],
         selectedChat: ChatsResponse | null;
-    }
-    // [key: string]: any;
+    };
 };

@@ -1,10 +1,12 @@
 import { Avatar } from '../../../../components';
 import { EAvatarSizes } from '../../../../components/avatar/types/avatar.types';
 import Block from '../../../../core/block';
+import { EBlockEvents } from '../../../../core/event-bus/types';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
 import type { StoreService } from '../../../../core/store/store.service';
 import type { StoreState } from '../../../../shared/types';
+import { ChatMessagesManagerController } from '../../services/chat-messages-manager.controller';
 import { ChatController } from '../../services/chat.controller';
 import { ChatListItem } from '../chat-list-item/chat-list-item';
 
@@ -16,6 +18,7 @@ export type ChatListProps = {
 class ChatsList extends Block<ChatListProps> {
     private readonly controller = new ChatController();
     private readonly store: StoreService<StoreState> = window.store as StoreService<StoreState>;
+    private readonly chatMessagesController = new ChatMessagesManagerController();
 
     constructor(props: ChatListProps) {
         super('app-chats-list', {
@@ -41,6 +44,8 @@ class ChatsList extends Block<ChatListProps> {
                             click: () => {
                                 this.chatItemClick({ ...item });
                                 console.log('click', this.element);
+                                this.chatMessagesController.requestNewWebsocketConnection();
+                                // this.eventBus.emit(EBlockEvents.SHOULD_INITIATE_NEW_WEBSOCKET_CONNECTION);
                             },
                         });
                     }),

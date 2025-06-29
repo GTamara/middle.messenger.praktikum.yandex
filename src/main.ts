@@ -13,12 +13,14 @@ import { RouteAccess } from './core/routing/types';
 import RouteGuard from './core/routing/route-guard';
 import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 import { StoreService } from './core/store/store.service';
-import { EStoreEvents } from './core/event-bus/types';
+import { EBlockEvents, EChatMessagesEvents, EStoreEvents } from './core/event-bus/types';
+import EventBus from './core/event-bus/event-bus';
 
 declare global {
     interface Window {
         router: any;
-        store: any
+        store: any;
+        websocketMessagesEventBus: any;
     }
 }
 
@@ -42,6 +44,8 @@ const initialState: StoreState = {
     },
 };
 window.store = StoreService.getInstance<StoreState>(initialState);
+const websocketMessagesEventBus: EventBus<EChatMessagesEvents> = new EventBus<EChatMessagesEvents>();
+window.websocketMessagesEventBus = websocketMessagesEventBus;
 
 const pages: Record<string, string | Constructor> = {
     [EPages.Register]: Pages.RegisterPage,

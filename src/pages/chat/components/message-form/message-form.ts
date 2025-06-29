@@ -2,8 +2,8 @@ import Block from '../../../../core/block';
 import { connect } from '../../../../core/store/connect';
 import { UserDataService } from '../../../../shared/services/user-data/user-data.controller';
 import type { StoreState } from '../../../../shared/types';
-import type { ChatWebsocketService } from '../../services/chat-websocket.service';
-import { ChatController } from '../../services/chat.controller';
+import { WebsocketService } from '../../../../core/websocket/websocket.service';
+import { ChatMessagesManagerController } from '../../services/chat-messages-manager.controller';
 
 export type MessageFormProps = {
     class?: string;
@@ -15,10 +15,6 @@ export type MessageFormProps = {
 }
 
 class MessageForm extends Block<MessageFormProps> {
-    private readonly userDataService = new UserDataService();
-    private readonly controller = new ChatController();
-    private ws: ChatWebsocketService | null = null;
-
     constructor(props: MessageFormProps) {
         super('form', {
             ...props,
@@ -27,24 +23,19 @@ class MessageForm extends Block<MessageFormProps> {
             submit: (e: SubmitEvent) => {
                 e.preventDefault();
                 const messaage = (this.children.MessageInput as Block).attrs.value;
-                this.ws?.sendMessage(messaage);
+                WebsocketService.sendMessage(messaage);
             },
         });
-
-        this.userDataService.storeUserData()
-            .then(() => {
-                this.ws = this.controller.getWebSocketInstance() ?? null;
-            });
     }
 
-    componentDidUpdate(oldProps: Partial<MessageFormProps>, newProps: Partial<MessageFormProps>): boolean {
-        const should = super.componentDidUpdate(oldProps, newProps);
-        if (should) {
-            this.ws = this.controller.getWebSocketInstance() ?? null;
-        }
-        console.log('should', should, oldProps, newProps);
-        return should;
-    }
+    // componentDidUpdate(oldProps: Partial<MessageFormProps>, newProps: Partial<MessageFormProps>): boolean {
+    //     const should = super.componentDidUpdate(oldProps, newProps);
+    //     if (should) {
+    //         this.ws = this.chatMessagesController.getWebSocketInstance() ?? null;
+    //     }
+    //     console.log('should', should, oldProps, newProps);
+    //     return should;
+    // }
 
     render() {
         return `
@@ -55,7 +46,6 @@ class MessageForm extends Block<MessageFormProps> {
 }
 
 const mapStateToProps = (state: Partial<StoreState>) => {
-    console.log('MessageForm', state?.chat?.selectedChat);
     return {
         activeChat: state?.chat?.selectedChat?.id,
         // chatsCount: state?.chat?.chats?.length,
