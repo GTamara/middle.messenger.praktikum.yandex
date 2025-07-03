@@ -1,3 +1,29 @@
 app-message-item {
-    display: block;
+    display: inline-block;
+    border: 1px solid var(--color-lighter-border);
+    padding: 7px 10px;
+    border-radius: 0.5rem;
+
+    &[owner="true"] {
+        align-self: flex-end;
+        background-color: var(--color-accent-background)
+    }
+
+    &:not([owner="true"]) {
+        align-self: flex-start;
+        background-color: var(--color-basic-background);
+    }
+
+    .date-time {
+        font-size: 0.7rem;
+        padding-inline-start: 60px;
+        text-align: end;
+    } 
+
+    .message-text {
+        padding-inline-end: 60px;
+        padding-block-end: 1rem;
+        text-align: start;
+        
+    }
 }

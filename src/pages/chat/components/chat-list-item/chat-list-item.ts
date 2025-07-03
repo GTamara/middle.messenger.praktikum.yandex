@@ -23,7 +23,6 @@ export class ChatListItem extends Block<ChatListItemProps> {
             class: 'test-item',
             avatar: new Avatar({
                 size: EAvatarSizes.SMALL,
-                // imageSrc: props.avatarImageSrc,
             }),
         });
     }
@@ -36,7 +35,6 @@ export class ChatListItem extends Block<ChatListItemProps> {
             { active: oldProps.active },
             { active: newProps.active },
         );
-        console.log('shouldUpdate', shouldUpdate, oldProps.active, newProps.active);
         return shouldUpdate;
     }
 
@@ -48,8 +46,8 @@ export class ChatListItem extends Block<ChatListItemProps> {
         <div class="chat-list-item {{#if ${active === true}}}chat-list-item__active{{/if}}"> 
         {{{avatar}}}
         <div class="chat-list-item__data">
-            <p class="chat-list-item__data-row">${name}</p>
-            <p class="chat-list-item__data-row">${id}</p>
+            <h2 class="chat-list-item__data-row">${name}</h2>
+            <p class="chat-list-item__data-row">ID: ${id}</p>
             {{#if ${activeCatIndex === 1}}}
                 dfdfgdgdfgdfgf
             {{/if}}

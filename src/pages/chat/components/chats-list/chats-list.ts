@@ -102,7 +102,7 @@ class ChatsList extends Block<ChatListProps> {
     render() {
         const { chatListItems } = this.children;
         return `
-        <div class="messages-list-scroll-container">
+        <div>
             {{#each chatListItems}}
                 {{{ this }}}
             {{/each}}

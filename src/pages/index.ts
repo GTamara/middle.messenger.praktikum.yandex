@@ -1,10 +1,5 @@
 export { default as LoginPage } from './login';
 export { default as RegisterPage } from './register';
-// export { ChatPage } from './chat';
-
-// export {
-//     ProfilePage,
-// } from './profile';
 export { NavigationPage } from './navigation';
 export { ServerErrorPage } from './server-error';
 export { ClientErrorPage } from './client-error';

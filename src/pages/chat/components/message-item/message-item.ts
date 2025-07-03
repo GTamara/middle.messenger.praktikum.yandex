@@ -6,19 +6,26 @@ type MessagesItemProps = {
     date?: string;
     ownerId?: number;
     type?: 'message'| 'file';
+    class?: string;
 }
 
 class MessageItem extends Block<MessagesItemProps> {
     constructor(props: MessagesItemProps) {
         super(
             'app-message-item',
-            { ...props },
+            {
+                ...props,
+                class: 'app-message-item',
+            },
         );
     }
 
     render(): string {
         const { text, date, owner } = this.attrs;
-        return `${text} ${date} ${owner}`;
+        return `<div class="message-text">
+            ${text}
+        </div>
+        <div class="date-time">${date}</div>`;
     }
 }
 

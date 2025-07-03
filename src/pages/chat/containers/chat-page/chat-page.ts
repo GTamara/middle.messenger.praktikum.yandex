@@ -12,7 +12,8 @@ type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: Partial<MessageFormType>;
     popover: Block;
-    activeChat?: ChatsResponse | null;
+    activeChatId?: number | null;
+    activeChat?: ChatsResponse;
     chatsCount?: number;
     chatHeaderMenu: InstanceType<typeof ChatHeaderMenu>;
     chatsList: InstanceType<typeof ChatsList>;
@@ -23,7 +24,7 @@ class ChatPage extends Block<ChatPageProps> {
     constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
-            activeChat: null,
+            activeChatId: null,
             chatsCount: 0,
             SearchInput: new ControlWrapper({
                 label: 'Search',
@@ -57,6 +58,7 @@ class ChatPage extends Block<ChatPageProps> {
     }
 
     render() {
+        const { activeChatId, activeChat } = this.attrs;
         return `
     <div class="chat-container">
         <div class="chat-container__messages">
@@ -70,7 +72,10 @@ class ChatPage extends Block<ChatPageProps> {
         <div class="chat-container__selected-chat-content chat">
             <div class="chat__header">
                 <div class="chat__header-title">
-                    Chat
+                    {{#if ${ !!activeChat?.title }}}
+                        <h2><span class="chat__header-label">Chat: </span>${ activeChat?.title }</h2>
+                    {{/if}}
+                    
                     
                 </div>
                 {{{ chatHeaderMenu }}}
@@ -89,7 +94,8 @@ class ChatPage extends Block<ChatPageProps> {
 
 const mapStateToProps = (state: Partial<StoreState>) => {
     return {
-        activeChat: state?.chat?.selectedChat?.id,
+        activeChatId: state?.chat?.selectedChat?.id,
+        activeChat: state?.chat?.selectedChat,
         chatsCount: state?.chat?.chats?.length,
     };
 };

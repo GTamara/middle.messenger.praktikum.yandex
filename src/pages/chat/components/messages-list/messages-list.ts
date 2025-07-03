@@ -20,8 +20,6 @@ class MessagesList extends Block<MessagesListProps> {
             'app-messages-list',
             { ...props },
         );
-        console.log('MessagesList', this.eventBus);
-        console.log('MESSAGE_NEW_CONNECTION_INITIATED on');
         this.websocketMessagesEventBus.on(EChatMessagesEvents.MESSAGE_NEW_CONNECTION_ESTABLISHED, this.processNewConnection.bind(this));
         this.websocketMessagesEventBus.on(EChatMessagesEvents.MESSAGE_RECEIVED, this.processReceivedMessages.bind(this));
     }
@@ -43,7 +41,7 @@ class MessagesList extends Block<MessagesListProps> {
     render(): string {
         const { messages } = this.children;
         return `
-            <div class="messages-list-scroll-container">
+            <div class="messages-list-container">
             {{{messages}}}
             </div>
         `;

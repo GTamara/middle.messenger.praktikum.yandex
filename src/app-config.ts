@@ -8,5 +8,5 @@ export const APP_ROOT_ELEMNT = '#app';
 
 export const REDIRECT_CONFIG: RedirectConfig = {
     authRedirect: '/messenger', // Для авторизованных
-    unauthRedirect: '/login', // Для неавторизованных
+    unauthRedirect: '/', // Для неавторизованных
 } as const;
