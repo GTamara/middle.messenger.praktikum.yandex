@@ -78,7 +78,7 @@ export class WebsocketService {
             );
 
             this.setupEventListeners();
-            this.websocketMessagesEventBus.emit(EChatMessagesEvents.MESSAGE_NEW_CONNECTION_INITIATED);
+            this.websocketMessagesEventBus.emit(EChatMessagesEvents.MESSAGE_NEW_CONNECTION_ESTABLISHED);
         } catch (e) {
             console.error(e);
         }
@@ -97,10 +97,6 @@ export class WebsocketService {
             console.log('WebSocket connection established');
             this.reconnectAttempts = 0; // Сброс счетчика переподключений
 
-            ws.send(JSON.stringify({
-                content: 'Моё первое сообщение миру!',
-                type: 'message',
-            }));
             this.websocketMessagesEventBus.emit(EChatMessagesEvents.WEBSOCKET_CONNECTION_OPENED);
             this.onOpenCallback?.();
         });

@@ -1,7 +1,6 @@
 import { Avatar } from '../../../../components';
 import { EAvatarSizes } from '../../../../components/avatar/types/avatar.types';
 import Block from '../../../../core/block';
-import { EBlockEvents } from '../../../../core/event-bus/types';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
 import type { StoreService } from '../../../../core/store/store.service';
@@ -45,7 +44,6 @@ class ChatsList extends Block<ChatListProps> {
                                 this.chatItemClick({ ...item });
                                 console.log('click', this.element);
                                 this.chatMessagesController.requestNewWebsocketConnection();
-                                // this.eventBus.emit(EBlockEvents.SHOULD_INITIATE_NEW_WEBSOCKET_CONNECTION);
                             },
                         });
                     }),
@@ -58,7 +56,11 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     chatItemClick(item: ChatsResponse) {
+        if (item.id === this.store.getState().chat.selectedChat?.id) {
+            return;
+        }
         this.store.setState('chat.selectedChat', item);
+        this.store.setState('chat.needToResetChatListComponent', true);
         this.selectChat(item.id);
     }
 

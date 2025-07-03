@@ -5,12 +5,14 @@ import { UserDataService } from '../../../shared/services/user-data/user-data.co
 import { EChatMessagesEvents } from '../../../core/event-bus/types';
 import type EventBus from '../../../core/event-bus/event-bus';
 import { WebsocketService } from '../../../core/websocket/websocket.service';
+import type { MessageModel } from '../types';
+import { isPlainObject } from '../../../shared/utils/is-equal';
 
 export class ChatMessagesManagerController {
     private readonly store: StoreService<StoreState> = window.store;
     private readonly userDataService = new UserDataService();
     private readonly websocketMessagesEventBus: EventBus<EChatMessagesEvents> = window.websocketMessagesEventBus;
-    private websocketService: WebsocketService | null = null;
+    websocketService: WebsocketService | null = null;
 
     getNewWebSocketConnectionPayload() {
         const userId = this.store.getState().user?.id;
@@ -34,11 +36,6 @@ export class ChatMessagesManagerController {
         this.userDataService.storeUserData()
             .then(() => {
                 const payload = this.getNewWebSocketConnectionPayload();
-                // this.websocketMessagesEventBus.emit(EChatMessagesEvents.SHOULD_INITIATE_NEW_WEBSOCKET_CONNECTION, {
-                //     userId: payload?.userId,
-                //     chatId: payload?.chatId,
-                //     callback: this.sendRequestOldMessages,
-                // });
                 if (payload?.userId && payload.chatId) {
                     this.websocketService = WebsocketService.getInstance(
                         payload.userId,
@@ -52,7 +49,6 @@ export class ChatMessagesManagerController {
                     console.error('new websocket connection payload is null');
                 }
             });
-        // this.store.emit(EBlockEvents.SHOULD_INITIATE_NEW_WEBSOCKET_CONNECTION);
     }
 
     sendRequestOldMessages() {
@@ -62,5 +58,39 @@ export class ChatMessagesManagerController {
             return;
         }
         WebsocketService.sendMessage('0', EMessagesTypes.GET_OLD);
+    }
+
+    prepareReceivedMessages(msgResp: string): {
+        text: string;
+        owner: boolean;
+        date: string;
+    }[] {
+        const parsedMsgResp: unknown = JSON.parse(msgResp);
+        let responseData: MessageModel[] = [];
+        if (Array.isArray(parsedMsgResp)) {
+            responseData = [ ...parsedMsgResp ];
+        } else if (isPlainObject(parsedMsgResp)) {
+            responseData = [ parsedMsgResp as MessageModel ];
+        }
+        const storeState: StoreState = this.store.getState();
+
+        const currentUserId = storeState.user?.id;
+        const needToResetChatListComponent = storeState.chat.needToResetChatListComponent;
+        let messagesData: MessageModel[] = [];
+        if (needToResetChatListComponent) {
+            messagesData = responseData.reverse();
+            this.store.setState('chat.needToResetChatListComponent', false);
+        } else {
+            messagesData = [ ...storeState.chat.selectedChatMessagesList ];
+            messagesData.push(...responseData);
+        }
+        this.store.setState('chat.selectedChatMessagesList', messagesData);
+        return messagesData.map((msg: MessageModel) => {
+            return {
+                text: msg.content,
+                owner: msg.user_id === currentUserId,
+                date: new Date(msg.time).toLocaleString(),
+            };
+        });
     }
 }

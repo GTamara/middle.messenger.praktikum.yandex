@@ -13,7 +13,7 @@ import { RouteAccess } from './core/routing/types';
 import RouteGuard from './core/routing/route-guard';
 import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 import { StoreService } from './core/store/store.service';
-import { EBlockEvents, EChatMessagesEvents, EStoreEvents } from './core/event-bus/types';
+import { EChatMessagesEvents } from './core/event-bus/types';
 import EventBus from './core/event-bus/event-bus';
 
 declare global {
@@ -41,6 +41,8 @@ const initialState: StoreState = {
     chat: {
         chats: [],
         selectedChat: null,
+        selectedChatMessagesList: [],
+        needToResetChatListComponent: false,
     },
 };
 window.store = StoreService.getInstance<StoreState>(initialState);

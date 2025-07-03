@@ -48,7 +48,6 @@ export default class FormValidation {
         const validationRuleAttr = control.getAttribute('validationRuleName') ?
             control.getAttribute('validationRuleName') :
             control.getAttribute('name') as ValidationRuleKeys;
-        // const nameAttr = control.getAttribute('name') ?? '';
         const validationRule = DEFAULT_VALIDATION_RULES[validationRuleAttr as ValidationRuleKeys];
         const isValid = new RegExp(validationRule.pattern).test(control.value);
         if (isValid) {
@@ -61,6 +60,14 @@ export default class FormValidation {
             this.toggleErrorVisibility(false, control, validationRule.error);
             this.toggleSubmitButtonState(false);
         }
+    }
+
+    checkFormValidity() {
+        return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
+            if (this.isHtmlInputElement(ctrl)) {
+                return this.checkControlValidity(ctrl);
+            }
+        });
     }
 
     isFormValid() {
@@ -90,8 +97,6 @@ export default class FormValidation {
     }
 
     private toggleSubmitButtonState(isFormValid: boolean) {
-        // this.config.submitAction[Object.keys(this.config.submitAction)[0]]
-        // .setProps({order: 1});
         if (isFormValid) {
             this.submitBtnHtmlElement.removeAttribute('disabled');
             this.submitBtnHtmlElement.disabled = false;
