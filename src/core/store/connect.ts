@@ -1,6 +1,4 @@
 import type { Indexed } from '../../shared/types';
-import isEqual from '../../shared/utils/is-equal';
-import type Block from '../block';
 import { EStoreEvents } from '../event-bus/types';
 
 // Базовый интерфейс для компонента

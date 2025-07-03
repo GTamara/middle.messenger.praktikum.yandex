@@ -39,10 +39,11 @@ class MessagesList extends Block<MessagesListProps> {
     }
 
     render(): string {
-        const { messages } = this.children;
+        const { _messages } = this.children;
+
         return `
             <div class="messages-list-container">
-            {{{messages}}}
+            {{{_messages}}}
             </div>
         `;
     }

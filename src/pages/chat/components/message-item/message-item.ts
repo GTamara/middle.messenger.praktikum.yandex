@@ -21,7 +21,7 @@ class MessageItem extends Block<MessagesItemProps> {
     }
 
     render(): string {
-        const { text, date, owner } = this.attrs;
+        const { text, date } = this.attrs;
         return `<div class="message-text">
             ${text}
         </div>

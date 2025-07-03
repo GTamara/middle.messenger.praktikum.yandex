@@ -15,7 +15,9 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([{
-	extends: compat.extends("google"),
+	extends: [
+		compat.extends("google"),
+	],
 	files: ["**/*.ts"],
 	ignores: [
 		"**/*d.ts"

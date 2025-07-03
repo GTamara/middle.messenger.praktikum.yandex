@@ -17,7 +17,7 @@ type ChatHeaderMenuProps = {
     selectedChat?: ChatsResponse;
 };
 
-class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
+export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
     private readonly controller = new ChatHeaderMenuController();
     // private readonly validationService = new FormValidation();
     validationService: FormValidation | null = null;
@@ -188,8 +188,6 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
                 type: 'text',
                 required: true,
                 options: usersList ?? [],
-                change: ((e: Event) => {
-                }),
             }),
         });
 
@@ -303,9 +301,3 @@ class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {};
-};
-
-export const ConnectedChatHeaderMenu = connect(mapStateToProps)(ChatHeaderMenu);

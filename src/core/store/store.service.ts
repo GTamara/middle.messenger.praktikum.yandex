@@ -1,6 +1,6 @@
 import type { Indexed } from '../../shared/types';
 import EventBus from '../event-bus/event-bus';
-import { EBlockEvents, EStoreEvents } from '../event-bus/types';
+import { EBlockEvents } from '../event-bus/types';
 
 export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
     private _state: T;

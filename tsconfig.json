@@ -14,7 +14,6 @@
 		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",
 		"noEmit": true,
-
 		"strict": true,
 		"noUnusedLocals": true,
         "noUnusedParameters": true,
@@ -22,7 +21,7 @@
 		"sourceMap": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
-        // "strictPropertyInitialization": false
+        "strictPropertyInitialization": false
 	},
 	"include": [
 		"src"
