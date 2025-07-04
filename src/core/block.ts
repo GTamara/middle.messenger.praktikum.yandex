@@ -9,7 +9,7 @@ type ComponentMetaData = {
     attrs: Attrs;
 }
 
-export type Props = Record<string, ComponentProp | any>
+export type Props = Record<string, ComponentProp>
 export type Children = Record<string, Block | Block[]>
 
 export type Attrs = Record<string, string | boolean | any>

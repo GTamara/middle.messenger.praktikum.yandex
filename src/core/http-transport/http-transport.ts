@@ -30,9 +30,11 @@ enum EPayloadType {
     TEXT = 'text',
     BLOB = 'blob',
 }
-
-interface RequestdHandlers<T = any> {
+// object | Blob | FormData | string
+interface RequestedHandlers<T = any> {
+    /* eslint-disable no-undef */
     getBody: (payload: T) => BodyInit;
+    /* eslint-enable no-undef */
     getHeaders: () => Record<string, string>;
 }
 
@@ -93,7 +95,7 @@ export class HTTPTransport {
             headers = {},
         } = options;
         const payloadType = this.detectPayloadType(payload);
-        const requestHandlers: RequestdHandlers = this.getRequestHandlersByPayloadType(payloadType);
+        const requestHandlers: RequestedHandlers = this.getRequestHandlersByPayloadType(payloadType);
         const response = await fetch(url, {
             method,
             credentials: 'include',
@@ -125,26 +127,26 @@ export class HTTPTransport {
         return EPayloadType.JSON; // По умолчанию считаем JSON
     }
 
-    private getRequestHandlersByPayloadType(type: EPayloadType): RequestdHandlers {
+    private getRequestHandlersByPayloadType(type: EPayloadType): RequestedHandlers {
         // Базовый обработчик JSON
-        const jsonHandlers: RequestdHandlers<object> = {
+        const jsonHandlers: RequestedHandlers<object> = {
             getBody: (payload) => JSON.stringify(payload),
             getHeaders: () => ({ 'Content-Type': 'application/json' }),
         };
 
         // Обработчик FormData
-        const formDataHandlers: RequestdHandlers<FormData> = {
+        const formDataHandlers: RequestedHandlers<FormData> = {
             getBody: (payload) => payload,
             getHeaders: () => ({}), // Для FormData заголовки установит браузер
         };
 
         // Обработчик простого текста
-        const textHandlers: RequestdHandlers<string> = {
+        const textHandlers: RequestedHandlers<string> = {
             getBody: (payload) => payload,
             getHeaders: () => ({ 'Content-Type': 'text/plain' }),
         };
 
-        const blobHandlers: RequestdHandlers<Blob> = {
+        const blobHandlers: RequestedHandlers<Blob> = {
             getBody: (payload) => payload,
             getHeaders: () => ({ 'Content-Type': 'application/octet-stream' }),
         };

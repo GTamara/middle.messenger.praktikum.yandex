@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
+		"target": "ES2022",
 		"useDefineForClassFields": true,
 		"module": "ESNext",
 		"lib": [
-			"ES2020",
-			"DOM",
+			"ES2022",
+			"dom",
 			"DOM.Iterable"
 		],
 		"skipLibCheck": true,
@@ -16,14 +16,30 @@
 		"noEmit": true,
 		"strict": true,
 		"noUnusedLocals": true,
-        "noUnusedParameters": true,
+		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"sourceMap": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "strictPropertyInitialization": false
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"declaration": true,
+		"paths": {
+			"@components/*": [
+				"./components/*"
+			],
+			"@utils/*": [
+				"./utils/*"
+			]
+		}
 	},
 	"include": [
 		"src"
+	],
+	"exclude": [
+		"dist",
+		"node_modules",
+		"**/*.test.ts"
 	]
 }

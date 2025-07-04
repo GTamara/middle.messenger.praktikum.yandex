@@ -1,6 +1,7 @@
 import { ControlWrapper, Input } from '../../../../components';
+import { RouterLink } from '../../../../components/router-link';
 import Block from '../../../../core/block';
-import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
+import type { ChatsResponse, UserResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
@@ -11,6 +12,7 @@ import type { MessageFormType } from '../../components/message-form/message-form
 type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: Partial<MessageFormType>;
+    profileRouterLink: Partial<RouterLink>;
     popover: Block;
     activeChatId?: number | null;
     activeChat?: ChatsResponse;
@@ -18,6 +20,7 @@ type ChatPageProps = {
     chatHeaderMenu: InstanceType<typeof ChatHeaderMenu>;
     chatsList: InstanceType<typeof ChatsList>;
     messagesList: InstanceType<typeof MessagesList>;
+    userData?: UserResponse;
 }
 
 class ChatPage extends Block<ChatPageProps> {
@@ -43,6 +46,10 @@ class ChatPage extends Block<ChatPageProps> {
                     }),
                 }),
             }),
+            profileRouterLink: new RouterLink({
+                routerLink: PATHS.profile,
+                label: 'Profile >',
+            }),
             chatHeaderMenu: new ChatHeaderMenu({}),
             chatsList: new ChatsList({}),
             messagesList: new MessagesList({}),
@@ -56,14 +63,16 @@ class ChatPage extends Block<ChatPageProps> {
             value: target.value,
         });
     }
-
+    // ${ userData.login }
     render() {
-        const { activeChatId, activeChat } = this.attrs;
+        const { activeChat } = this.attrs;
+        console.log('userData', this.attrs.userData);
         return `
     <div class="chat-container">
         <div class="chat-container__messages">
-            {{> Link href="${PATHS.profile}" label="Profile >" page="profile" }}
-
+        
+            {{> Link routerLink="${PATHS.profile}" label="Profile >" page="profile" }}
+            {{{ profileRouterLink }}}
             {{{ SearchInput }}}
             <div class="chat-container__messages-list">
                 {{{chatsList}}}
@@ -97,6 +106,7 @@ const mapStateToProps = (state: Partial<StoreState>) => {
         activeChatId: state?.chat?.selectedChat?.id,
         activeChat: state?.chat?.selectedChat,
         chatsCount: state?.chat?.chats?.length,
+        userData: state?.user,
     };
 };
 

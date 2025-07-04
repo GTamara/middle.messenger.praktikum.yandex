@@ -24,7 +24,7 @@ export class EditProfileDataPageController {
         const payload = this.getPayload(form);
 
         this.api.editProfileData(payload)
-            .then((response) => {
+            .then(() => {
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
             })
             .catch((error) => {

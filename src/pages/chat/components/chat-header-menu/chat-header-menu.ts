@@ -1,7 +1,6 @@
 import { Button, ControlWrapper, FormElement, Input, Popover, Popup, Select } from '../../../../components';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
-import { connect } from '../../../../core/store/connect';
 import FormValidation from '../../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import type { StoreState } from '../../../../shared/types';

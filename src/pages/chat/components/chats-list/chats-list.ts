@@ -100,6 +100,7 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     render() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { chatListItems } = this.children;
         return `
         <div>

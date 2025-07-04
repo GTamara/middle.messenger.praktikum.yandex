@@ -1,4 +1,4 @@
-function cloneDeep<T extends object = object>(obj: T) {
+function cloneDeep<T extends Record<string | symbol, any>>(obj: T) {
     return (function _cloneDeep(item: T): T | Date | Set<unknown> | Map<unknown, unknown> | object | T[] {
         // Handle:
         // * null
@@ -21,7 +21,7 @@ function cloneDeep<T extends object = object>(obj: T) {
         // Handle:
         // * Array
         if (item instanceof Array) {
-            const copy = [];
+            const copy: any[] = [];
 
             item.forEach((_, i) => (copy[i] = _cloneDeep(item[i])));
 
@@ -51,7 +51,7 @@ function cloneDeep<T extends object = object>(obj: T) {
         // Handle:
         // * Object
         if (item instanceof Object) {
-            const copy: object = {};
+            const copy: Record<string | symbol, any> = {};
 
             // Handle:
             // * Object.symbol

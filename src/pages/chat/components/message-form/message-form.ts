@@ -50,7 +50,7 @@ class MessageForm extends Block<MessageFormProps> {
                 e.preventDefault();
                 const messaage = (this.children.MessageInput as Block).attrs.value;
                 WebsocketService.sendMessage(messaage);
-                (this.element as HTMLFormElement).reset(); debugger;
+                (this.element as HTMLFormElement).reset();
                 this.validationService.checkFormValidity();
                 (this.children.SendButton as Block).setAttrs({ disabled: true });
             },

@@ -20,7 +20,7 @@ export class ChangePasswordController {
         const payload = this.getPayload(form);
 
         this.api.changePassword(payload)
-            .then((response) => {
+            .then(() => {
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
             })
             .catch((error) => {

@@ -103,7 +103,7 @@ export class EditProfileDataPage extends Block {
             class: 'button full-width',
             order: 2,
             ctrlType: 'action',
-            click: ((e: Event) => {
+            click: (() => {
                 this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement);
             }),
         });

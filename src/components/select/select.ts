@@ -9,7 +9,7 @@ export type SelectProps = {
     id?: string;
     options?: {login: string; id: number}[];
     input?: (e: Event) => void;
-    change?: (e: any) => void;
+    change?: (e: Event) => void;
 };
 
 export class Select extends Block<SelectProps> {

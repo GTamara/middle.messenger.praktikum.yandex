@@ -39,11 +39,12 @@ class MessagesList extends Block<MessagesListProps> {
     }
 
     render(): string {
-        const { _messages } = this.children;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const messages = this.children;
 
         return `
             <div class="messages-list-container">
-            {{{_messages}}}
+            {{{messages}}}
             </div>
         `;
     }

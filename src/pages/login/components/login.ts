@@ -1,5 +1,5 @@
 import { Button, ControlWrapper, FormElement, Input } from '../../../components';
-import Block, { type Attrs } from '../../../core/block';
+import Block from '../../../core/block';
 import FormValidation from '../../../core/validation/validation';
 import { getWrappedTextInputPropsForValidation } from '../../../core/validation/validation-utils';
 import { getWrappedInputElement } from '../../../shared/helper-functions';

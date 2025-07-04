@@ -28,13 +28,12 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
     };
 
     private _set<K extends keyof T & string>(path: K, value: T[K]): void {
-        // this._state[path] = value;
         this.merge(this._state, this.getObjectFromPath(path, value));
     }
 
     private merge(lhs: Indexed, rhs: Indexed): Indexed {
         for (const p in rhs) {
-            if (!rhs.hasOwnProperty(p)) {
+            if (!Object.hasOwn(rhs, p)) {
                 continue;
             }
 
@@ -45,6 +44,7 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
                     lhs[p] = rhs[p];
                 }
             } catch (e) {
+                console.warn(e);
                 lhs[p] = rhs[p];
             }
         }

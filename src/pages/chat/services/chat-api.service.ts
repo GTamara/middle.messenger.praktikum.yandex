@@ -2,8 +2,6 @@ import { HTTPTransport } from '../../../core/http-transport/http-transport';
 import {
     type ChatsMessagesTokenResponse,
     type ChatsResponse,
-    type CreateChatRequest,
-    type CreateChatResponse,
     type DeleteChatRequest,
     type DeleteChatResponse,
     type FindUserRequest,

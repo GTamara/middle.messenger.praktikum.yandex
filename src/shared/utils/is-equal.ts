@@ -3,10 +3,6 @@ type PlainObject<T = any> = {
 };
 
 export function isPlainObject(value: unknown): value is PlainObject {
-    const x = typeof value === 'object';
-    const y = value !== null;
-    const z = value?.constructor === Object;
-    const c = Object.prototype.toString.call(value) === '[object Object]';
     return typeof value === 'object' &&
         value !== null &&
         value.constructor === Object &&

@@ -83,7 +83,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Латиница или кириллица, первая заглавная, без пробелов и цифр',
     },
     login: {
-        pattern: '^(?=.*[a-zA-Z])[a-zA-Z0-9\-_]{3,20}$',
+        pattern: '^(?=.*[a-zA-Z])[a-zA-Z0-9-_]{3,20}$',
         error: 'От 3 до 20 символов, латиница, может содержать цифры, но не только цифры',
     },
     email: {

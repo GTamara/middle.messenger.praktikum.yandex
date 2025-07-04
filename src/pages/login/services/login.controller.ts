@@ -34,7 +34,7 @@ export class LoginController {
         };
 
         this.loginApiService.login(payload)
-            .then((_) => {
+            .then(() => {
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
                 form.reset();
                 this.router.guard.resetAuthCache();
