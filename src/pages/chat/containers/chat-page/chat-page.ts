@@ -1,5 +1,5 @@
 import { ControlWrapper, Input } from '../../../../components';
-import { RouterLink } from '../../../../components/router-link';
+import { DecoratedRouterLink } from '../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../core/block';
 import type { ChatsResponse, UserResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
@@ -12,7 +12,7 @@ import type { MessageFormType } from '../../components/message-form/message-form
 type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: Partial<MessageFormType>;
-    profileRouterLink: Partial<RouterLink>;
+    profileRouterLink: Partial<DecoratedRouterLink>;
     popover: Block;
     activeChatId?: number | null;
     activeChat?: ChatsResponse;
@@ -46,8 +46,8 @@ class ChatPage extends Block<ChatPageProps> {
                     }),
                 }),
             }),
-            profileRouterLink: new RouterLink({
-                routerLink: PATHS.profile,
+            profileRouterLink: new DecoratedRouterLink({
+                routerLinkToNavigate: PATHS.profile,
                 label: 'Profile >',
             }),
             chatHeaderMenu: new ChatHeaderMenu({}),
@@ -70,8 +70,6 @@ class ChatPage extends Block<ChatPageProps> {
         return `
     <div class="chat-container">
         <div class="chat-container__messages">
-        
-            {{> Link routerLink="${PATHS.profile}" label="Profile >" page="profile" }}
             {{{ profileRouterLink }}}
             {{{ SearchInput }}}
             <div class="chat-container__messages-list">

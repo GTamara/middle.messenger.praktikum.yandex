@@ -83,7 +83,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Латиница или кириллица, первая заглавная, без пробелов и цифр',
     },
     login: {
-        pattern: '^(?=.*[a-zA-Z])[a-zA-Z0-9-_]{3,20}$',
+        pattern: /^(?=.*[a-zA-Z])[a-zA-Z0-9\-_]{3,20}$/,
         error: 'От 3 до 20 символов, латиница, может содержать цифры, но не только цифры',
     },
     email: {
@@ -91,13 +91,9 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Некорректный email. Пример: example@domain.com',
     },
     password: {
-        pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
+        pattern: /^(?=.*[A-Z])(?=.*\\d).{8,40}$/,
         error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
     },
-    // repeatPassword: {
-    //     pattern: '^(?=.*[A-Z])(?=.*\\d).{8,40}$',
-    //     error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
-    // },
     phone: {
         pattern: /^\+?\d{10,15}$/,
         error: 'От 10 до 15 цифр, может начинаться с плюса',

@@ -1,13 +1,7 @@
-.wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 25px;
-	justify-content: center;
-}
-
 .link {
 	color: inherit;
 	text-decoration: none;
+    cursor: pointer;
 
     &:hover {
         color: var(--color-accent);
@@ -15,12 +9,12 @@
     }
 
     &[size="large"] {
-	font-size: 2rem;
+        font-size: 2rem;
 
-	&::after {
-		height: 2px;
-	}
-}
+        &::after {
+            height: 2px;
+        }
+    }
 }
 
 

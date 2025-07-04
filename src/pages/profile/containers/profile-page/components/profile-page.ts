@@ -1,5 +1,6 @@
 import { Avatar, Button, GoBackButton } from '../../../../../components';
 import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.types';
+import { DecoratedRouterLink } from '../../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../../core/block';
 import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
@@ -19,6 +20,8 @@ type EditProfileDataPageProps = {
             PhoneDataItem: Block;
         };
     };
+    editProfileRouterLink: DecoratedRouterLink;
+    changePasswordRouterLink: DecoratedRouterLink;
 }
 
 export class ProfilePage extends Block {
@@ -46,7 +49,14 @@ export class ProfilePage extends Block {
             }),
             avatar: new Avatar({
                 size: EAvatarSizes.LARGE,
-                // imageSrc: props.imageSrc,
+            }),
+            editProfileRouterLink: new DecoratedRouterLink({
+                routerLinkToNavigate: PATHS.editProfile,
+                label: 'Edit profile details',
+            }),
+            changePasswordRouterLink: new DecoratedRouterLink({
+                routerLinkToNavigate: PATHS.changePassword,
+                label: 'Change password',
             }),
         });
         this.userDataService.storeUserData()
@@ -88,8 +98,8 @@ export class ProfilePage extends Block {
                     {{{PhoneDataItem}}}
 
                     <div class="profile-page__actions">
-                        {{> Link href="${PATHS.editProfile}" label="Edit profile details" page="register" }}
-                        {{> Link href="${PATHS.changePassword}" label="Change password" page="register" }}
+                        {{{ editProfileRouterLink }}}
+                        {{{ changePasswordRouterLink }}}
                         {{{SignOutButton}}}
                     </div>
                 {{/ Card}}

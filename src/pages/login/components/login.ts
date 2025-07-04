@@ -6,6 +6,7 @@ import { getWrappedInputElement } from '../../../shared/helper-functions';
 import { PATHS } from '../../../shared/constants/routing-constants';
 import { getElement } from '../../../shared/utils';
 import { LoginController } from '../services/login.controller';
+import { DecoratedRouterLink } from '../../../components/drcorated-router-link/drcorated-router-link';
 
 type LoginPageProps = {
     Form: {
@@ -16,6 +17,7 @@ type LoginPageProps = {
             CancelButton: Block;
         };
     };
+    registerRouterLink: DecoratedRouterLink;
 }
 
 export class LoginPage extends Block {
@@ -29,14 +31,10 @@ export class LoginPage extends Block {
     constructor(props: LoginPageProps) {
         super('app-login-page', {
             ...props,
-            formState: {
-                login: '',
-                password: '',
-                errors: {
-                    login: '',
-                    password: '',
-                },
-            },
+            registerRouterLink: new DecoratedRouterLink({
+                routerLinkToNavigate: PATHS.register,
+                label: 'Sign up',
+            }),
         });
         this.setChildren({
             Form: this.getForm(),
@@ -163,7 +161,7 @@ export class LoginPage extends Block {
                             Sign in
                         </h2>
                         {{{ Form}}}
-                        {{> Link href="${PATHS.register}" label="Sign up" page="register" }}
+                         {{{ registerRouterLink }}}
                     </div>
                 {{/ Card}}
             {{/ FormLayout}}
