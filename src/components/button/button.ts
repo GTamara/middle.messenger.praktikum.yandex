@@ -1,14 +1,16 @@
 import Block from '../../core/block';
-import { areObjectsDeepEqual } from '../../utils';
+import isEqual from '../../shared/utils/is-equal';
 
 export type ButtonProps = {
     label?: string;
     type?: 'submit' | 'button';
-    color?: 'primary' | 'basic';
+    color?: 'primary' | 'basic' | 'warn';
     class?: string;
     order?: number;
     ctrlType?: 'action';
     icon?: string;
+    disabled?: boolean;
+    popovertarget?: string;
     click?: (e: Event) => void;
 }
 
@@ -16,12 +18,12 @@ export default class Button extends Block<ButtonProps> {
     constructor(props: ButtonProps) {
         super('button', {
             ...props,
+            // class: 'button',
         });
     }
 
     componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
-        console.log('componentDidUpdate', oldProps !== newProps, oldProps, newProps);
-        return !areObjectsDeepEqual(oldProps, newProps);
+        return !isEqual(oldProps, newProps);
     }
 
     render() {
@@ -33,7 +35,7 @@ export default class Button extends Block<ButtonProps> {
             {{/if}}
 			
             {{#if ${!!icon}}}
-                <span class="material-icons">{{icon}}</span>
+                <span class="button-icon material-icons">{{icon}}</span>
             {{/if}}
 		`;
     }

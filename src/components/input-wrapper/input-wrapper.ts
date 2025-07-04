@@ -1,4 +1,4 @@
-import Block, { type PropsAndChildren } from '../../core/block';
+import Block, { type Props } from '../../core/block';
 
 export type ControlWrapperProps = {
     class?: string;
@@ -8,7 +8,7 @@ export type ControlWrapperProps = {
 }
 
 export default class ControlWrapper extends Block<ControlWrapperProps> {
-    constructor(props: ControlWrapperProps & PropsAndChildren) {
+    constructor(props: ControlWrapperProps & Props) {
         super('app-control-wrapper', {
             ...props,
             class: 'group',

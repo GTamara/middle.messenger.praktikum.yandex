@@ -1,0 +1,16 @@
+@import '../../../styles/mixins.pcss';
+
+.page-container {
+	@mixin flex-layout;
+
+	gap: 2.5rem;
+	min-width: 450px;
+
+	&__actions {
+		display: flex;
+		gap: 1.2rem;
+		justify-content: end;
+		margin-block-start: 1rem;
+		flex-wrap: wrap;
+	}
+}

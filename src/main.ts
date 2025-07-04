@@ -3,23 +3,71 @@ import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
 import * as Layout from './layout';
-import type Block from './core/block';
 
 import * as ChatComponents from './pages/chat/components';
 import * as ProfileComponents from './pages/profile/components';
+import Router from './core/routing/router';
+import type { Constructor, StoreState } from './shared/types';
+import { PATHS } from './shared/constants/routing-constants';
+import { RouteAccess } from './core/routing/types';
+import RouteGuard from './core/routing/route-guard';
+import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
+import { StoreService } from './core/store/store.service';
+import { EChatMessagesEvents } from './core/event-bus/types';
+import EventBus from './core/event-bus/event-bus';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
-const pages: Record<string, string | Constructor> = {
-    'register': Pages.RegisterPage,
-    'login': Pages.LoginPage,
-    'chat': Pages.ChatPage,
-    'profile': Pages.ProfilePage,
-    'edit-profile': Pages.EditProfileDataPage,
-    'change-password': Pages.ChangePasswordPage,
-    'navigation': Pages.NavigationPage,
-    'server-error': Pages.ServerErrorPage,
-    'client-error': Pages.ClientErrorPage,
+declare global {
+    interface Window {
+        router: any;
+        store: any;
+        websocketMessagesEventBus: any;
+    }
+}
+
+enum EPages {
+    Register = 'register',
+    Login = 'login',
+    Chat = 'messenger',
+    Profile = 'profile',
+    EditProfileData = 'edit-profile',
+    ChangePassword = 'change-password',
+    Navigation = 'navigation',
+    ServerError = 'server-error',
+    ClientError = 'client-error',
+}
+
+const initialState: StoreState = {
+    user: null,
+    chat: {
+        chats: [],
+        selectedChat: null,
+        selectedChatMessagesList: [],
+        needToResetChatListComponent: false,
+    },
 };
+window.store = StoreService.getInstance<StoreState>(initialState);
+const websocketMessagesEventBus: EventBus<EChatMessagesEvents> = new EventBus<EChatMessagesEvents>();
+window.websocketMessagesEventBus = websocketMessagesEventBus;
+
+const pages: Record<string, string | Constructor> = {
+    [EPages.Register]: Pages.RegisterPage,
+    [EPages.Login]: Pages.LoginPage,
+    [EPages.Chat]: Pages.ChatPage,
+    [EPages.Profile]: Pages.ProfilePage,
+    [EPages.EditProfileData]: Pages.EditProfileDataPage,
+    [EPages.ChangePassword]: Pages.ChangePasswordPage,
+    [EPages.Navigation]: Pages.NavigationPage,
+    [EPages.ServerError]: Pages.ServerErrorPage,
+    [EPages.ClientError]: Pages.ClientErrorPage,
+};
+
+const guard = new RouteGuard();
+
+window.router = new Router(
+    guard,
+    REDIRECT_CONFIG,
+    APP_ROOT_ELEMNT,
+);
 
 Object.entries({
     ...Components,
@@ -37,32 +85,15 @@ Object.entries({
         }
     });
 
-function navigate(page: string) {
-    const container = document.getElementById('app')!;
-    if (typeof (pages[page]) === 'string') {
-        let source; let context;
-        Array.isArray(pages[page]) ?
-            [source, context] = pages[page] :
-            source = pages[page];
+window.router
+    .use(PATHS.login, pages[EPages.Login], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.register, pages[EPages.Register], RouteAccess.UNAUTH_ONLY)
+    .use(PATHS.profile, pages[EPages.Profile], RouteAccess.AUTH_ONLY)
+    .use(PATHS.editProfile, pages[EPages.EditProfileData], RouteAccess.AUTH_ONLY)
+    .use(PATHS.changePassword, pages[EPages.ChangePassword], RouteAccess.AUTH_ONLY)
+    .use(PATHS.chat, pages[EPages.Chat], RouteAccess.AUTH_ONLY)
+    .use(PATHS.serverError, pages[EPages.ServerError], RouteAccess.PUBLIC)
+    .use(PATHS.clientError, pages[EPages.ClientError], RouteAccess.PUBLIC)
+    .use('*', pages[EPages.Navigation], RouteAccess.PUBLIC)
+    .start();
 
-        const temlpatingFunction = Handlebars.compile(source);
-        container.innerHTML = temlpatingFunction(context);
-        return;
-    }
-
-    if (typeof pages[page] === 'function') {
-        const Component = pages[page];
-        const component = new Component();
-        container?.replaceChildren((component as Block).getContent());
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => navigate('navigation'));
-
-document.addEventListener('click', (e: MouseEvent) => {
-    const page = (e.target as HTMLElement).getAttribute('page');
-    if (page) {
-        navigate(page);
-        e.preventDefault();
-    }
-});

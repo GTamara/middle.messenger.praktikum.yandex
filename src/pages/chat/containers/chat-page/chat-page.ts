@@ -1,148 +1,111 @@
-import { Button, ControlWrapper, Input } from '../../../../components';
-import type { ControlWrapperProps } from '../../../../components/input-wrapper/input-wrapper';
+import { ControlWrapper, Input } from '../../../../components';
+import { DecoratedRouterLink } from '../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../core/block';
-import FormValidation from '../../../../core/validation/validation';
-import { getTextInputPropsForValidation, getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import { getElement } from '../../../../utils';
-import { MessageForm } from '../../components';
+import type { ChatsResponse, UserResponse } from '../../../../core/http-transport/types/swagger-types';
+import { connect } from '../../../../core/store/connect';
+import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import { PATHS } from '../../../../shared/constants/routing-constants';
+import type { StoreState } from '../../../../shared/types';
+import { ChatHeaderMenu, ChatsList, MessageForm, MessagesList } from '../../components';
+import type { MessageFormType } from '../../components/message-form/message-form';
 
-type ChatProps = {
+type ChatPageProps = {
     SearchInput: ControlWrapper;
-    Form: MessageForm;
+    Form: Partial<MessageFormType>;
+    profileRouterLink: Partial<DecoratedRouterLink>;
+    popover: Block;
+    activeChatId?: number | null;
+    activeChat?: ChatsResponse;
+    chatsCount?: number;
+    chatHeaderMenu: InstanceType<typeof ChatHeaderMenu>;
+    chatsList: InstanceType<typeof ChatsList>;
+    messagesList: InstanceType<typeof MessagesList>;
+    userData?: UserResponse;
 }
 
-export class ChatPage extends Block {
-    validationService: FormValidation;
-    form: MessageForm;
-    messageControlProps: Block;
-    searchControlProps: Block<ControlWrapperProps>;
-
-    constructor(props: ChatProps) {
+class ChatPage extends Block<ChatPageProps> {
+    constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
-            formState: {},
+            activeChatId: null,
+            chatsCount: 0,
             SearchInput: new ControlWrapper({
                 label: 'Search',
                 icon: 'search',
-
                 Control: new Input({
                     name: 'message',
                     type: 'text',
                     autocomplete: 'off',
                     input: ((e: Event) => {
-                        console.log('login input');
-                        this.setValue(e, this.searchControlProps);
+                        const searchControlProps = getWrappedTextInputPropsForValidation<Block>(
+                            this.children.SearchInput as Block,
+                            'search',
+                            this.setAttrs.bind(this),
+                        );
+                        this.setValue(e, searchControlProps);
                     }),
                 }),
             }),
-        });
-        this.setChildren({
-            Form: this.getForm(),
-        });
-        this.form = getElement(this.children.Form);
-        this.messageControlProps = getElement(this.form.children.MessageInput);
-
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
-
-        this.searchControlProps = getWrappedTextInputPropsForValidation<Block>(
-            this.children.SearchInput as Block,
-            'search',
-            this.setProps.bind(this),
-        );
-    }
-
-    getForm(): MessageForm {
-        const sendButton = new Button({
-            type: 'submit',
-            color: 'primary',
-            class: 'button',
-            icon: 'send',
-            order: 1,
-            ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('click "Send" button from component. It might be additional actions here', e);
+            profileRouterLink: new DecoratedRouterLink({
+                routerLinkToNavigate: PATHS.profile,
+                label: 'Profile >',
             }),
-        });
-
-        const messageInput = new Input({
-            name: 'message',
-            type: 'text',
-            autocomplete: 'off',
-            input: ((e: Event) => {
-                console.log('message input event', (e.target as HTMLInputElement).value);
-                this.setValue(e, this.messageControlProps);
-            }),
-            change: ((e: Event) => {
-                this.validationService.checkControlValidity(e.target as HTMLInputElement);
-            }),
-        });
-
-        return new MessageForm({
-            submit: () => {
-                console.log('submit', {
-                    message: this.messageControlProps.attrs.value,
-                });
-            },
-            SendButton: sendButton,
-            MessageInput: messageInput,
+            chatHeaderMenu: new ChatHeaderMenu({}),
+            chatsList: new ChatsList({}),
+            messagesList: new MessagesList({}),
+            Form: new MessageForm({}),
         });
     }
 
     setValue(e: Event, controlProps: Block) {
         const target = e.target as HTMLInputElement;
-        controlProps.setProps({
+        controlProps.setAttrs({
             value: target.value,
         });
     }
-
-    getValidationConfig(form: Block) {
-        return {
-            form: {
-                ...form,
-                element: form.element as HTMLFormElement,
-            },
-            controls: {
-                MessageInput: getTextInputPropsForValidation<Block>(
-                    form.children.MessageInput as Block,
-                    'message',
-                    this.setProps.bind(this),
-                ),
-            },
-            submitAction: {
-                SendButton: getElement(form.children.SendButton),
-            },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
-        };
-    }
-
+    // ${ userData.login }
     render() {
+        const { activeChat } = this.attrs;
+        console.log('userData', this.attrs.userData);
         return `
-<div class="chat-container">
-    <div class="chat-container__messages">
-        {{> Link label="Profile >" page="profile" }}
-
-        {{{ SearchInput }}}
-
-        <div class="chat-container__messages-list">
-            {{#each items}}
-            {{> ChatListItem item=this}}
-            {{/each}}
+    <div class="chat-container">
+        <div class="chat-container__messages">
+            {{{ profileRouterLink }}}
+            {{{ SearchInput }}}
+            <div class="chat-container__messages-list">
+                {{{chatsList}}}
+            </div>
+        </div>
+        <div class="chat-container__selected-chat-content chat">
+            <div class="chat__header">
+                <div class="chat__header-title">
+                    {{#if ${ !!activeChat?.title }}}
+                        <h2><span class="chat__header-label">Chat: </span>${ activeChat?.title }</h2>
+                    {{/if}}
+                    
+                    
+                </div>
+                {{{ chatHeaderMenu }}}
+            </div>
+            <div class="chat__content">
+                {{{ messagesList }}}
+            </div>
+            <div class="chat__footer">
+                {{{ Form }}}
+            </div>
         </div>
     </div>
-    <div class="chat-container__selected-chat-content chat">
-        <div class="chat__header-title">
-            Chat
-        </div>
-        <div class="chat__content"></div>
-        <div class="chat__footer">
-            {{{ Form }}}
-        </div>
-    </div>
-</div>
-        `;
+            `;
     }
 }
+
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        activeChatId: state?.chat?.selectedChat?.id,
+        activeChat: state?.chat?.selectedChat,
+        chatsCount: state?.chat?.chats?.length,
+        userData: state?.user,
+    };
+};
+
+export const ConnectedChatPage = connect(mapStateToProps)(ChatPage);

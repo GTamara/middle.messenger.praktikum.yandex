@@ -19,6 +19,7 @@
 					"include"
 				]
 			}
-		]
+		],
+        "media-feature-range-notation": null
 	}
 }

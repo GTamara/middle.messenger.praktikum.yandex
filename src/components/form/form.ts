@@ -2,7 +2,7 @@ import Block, { type Children } from '../../core/block';
 import { EFormCOntrolType as EFormControlType } from './types';
 
 export type FormControlProps = {
-    submit: (e?: Event | undefined) => void;
+    submit: (e: SubmitEvent) => void;
 } & Record<string,
     | Block
     | {
@@ -28,6 +28,7 @@ export default class FormElement extends Block<FormControlProps> {
 
     getElemsTemplateByType(array: Children, type: EFormControlType) {
         return Object.entries(array)
+
             .filter(([_, value]) => {
                 if (Array.isArray(value)) {
                     return value[0].attrs.ctrlType === type;
@@ -35,6 +36,7 @@ export default class FormElement extends Block<FormControlProps> {
                     return value.attrs.ctrlType === type;
                 }
             })
+
             .sort(([_, a], [__, b]) => {
                 // Извлекаем объект (или первый элемент массива)
                 const aItem = Array.isArray(a) ? a[0] : a;
@@ -43,6 +45,7 @@ export default class FormElement extends Block<FormControlProps> {
                 // Сортируем по `props.order` (по возрастанию)
                 return (aItem.attrs.order || 0) - (bItem.attrs.order || 0);
             })
+
             .map(([key, _]) => key)
             .map((control) => `{{{ ${control} }}}`)
             .join('\n');
