@@ -11,7 +11,7 @@ import { ChatListItem } from '../chat-list-item/chat-list-item';
 
 export type ChatListProps = {
     chats?: ChatsResponse[];
-    chatListItems?: ChatListItem[];
+    _chatListItems?: ChatListItem[];
 }
 
 class ChatsList extends Block<ChatListProps> {
@@ -32,7 +32,7 @@ class ChatsList extends Block<ChatListProps> {
             .then(() => {
                 const chatListData = [ ...this.controller.getStoredChatsList() ];
                 this.setChildren({
-                    chatListItems: chatListData.map((item) => {
+                    _chatListItems: chatListData.map((item) => {
                         return new ChatListItem({
                             name: item.title,
                             item: item,
@@ -65,11 +65,11 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     selectChat(id: number) {
-        if (!Array.isArray(this.children.chatListItems)) {
-            console.error('chatListItems не массив!', this.children.chatListItems);
+        if (!Array.isArray(this.children._chatListItems)) {
+            console.error('chatListItems не массив!', this.children._chatListItems);
             return;
         }
-        this.children.chatListItems.forEach((li) => {
+        this.children._chatListItems.forEach((li) => {
             if (li.attrs.item.id === id) {
                 li.setAttrs({
                     active: true,
@@ -86,11 +86,11 @@ class ChatsList extends Block<ChatListProps> {
         const shouldUpdate = super.componentDidUpdate(
             {
                 chats: oldProps?.chats,
-                chatListItems: oldProps?.chatListItems?.map((li) => li.attrs.item.id),
+                _chatListItems: oldProps?._chatListItems?.map((li) => li.attrs.item.id),
             },
             {
                 chats: newProps?.chats,
-                chatListItems: newProps?.chatListItems?.map((li) => li.attrs.item.id),
+                _chatListItems: newProps?._chatListItems?.map((li) => li.attrs.item.id),
             },
         );
         if (shouldUpdate) {
@@ -100,11 +100,11 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     render() {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { chatListItems } = this.children;
+        // @ts-ignore
+        const { _chatListItems } = this.children;
         return `
         <div>
-            {{#each chatListItems}}
+            {{#each _chatListItems}}
                 {{{ this }}}
             {{/each}}
         </div>

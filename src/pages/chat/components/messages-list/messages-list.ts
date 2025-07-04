@@ -7,7 +7,7 @@ import { ChatMessagesManagerController } from '../../services/chat-messages-mana
 import { MessageItem } from '../message-item';
 
 type MessagesListProps = {
-    messages: Block<Record<string, any>>[];
+    _messages: Block<Record<string, any>>[];
     activeChatId?: number
 }
 
@@ -35,16 +35,16 @@ class MessagesList extends Block<MessagesListProps> {
                 date,
             });
         }) as Block[];
-        this.setChildren({ messages });
+        this.setChildren({ _messages: messages });
     }
 
     render(): string {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const messages = this.children;
+        // @ts-ignore
+        const { _messages } = this.children;
 
         return `
             <div class="messages-list-container">
-            {{{messages}}}
+            {{{ _messages }}}
             </div>
         `;
     }

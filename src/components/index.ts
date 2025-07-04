@@ -10,3 +10,5 @@ export { Popover } from './popover';
 export { Popup } from './popup';
 export { PopoverOption } from './popover/components/popover-option';
 export { Select } from './select';
+export { DecoratedRouterLink } from './drcorated-router-link';
+export { RouterLink } from './router-link';
