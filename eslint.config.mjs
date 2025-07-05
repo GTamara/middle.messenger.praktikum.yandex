@@ -21,15 +21,20 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
+	{
+		ignores: [
+            "**/dist/**",          // Игнорируем всю папку dist
+            "**/*.d.ts",           // Игнорируем файлы деклараций TypeScript
+            "**/assets/**",        // Игнорируем папку assets
+            "/dist/assets/*.js"    // Конкретно для вашего случая
+        ]
+	},
 	eslint.configs.recommended,
 	{
 		extends: [
 			compat.extends("google"),
 		],
 		files: ["**/*.ts"],
-		ignores: [
-			"**/*d.ts", "dist/**"
-		],
 		languageOptions: {
 			parser: tsParser,
 			globals: {

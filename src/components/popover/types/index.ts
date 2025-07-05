@@ -1,4 +1,4 @@
-export type PopoverOptionModel = {
+export type popoveroptionmodel = {
     title?: string;
     click?: () => void;
     icon?: string;

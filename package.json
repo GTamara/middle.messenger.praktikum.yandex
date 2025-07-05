@@ -9,7 +9,7 @@
 		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"lint": "eslint src --fix",
-		"stylelint": "npx stylelint '**/*.pcss' --fix",
+		"stylelint": "npx stylelint src '**/*.pcss' --fix",
 		"prepare": "husky",
 		"lint-staged": "lint-staged",
 		"postinstall": "husky install"
@@ -39,7 +39,7 @@
 		"postcss-nested": "^7.0.2",
 		"postcss-preset-env": "^10.1.6",
 		"postcss-scss": "^4.0.9",
-		"stylelint": "^16.20.0",
+		"stylelint": "^16.21.1",
 		"stylelint-config-standard": "^38.0.0",
 		"stylelint-config-standard-scss": "^15.0.1",
 		"typescript": "~5.8.3",

@@ -11,23 +11,23 @@ class RouteGuard {
         const isAuthenticated = await this.checkAuth();
 
         switch (routeAccess) {
-            case RouteAccess.AUTH_ONLY:
-                return {
-                    allow: isAuthenticated,
-                    requiredAuth: true
-                };
+        case RouteAccess.AUTH_ONLY:
+            return {
+                allow: isAuthenticated,
+                requiredAuth: true,
+            };
 
-            case RouteAccess.UNAUTH_ONLY:
-                return {
-                    allow: !isAuthenticated,
-                    requiredAuth: false
-                };
+        case RouteAccess.UNAUTH_ONLY:
+            return {
+                allow: !isAuthenticated,
+                requiredAuth: false,
+            };
 
-            default:
-                return {
-                    allow: true,
-                    requiredAuth: false
-                };
+        default:
+            return {
+                allow: true,
+                requiredAuth: false,
+            };
         }
     }
 
@@ -36,7 +36,7 @@ class RouteGuard {
 
         try {
             const response = await fetch(`${API_URL}auth/user`, {
-                credentials: 'include'
+                credentials: 'include',
             });
             this._authState = response.ok;
             return this._authState;
