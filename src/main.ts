@@ -15,12 +15,18 @@ import { APP_ROOT_ELEMNT, REDIRECT_CONFIG } from './app-config';
 import { StoreService } from './core/store/store.service';
 import { EChatMessagesEvents } from './core/event-bus/types';
 import EventBus from './core/event-bus/event-bus';
+import type { RegisterPageProps } from './pages/register/components/register';
+import type { LoginPageProps } from './pages/login/components/login';
+import type { ProfilePageProps } from './pages/profile/containers/profile-page/components/profile-page';
+import type { ChatPageProps } from './pages/chat/containers/chat-page/chat-page';
+import type { EditProfileDataPageProps } from './pages/profile/containers/edit-profile-data-page/components/edit-profile-data-page';
+import type { ChangePasswordPageProps } from './pages/profile/containers/change-password-page/components/change-password-page';
 
 declare global {
     interface Window {
         router: any;
-        store: any;
-        websocketMessagesEventBus: any;
+        store: StoreService<StoreState>;
+        websocketMessagesEventBus: EventBus<EChatMessagesEvents>;
     }
 }
 
@@ -45,11 +51,21 @@ const initialState: StoreState = {
         needToResetChatListComponent: false,
     },
 };
+
 window.store = StoreService.getInstance<StoreState>(initialState);
 const websocketMessagesEventBus: EventBus<EChatMessagesEvents> = new EventBus<EChatMessagesEvents>();
 window.websocketMessagesEventBus = websocketMessagesEventBus;
 
-const pages: Record<string, string | Constructor> = {
+const pages: Record<
+    string,
+    string
+        | Constructor<RegisterPageProps>
+        | Constructor<LoginPageProps>
+        | Constructor<ProfilePageProps>
+        | Constructor<ChatPageProps>
+        | Constructor<EditProfileDataPageProps>
+        | Constructor<ChangePasswordPageProps>
+> = {
     [EPages.Register]: Pages.RegisterPage,
     [EPages.Login]: Pages.LoginPage,
     [EPages.Chat]: Pages.ChatPage,

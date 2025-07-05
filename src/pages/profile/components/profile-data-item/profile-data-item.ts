@@ -1,9 +1,9 @@
-import Block, { type ComponentProp } from '../../../../core/block';
+import Block from '../../../../core/block';
 
 export type ProfileDataItemProps = {
     label: string;
     value: string;
-    [key: string]: ComponentProp;
+    class?: string;
 }
 
 export default class ProfileDataItem extends Block<ProfileDataItemProps> {

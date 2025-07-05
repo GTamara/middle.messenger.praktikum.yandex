@@ -10,7 +10,7 @@ import { AvatarUploader } from '../../../components';
 import { EditProfileDataPageController } from '../services/edit-profile-data-page.controller';
 import { EEditProfileFormFields } from '../types';
 
-type EditProfileDataPageProps = {
+export type EditProfileDataPageProps = {
     Form: {
         children: {
             EmailInput: Block;

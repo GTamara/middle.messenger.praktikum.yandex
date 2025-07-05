@@ -7,7 +7,7 @@ import { getWrappedInputElement } from '../../../../../shared/helper-functions';
 import { getElement } from '../../../../../shared/utils';
 import { ChangePasswordController } from '../services/change-password.controller';
 
-type ChangePasswordPageProps = {
+export type ChangePasswordPageProps = {
     Form: {
         children: {
             OldPasswordInput: Block;
@@ -47,7 +47,7 @@ export class ChangePasswordPage extends Block {
             },
         });
         this.setChildren({
-            Form: this.getForm() as Block<Record<string, any>>,
+            Form: this.getForm() as Block<Record<string, ChangePasswordPageProps>>,
         });
         this.form = getElement(this.children.Form) as FormElement;
         this.oldPasswordControlProps = getWrappedInputElement(this.form.children.OldPasswordInput);

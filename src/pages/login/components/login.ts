@@ -8,7 +8,7 @@ import { getElement } from '../../../shared/utils';
 import { LoginController } from '../services/login.controller';
 import { DecoratedRouterLink } from '../../../components/drcorated-router-link/drcorated-router-link';
 
-type LoginPageProps = {
+export type LoginPageProps = {
     Form: {
         children: {
             LoginInput: Block;

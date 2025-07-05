@@ -9,7 +9,7 @@ import type { StoreState } from '../../../../shared/types';
 import { ChatHeaderMenu, ChatsList, MessageForm, MessagesList } from '../../components';
 import type { MessageFormType } from '../../components/message-form/message-form';
 
-type ChatPageProps = {
+export type ChatPageProps = {
     SearchInput: ControlWrapper;
     Form: Partial<MessageFormType>;
     profileRouterLink: Partial<DecoratedRouterLink>;

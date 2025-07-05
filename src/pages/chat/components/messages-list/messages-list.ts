@@ -2,12 +2,13 @@ import Block from '../../../../core/block';
 import type EventBus from '../../../../core/event-bus/event-bus';
 import { EChatMessagesEvents } from '../../../../core/event-bus/types';
 import { connect } from '../../../../core/store/connect';
-import type { StoreState } from '../../../../shared/types';
+import type { Constructor, StoreState } from '../../../../shared/types';
 import { ChatMessagesManagerController } from '../../services/chat-messages-manager.controller';
 import { MessageItem } from '../message-item';
+import type { MessagesItemProps } from '../message-item/message-item';
 
 type MessagesListProps = {
-    _messages: Block<Record<string, any>>[];
+    _messages: Constructor<MessagesItemProps>;
     activeChatId?: number
 }
 

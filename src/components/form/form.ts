@@ -3,17 +3,15 @@ import { EFormCOntrolType as EFormControlType } from './types';
 
 export type FormControlProps = {
     submit: (e: SubmitEvent) => void;
-} & Record<string,
-    | Block
+    label: string;
+    order: number;
+    ctrlType: EFormControlType;
+    // Control: Block;
+    class?: string;
+} & Record<string, Block | Block[] | (() => void)>
     | {
-        label: string;
-        order: number;
-        ctrlType: EFormControlType;
-        Control: Block;
-    }
-	| (() => void)
-    | any
->;
+
+    };
 
 export default class FormElement extends Block<FormControlProps> {
     EFormCOntrolType = EFormControlType;

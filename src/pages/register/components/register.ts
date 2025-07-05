@@ -8,7 +8,7 @@ import { getElement } from '../../../shared/utils';
 import { RegisterController } from '../services/register.controller';
 import { DecoratedRouterLink } from '../../../components/drcorated-router-link/drcorated-router-link';
 
-type RegisterPageProps = {
+export type RegisterPageProps = {
     Form: {
         children: {
             PasswordInput: Block;

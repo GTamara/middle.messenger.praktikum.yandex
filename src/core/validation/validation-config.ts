@@ -91,7 +91,7 @@ export const DEFAULT_VALIDATION_RULES: ValidationRules = {
         error: 'Некорректный email. Пример: example@domain.com',
     },
     password: {
-        pattern: /^(?=.*[A-Z])(?=.*\\d).{8,40}$/,
+        pattern: /^(?=.*[A-Z])(?=.*\d).{8,40}$/,
         error: 'От 8 до 40 символов, минимум одна заглавная буква и цифра',
     },
     phone: {

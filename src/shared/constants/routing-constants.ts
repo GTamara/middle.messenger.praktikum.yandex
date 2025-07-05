@@ -7,6 +7,7 @@ export const PATHS = {
     chat: '/messenger',
     serverError: '/server-error',
     clientError: '/client-error',
+    wildcard: '*',
 
     // pageNotFound: "**"
 } as const;

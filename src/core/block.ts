@@ -12,7 +12,7 @@ type ComponentMetaData = {
 export type Props = Record<string, ComponentProp>
 export type Children = Record<string, Block | Block[]>
 
-export type Attrs = Record<string, string | boolean | any>
+export type Attrs = Record<string, string | boolean | number | any>
 
 type Events = {
     [key: string]: (e?: any) => void;

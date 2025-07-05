@@ -1,7 +1,6 @@
 import Block from '../../../../core/block';
-import { connect } from '../../../../core/store/connect';
 
-type MessagesItemProps = {
+export type MessagesItemProps = {
     text?: string;
     date?: string;
     ownerId?: number;
@@ -9,7 +8,7 @@ type MessagesItemProps = {
     class?: string;
 }
 
-class MessageItem extends Block<MessagesItemProps> {
+export class MessageItem extends Block<MessagesItemProps> {
     constructor(props: MessagesItemProps) {
         super(
             'app-message-item',
@@ -28,11 +27,3 @@ class MessageItem extends Block<MessagesItemProps> {
         <div class="date-time">${date}</div>`;
     }
 }
-
-export const mapStateToProps = (state: any) => {
-    return {
-        messages: state.messages,
-    };
-};
-
-export const ConnectedMessageItem = connect(mapStateToProps)(MessageItem);

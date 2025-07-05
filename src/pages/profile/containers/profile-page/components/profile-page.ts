@@ -9,7 +9,7 @@ import type { StoreState } from '../../../../../shared/types';
 import { ProfileDataItem } from '../../../components';
 import { ProfilePageController } from '../services/profile-page.controller';
 
-type EditProfileDataPageProps = {
+export type ProfilePageProps = {
     Form: {
         children: {
             EmailDataItem: Block;
@@ -30,7 +30,7 @@ export class ProfilePage extends Block {
     store: StoreState = window.store as StoreState;
     userDataService: UserDataService = new UserDataService();
 
-    constructor(props: EditProfileDataPageProps) {
+    constructor(props: ProfilePageProps) {
         super('app-profile-page', {
             ...props,
             goBackButton: new GoBackButton({
