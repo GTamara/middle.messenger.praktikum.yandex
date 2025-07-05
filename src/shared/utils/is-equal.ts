@@ -1,4 +1,4 @@
-type PlainObject<T = any> = {
+type PlainObject<T = unknown> = {
     [k in string]: T;
 };
 
@@ -17,23 +17,43 @@ function isArrayOrObject(value: unknown): value is [] | PlainObject {
     return isPlainObject(value) || isArray(value);
 }
 
-function isEqual(lhs: PlainObject, rhs: PlainObject) {
-    if (Object.keys(lhs).length !== Object.keys(rhs).length) {
-        return false;
-    }
+function isEqual(lhs: unknown[] | PlainObject, rhs: unknown[] | PlainObject): boolean {
+    if (isArray(lhs) && isArray(rhs)) {
+        if (lhs.length !== rhs.length) {
+            return false;
+        }
 
-    for (const [key, value] of Object.entries(lhs)) {
-        const rightValue = rhs[key];
-        if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
-            if (isEqual(value, rightValue)) {
-                continue;
+        for (let i = 0; i < lhs.length; i++) {
+            const leftValue = lhs[i];
+            const rightValue = rhs[i];
+
+            if (isArrayOrObject(leftValue) && isArrayOrObject(rightValue)) {
+                if (!isEqual(leftValue, rightValue)) {
+                    return false;
+                }
+            } else if (leftValue !== rightValue) {
+                return false;
             }
+        }
+    } else if (isPlainObject(lhs) && isPlainObject(rhs)) {
+        if (Object.keys(lhs).length !== Object.keys(rhs).length) {
             return false;
         }
 
-        if (value !== rightValue) {
-            return false;
+        for (const [key, value] of Object.entries(lhs)) {
+            const rightValue = rhs[key];
+
+            if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
+                if (!isEqual(value, rightValue)) {
+                    return false;
+                }
+            } else if (value !== rightValue) {
+                return false;
+            }
         }
+    } else {
+        // One is array and the other is object - not equal
+        return false;
     }
 
     return true;

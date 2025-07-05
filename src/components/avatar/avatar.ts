@@ -33,9 +33,14 @@ export default class Avatar extends Block<AvatarProps> {
 
     render() {
         const { size, imageSrc } = this.attrs;
+        const src = `${RESOURCES_URL}${imageSrc}`;
 
         return `
-            <div class="avatar" style="background-image: url(${RESOURCES_URL}${imageSrc})" size="${size}"></div>
+            <div 
+                class="avatar" 
+                style="background-image: url(${src})" 
+                size="${size}"
+            ></div>
 		`;
     }
 }
