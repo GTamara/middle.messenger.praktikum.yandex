@@ -30,7 +30,7 @@ export type AttrsObject = {
     disabled?: boolean;
     pattern?: string;
 
-    [key: string]: string | boolean | undefined;
+    [key: string]: string | boolean | number | undefined;
 
 };
 

@@ -9,13 +9,37 @@ type ComponentMetaData = {
     attrs: Attrs;
 }
 
+type Primitive =
+    | string
+    | boolean
+    | number
+    | null
+    | undefined;
+
+type ArrayOrPrimitive<T extends Primitive> = T | T[];
+
+export type AttrValue = ArrayOrPrimitive<Primitive> | Record<string, Primitive>;
+
+// type AttrValue =
+//   | string
+//   | boolean
+//   | number
+//   | null
+//   | undefined
+//   | Function // если нужно сохранить поддержку функций
+//   | AttrValue[]
+//   | { [key: string]: AttrValue };
+
+export type Attrs = Record<string, AttrValue>;
+
 export type Props = Record<string, ComponentProp>
 export type Children = Record<string, Block | Block[]>
 
-export type Attrs = Record<string, string | boolean | number | any>
+// type AttrValue = string | boolean | number | undefined | any;
+// export type Attrs = Record<string, AttrValue | AttrValue[]>
 
 type Events = {
-    [key: string]: (e?: any) => void;
+    [key: string]: (e?: Event) => void;
 }
 
 type ValuesOf<T> = T[keyof T];
@@ -89,7 +113,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                if (value[0] && value[0] instanceof Block) {
+                if (value.every((item) => item instanceof Block)) {
                     children[key] = value;
                 } else {
                     attrs[key] = value;
@@ -154,7 +178,10 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
             return;
         }
         this.setAttrs(newProps);
-        this.setChildren(newProps.children);
+
+        if (newProps instanceof Block || Array.isArray(newProps)) {
+            this.setChildren(newProps?.children as Children);
+        }
     };
 
     hasChildrenChanges(newChildren: Children) {
@@ -251,7 +278,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
     }
 
     _compile() {
-        const propsAndStubs: { [key: string]: string | string[] | boolean } = { ...this.attrs };
+        const propsAndStubs: Record<string, AttrValue> = { ...this.attrs };
         Object.entries(this.children).forEach(([key, child]) => {
             if (Array.isArray(child)) {
                 propsAndStubs[key] = child.map(
