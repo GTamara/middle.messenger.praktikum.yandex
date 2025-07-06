@@ -25,7 +25,7 @@ export default class EventBus<E extends string> {
 
     off(event: E, callback: Function) {
         if (!this.listeners[event]) {
-            throw new Error(`Нет события: ${event}`);
+            throw new Error(`Не зарегистрировано событие: ${event}`);
         }
         this.listeners[event] = this.listeners[event].filter(
             (listener) => listener !== callback,
@@ -33,7 +33,7 @@ export default class EventBus<E extends string> {
     }
     emit<T extends any[] = []>(event: E, ...args: T) {
         if (!this.listeners[event]) {
-            console.error(`Нет события: ${event}`);
+            console.error(`Не зарегистрировано событие: ${event}`);
             return;
         }
         this.listeners[event].forEach(function(listener) {

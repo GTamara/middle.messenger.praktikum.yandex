@@ -20,23 +20,9 @@ type ArrayOrPrimitive<T extends Primitive> = T | T[];
 
 export type AttrValue = ArrayOrPrimitive<Primitive> | Record<string, Primitive>;
 
-// type AttrValue =
-//   | string
-//   | boolean
-//   | number
-//   | null
-//   | undefined
-//   | Function // если нужно сохранить поддержку функций
-//   | AttrValue[]
-//   | { [key: string]: AttrValue };
-
 export type Attrs = Record<string, AttrValue>;
-
 export type Props = Record<string, ComponentProp>
 export type Children = Record<string, Block | Block[]>
-
-// type AttrValue = string | boolean | number | undefined | any;
-// export type Attrs = Record<string, AttrValue | AttrValue[]>
 
 type Events = {
     [key: string]: (e?: Event) => void;
@@ -50,7 +36,7 @@ export type ComponentProp =
     | ValuesOf<Events>;
 
 // Нельзя создавать экземпляр данного класса
-export default abstract class Block<P extends Record<string, any> = Record<string, any>> {
+export default abstract class Block<P extends Record<string, ComponentProp> = Record<string, ComponentProp>> {
     _element: HTMLElement;
     _meta: ComponentMetaData;
     _id = nanoid(6);
@@ -354,23 +340,23 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         return this.element;
     }
 
-    _makePropsProxy(props: Props) {
+    _makePropsProxy(props: Attrs): Attrs {
         const eventBus = this.eventBus;
         const emitBind = eventBus.emit.bind(eventBus);
 
-        return new Proxy(props as any, {
-            get(target, prop) {
+        return new Proxy<Attrs>(props, {
+            get(target: Attrs, prop: string) {
                 const value = target[prop];
-                return typeof value === 'function' ? value.bind(target) : value;
+                return typeof value === 'function' ? (value as Function).bind(target) : value;
             },
-            set(target, prop, value) {
+            set(target: Attrs, prop: string, value: AttrValue) {
                 const oldTarget = { ...target };
                 target[prop] = value;
                 // Запускаем обновление компоненты
                 emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
                 return true;
             },
-            deleteProperty(target, prop) {
+            deleteProperty(target: Attrs, prop: string) {
                 console.log('deleteProperty', target, prop);
                 if (prop in target) {
                     const oldTarget = { ...target };
