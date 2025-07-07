@@ -1,8 +1,8 @@
-import { RouteAccess, type IBlock, type IBlockClass, type IRouteItem } from './types';
+import { RouteAccess, type IBlock, type IBlockClass, type IProps, type IRouteItem } from './types';
 
 class Route implements IRouteItem {
     private _block: IBlock | null = null;
-    private _props: Record<string, any>;
+    private _props: IProps;
     private _blockClass: IBlockClass;
     private _pathname: string;
     RouteAccess = RouteAccess;
@@ -11,7 +11,7 @@ class Route implements IRouteItem {
     constructor(
         pathname: string,
         view: IBlockClass,
-        props: Record<string, any>,
+        props: IProps,
         access: RouteAccess = RouteAccess.PUBLIC,
     ) {
         this._pathname = pathname; // Сохраняем и в приватное поле, если оно используется

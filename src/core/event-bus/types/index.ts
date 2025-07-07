@@ -3,14 +3,10 @@ export enum EBlockEvents {
     FLOW_CDM = 'flow:component-did-mount',
     FLOW_CDU = 'flow:component-did-update',
     FLOW_RENDER = 'flow:render',
-
-    STORE_CHANGED = 'store:changed',
-    UPDATED = 'store:updated',
 };
 
 export enum EStoreEvents {
-    STORE_CHANGED = 'store:changed',
-    UPDATED = 'store:updated',
+    STORE_UPDATED = 'store:updated',
 };
 
 export enum EChatMessagesEvents {

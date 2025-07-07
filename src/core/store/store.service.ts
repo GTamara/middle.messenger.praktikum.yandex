@@ -1,10 +1,10 @@
 import type { Indexed } from '../../shared/types';
 import EventBus from '../event-bus/event-bus';
-import { EBlockEvents } from '../event-bus/types';
+import { EBlockEvents, EStoreEvents } from '../event-bus/types';
 
-export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
+export class StoreService<T extends Indexed> extends EventBus<EBlockEvents | EStoreEvents> {
     private _state: T;
-    static __instance: StoreService<any>;
+    static __instance: StoreService<Indexed> | null = null;
     private constructor(initialState: T) {
         super();
         this._state = initialState;
@@ -22,9 +22,12 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
         return this._state;
     }
 
-    setState(path: string, value: any): void {
+    setState<K extends keyof T & string>(
+        path: K,
+        value: T[K],
+    ): void {
         this._set(path, value);
-        this.emit(EBlockEvents.UPDATED);
+        this.emit(EStoreEvents.STORE_UPDATED);
     };
 
     private _set<K extends keyof T & string>(path: K, value: T[K]): void {
@@ -51,7 +54,7 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents> {
         return lhs;
     }
 
-    private getObjectFromPath(path: string, value: any): Record<string, any> {
+    private getObjectFromPath<K extends keyof T & string>(path: K, value: T[K]): Record<string, unknown> {
         const arraySegments = path.split('.');
 
         return arraySegments.reduceRight((acc, segment, index) => {

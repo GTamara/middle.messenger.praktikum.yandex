@@ -56,7 +56,7 @@ export class HTTPTransport {
         options = {},
     ) => {
         return this.request(
-            `${API_URL}${url}`,
+            url,
             payload,
             {
                 ...options,
@@ -71,7 +71,7 @@ export class HTTPTransport {
         options = {},
     ) => {
         return this.request(
-            `${API_URL}${url}`,
+            url,
             payload,
             {
                 ...options,
@@ -82,7 +82,7 @@ export class HTTPTransport {
 
     delete: HTTPMethod = (url, payload, options = {}) => (
         this.request(
-            `${API_URL}${url}`,
+            url,
             payload,
             { ...options, method: EHttpMethod.DELETE },
         )
@@ -90,7 +90,7 @@ export class HTTPTransport {
 
     put: HTTPMethod = (url, payload, options = {}) => (
         this.request(
-            `${API_URL}${url}`,
+            url,
             payload,
             { ...options, method: EHttpMethod.PUT },
         )

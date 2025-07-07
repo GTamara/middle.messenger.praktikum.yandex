@@ -17,8 +17,12 @@ export interface IBlock {
     hide(): void;
 }
 
+export interface IProps {
+    rootQuery: string;
+}
+
 export interface IBlockClass {
-    new(props: any): IBlock;
+    new(props: IProps): IBlock;
 }
 
 export type PathString = typeof PATHS[keyof typeof PATHS];

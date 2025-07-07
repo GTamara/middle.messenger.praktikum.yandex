@@ -21,7 +21,7 @@ export function connect(mapStateToProps: (state: Indexed) => Indexed) {
                 super({ ...props, ...mapStateToProps(store.getState()) });
 
                 // подписываемся на событие
-                store.on(EStoreEvents.UPDATED, () => {
+                store.on(EStoreEvents.STORE_UPDATED, () => {
                     // вызываем обновление компонента, передав данные из хранилища
                     this.setProps({ ...mapStateToProps(store.getState()) });
                 });

@@ -1,6 +1,6 @@
 import Route from './route';
 import RouteGuard from './route-guard';
-import { isPathString, RouteAccess, type IBlockClass, type IRouteItem, type PathString, type RedirectConfig } from './types';
+import { isPathString, RouteAccess, type IBlockClass, type IProps, type IRouteItem, type PathString, type RedirectConfig } from './types';
 
 class Router {
     static __instance: Router;
@@ -9,7 +9,7 @@ class Router {
     history: History = window.history;
 
     _currentRoute: IRouteItem | null = null;
-    _rootQuery;
+    _rootQuery: IProps['rootQuery'];
 
     constructor(
         public readonly guard: RouteGuard,
