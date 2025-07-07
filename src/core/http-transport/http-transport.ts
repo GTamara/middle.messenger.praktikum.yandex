@@ -9,10 +9,10 @@ enum EHttpMethod {
 }
 
 type HandlersMap = {
-    [EPayloadType.FORM_DATA]: RequestedHandlers<FormData>;
-    [EPayloadType.JSON]: RequestedHandlers<object | null>;
-    [EPayloadType.TEXT]: RequestedHandlers<string>;
-    [EPayloadType.BLOB]: RequestedHandlers<Blob>;
+    [EPayloadType.FORM_DATA]: RequestPayloadHandlers<FormData>;
+    [EPayloadType.JSON]: RequestPayloadHandlers<object | null>;
+    [EPayloadType.TEXT]: RequestPayloadHandlers<string>;
+    [EPayloadType.BLOB]: RequestPayloadHandlers<Blob>;
 };
 
 type HTTPHeaders = Record<string, string>;
@@ -41,16 +41,8 @@ enum EPayloadType {
 }
 
 type PayloadData = object | Blob | FormData | string | null;
-type PayloadDataObj = { type: EPayloadType; payload: PayloadData };
-type PayloadDataObjsUnion =
-    | { type: EPayloadType.FORM_DATA; payload: FormData }
-    | { type: EPayloadType.JSON; payload: string | null }
-    | { type: EPayloadType.TEXT; payload: string }
-    | { type: EPayloadType.BLOB; payload: Blob };
 
-type RequestHandlersUnion = RequestedHandlers<object> | RequestedHandlers<FormData> | RequestedHandlers<string> | RequestedHandlers<Blob>
-
-interface RequestedHandlers<P extends PayloadData> {
+interface RequestPayloadHandlers<P extends PayloadData> {
     /* eslint-disable no-undef */
     getBody: (payload: P) => BodyInit;
     /* eslint-enable no-undef */
@@ -104,9 +96,9 @@ export class HTTPTransport {
         )
     );
 
-    async request<R, P extends PayloadData>(
+    async request<R>(
         url: string,
-        payload?: P,
+        payload?: unknown,
         options: RequestOptionsWithMethod = { method: EHttpMethod.GET },
     ): Promise<R> {
         const {
@@ -114,11 +106,10 @@ export class HTTPTransport {
             headers = {},
         } = options;
 
-        const checkedPayloadObj: PayloadDataObjsUnion = this.detectPayloadType(payload);
-        const requestHandlers: RequestHandlersUnion = this.getRequestHandlersByPayloadType(checkedPayloadObj.type);
-        const body = this.getBodyByPayloadType(checkedPayloadObj, requestHandlers) ?? null;
+        const { type, requestBody } = this.normalizePayload(payload);
+        const requestHandlers = this.getRequestHandlersByPayloadType(type);
 
-        const response = await fetch(url, {
+        const response = await fetch(`${API_URL}${url}`, {
             method,
             credentials: 'include',
             mode: 'cors',
@@ -126,70 +117,37 @@ export class HTTPTransport {
                 ...requestHandlers.getHeaders(),
                 ...headers,
             },
-            body: payload ? body : null,
+            body: payload ? requestHandlers.getBody(requestBody as never) : null,
         });
 
         if (!response.ok) {
             throw response;
         }
 
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('application/json')) {
-            return response.json();
-        }
-
-        return response.text() as R;
+        return this.parseResponse(response);
     }
 
-    getBodyByPayloadType(
-        checkedPayloadObj: PayloadDataObjsUnion,
-        requestHandlers: RequestHandlersUnion,
-    ) {
-        let body = null;
-        if (!checkedPayloadObj) {
-            return;
-        }
-        if (this.isFormDataPayload(checkedPayloadObj)) {
-            body = (requestHandlers as RequestedHandlers<FormData>)
-                .getBody(checkedPayloadObj.payload);
-        } else if (this.isJsonPayload(checkedPayloadObj)) {
-            body = (requestHandlers as RequestedHandlers<object>)
-                .getBody(JSON.parse(checkedPayloadObj.payload));
-        } else if (this.isTextPayload(checkedPayloadObj)) {
-            body = (requestHandlers as RequestedHandlers<string>)
-                .getBody(checkedPayloadObj.payload);
-        } else if (this.isBlobPayload(checkedPayloadObj)) {
-            body = (requestHandlers as RequestedHandlers<Blob>)
-                .getBody(checkedPayloadObj.payload);
-        }
-        return body;
-    }
+    private normalizePayload(payload?: unknown): { type: EPayloadType; requestBody?: unknown } {
+        if (!payload) return { type: EPayloadType.JSON };
 
-    // для автоматического определения типа payload
-    private detectPayloadType(payload: unknown): PayloadDataObjsUnion {
-        if (!payload) {
-            return { type: EPayloadType.JSON, payload: null };
-        }
-        if (payload instanceof FormData) {
-            return { type: EPayloadType.FORM_DATA, payload };
-        } else if (payload instanceof Blob) {
-            return { type: EPayloadType.BLOB, payload };
-        } else if (typeof payload === 'string') {
-            // Дополнительная проверка на JSON
+        if (payload instanceof FormData) return { type: EPayloadType.FORM_DATA, requestBody: payload };
+        if (payload instanceof Blob) return { type: EPayloadType.BLOB, requestBody: payload };
+
+        if (typeof payload === 'string') {
             try {
                 JSON.parse(payload);
-                return { type: EPayloadType.JSON, payload };
+                return { type: EPayloadType.JSON, requestBody: JSON.parse(payload) };
             } catch {
-                return { type: EPayloadType.TEXT, payload };
+                return { type: EPayloadType.TEXT, requestBody: payload };
             }
         }
-        // return {type: EPayloadType.JSON, payload}; // По умолчанию считаем JSON
-        throw new Error('Unsupported payload type');
+
+        return { type: EPayloadType.JSON, requestBody: payload };
     }
 
-    private getRequestHandlersByPayloadType<T extends EPayloadType>(
-        type: T,
-    ): HandlersMap[T] {
+    private getRequestHandlersByPayloadType(
+        type: EPayloadType,
+    ): HandlersMap[EPayloadType] {
         const handlersMap: HandlersMap = {
             [EPayloadType.FORM_DATA]: {
                 getBody: (payload) => payload,
@@ -209,22 +167,18 @@ export class HTTPTransport {
             },
         };
 
-        return handlersMap[type] as HandlersMap[T];
+        return handlersMap[type];
     }
 
-    isFormDataPayload(obj: PayloadDataObj): obj is { type: EPayloadType.FORM_DATA; payload: FormData } {
-        return obj.type === EPayloadType.FORM_DATA;
-    }
+    private async parseResponse<R>(response: Response): Promise<R> {
+        const contentType = response.headers.get('content-type');
 
-    isJsonPayload(obj: PayloadDataObj): obj is { type: EPayloadType.JSON; payload: string } {
-        return obj.type === EPayloadType.JSON;
-    }
+        if (contentType?.includes('application/json')) {
+            return response.json();
+        }
 
-    isTextPayload(obj: PayloadDataObj): obj is { type: EPayloadType.TEXT; payload: string } {
-        return obj.type === EPayloadType.TEXT;
-    }
+        // Здесь можно добавить обработку других типов ответа по необходимости
 
-    isBlobPayload(obj: PayloadDataObj): obj is { type: EPayloadType.BLOB; payload: Blob } {
-        return obj.type === EPayloadType.BLOB;
+        return response.text() as Promise<R>;
     }
 }
