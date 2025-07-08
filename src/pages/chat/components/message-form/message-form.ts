@@ -6,6 +6,7 @@ import FormValidation from '../../../../core/validation/validation';
 import { Button, Input } from '../../../../components';
 import { getElement } from '../../../../shared/utils';
 import { getTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
+import type { ValidationConfig } from '../../../../core/validation/validation-config';
 
 export type MessageFormProps = {
     class?: string;
@@ -48,7 +49,7 @@ class MessageForm extends Block<MessageFormProps> {
             }),
             submit: (e: SubmitEvent) => {
                 e.preventDefault();
-                const messaage = (this.children.MessageInput as Block).attrs.value;
+                const messaage = (this.children.MessageInput as Block).attrs.value as string;
                 WebsocketService.sendMessage(messaage);
                 (this.element as HTMLFormElement).reset();
                 this.validationService.checkFormValidity();
@@ -57,7 +58,7 @@ class MessageForm extends Block<MessageFormProps> {
         });
 
         this.messageControlProps = getElement(this.children.MessageInput);
-        this.validationService = new FormValidation(this.getValidationConfig(this));
+        this.validationService = new FormValidation(this.getValidationConfig(this) as ValidationConfig);
     }
 
     setValue(e: Event, controlProps: Block) {

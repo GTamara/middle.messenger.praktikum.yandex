@@ -1,11 +1,8 @@
 import { HTTPTransport } from '../../../../../core/http-transport/http-transport';
 import type {
     ChatUserResponse,
-    CreateChatRequest,
     CreateChatResponse,
-    DeleteChatRequest,
     DeleteChatResponse,
-    FindUserRequest,
     UserResponse,
 } from '../../../../../core/http-transport/types/swagger-types';
 
@@ -13,14 +10,14 @@ export class ChatHeaderMenuApiService {
     private readonly http = new HTTPTransport();
 
     deleteChat(chatId: number): Promise<DeleteChatResponse> {
-        return this.http.delete<DeleteChatResponse, DeleteChatRequest>(
+        return this.http.delete<DeleteChatResponse>(
             'chats',
             { chatId },
         );
     }
 
     createChat(payload: string): Promise<CreateChatResponse> {
-        return this.http.post<CreateChatResponse, CreateChatRequest>('chats', { title: payload });
+        return this.http.post<CreateChatResponse>('chats', { title: payload });
     }
 
     getChatUsers(chatId: number): Promise<ChatUserResponse[]> {
@@ -28,6 +25,6 @@ export class ChatHeaderMenuApiService {
     }
 
     seacrhUserByLogin(login: string): Promise<UserResponse[]> {
-        return this.http.post<UserResponse[], FindUserRequest>('user/search', { login });
+        return this.http.post<UserResponse[]>('user/search', { login });
     }
 }

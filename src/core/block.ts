@@ -13,30 +13,38 @@ type Primitive =
     | string
     | boolean
     | number
-    | null
-    | undefined;
+    // | null
+    // | undefined;
 
-type ArrayOrPrimitive<T extends Primitive> = T | T[];
+// type ArrayOrPrimitive<T extends Primitive> = T | T[];
 
-export type AttrValue = ArrayOrPrimitive<Primitive> | Record<string, Primitive>;
+export type AttrValue = Primitive | Primitive[] | Record<string, Primitive>;
 
 export type Attrs = Record<string, AttrValue>;
-export type Props = Record<string, ComponentProp>
+export type Props = Record<
+    string,
+    | Primitive
+    | Primitive[]
+    | AttrValue
+    | Block
+    | Block[]
+    | object
+    | object[]
+    | ((e: Event) => void)
+>
 export type Children = Record<string, Block | Block[]>
 
-type Events = {
-    [key: string]: (e?: Event) => void;
-}
+type Events = Record<string, (e: Event) => void>;
 
-type ValuesOf<T> = T[keyof T];
-
-export type ComponentProp =
-    | ValuesOf<Children>
-    | ValuesOf<Attrs>
-    | ValuesOf<Events>;
+// type ValuesOf<T> = T[keyof T];
+// type t = ValuesOf<Children>
+// export type ComponentProp =
+//     | ValuesOf<Children>
+//     | ValuesOf<Attrs>
+//     | ValuesOf<Events>;
 
 // Нельзя создавать экземпляр данного класса
-export default abstract class Block<P extends Record<string, ComponentProp> = Record<string, ComponentProp>> {
+export default abstract class Block<P extends Props = Props> {
     _element: HTMLElement;
     _meta: ComponentMetaData;
     _id = nanoid(6);

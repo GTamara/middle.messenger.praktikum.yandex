@@ -2,7 +2,8 @@ import type { Indexed } from '../../shared/types';
 import EventBus from '../event-bus/event-bus';
 import { EBlockEvents, EStoreEvents } from '../event-bus/types';
 
-export class StoreService<T extends Indexed> extends EventBus<EBlockEvents | EStoreEvents> {
+export class StoreService<T extends Indexed>
+    extends EventBus<EBlockEvents | EStoreEvents> {
     private _state: T;
     static __instance: StoreService<Indexed> | null = null;
     private constructor(initialState: T) {
@@ -22,15 +23,15 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents | ESt
         return this._state;
     }
 
-    setState<K extends keyof T & string>(
-        path: K,
-        value: T[K],
+    setState(
+        path: string,
+        value: unknown,
     ): void {
         this._set(path, value);
         this.emit(EStoreEvents.STORE_UPDATED);
     };
 
-    private _set<K extends keyof T & string>(path: K, value: T[K]): void {
+    private _set(path: string, value: unknown): void {
         this.merge(this._state, this.getObjectFromPath(path, value));
     }
 
@@ -41,8 +42,13 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents | ESt
             }
 
             try {
-                if (rhs[p].constructor === Object) {
-                    rhs[p] = this.merge(lhs[p] as Indexed, rhs[p] as Indexed);
+                const rhsValue = rhs[p];
+
+                if (typeof rhsValue === 'object' && rhsValue !== null && !Array.isArray(rhsValue)) {
+                    const lhsValue = lhs[p] as Indexed | undefined;
+                    if (lhsValue !== undefined) {
+                        rhs[p] = this.merge(lhsValue, rhsValue as Indexed);
+                    }
                 } else {
                     lhs[p] = rhs[p];
                 }
@@ -54,7 +60,7 @@ export class StoreService<T extends Indexed> extends EventBus<EBlockEvents | ESt
         return lhs;
     }
 
-    private getObjectFromPath<K extends keyof T & string>(path: K, value: T[K]): Record<string, unknown> {
+    private getObjectFromPath(path: string, value: unknown): Record<string, unknown> {
         const arraySegments = path.split('.');
 
         return arraySegments.reduceRight((acc, segment, index) => {

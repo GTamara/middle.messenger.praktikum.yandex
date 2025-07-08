@@ -7,7 +7,7 @@ export type ButtonProps = {
     color?: 'primary' | 'basic' | 'warn';
     class?: string;
     order?: number;
-    ctrlType?: 'action';
+    ctrlType?: 'action' | 'control';
     icon?: string;
     disabled?: boolean;
     popovertarget?: string;

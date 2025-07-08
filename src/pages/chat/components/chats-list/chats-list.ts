@@ -70,7 +70,7 @@ class ChatsList extends Block<ChatListProps> {
             return;
         }
         this.children._chatListItems.forEach((li) => {
-            if (li.attrs.item.id === id) {
+            if (li.attrs.item?.id === id) {
                 li.setAttrs({
                     active: true,
                 });
@@ -86,11 +86,11 @@ class ChatsList extends Block<ChatListProps> {
         const shouldUpdate = super.componentDidUpdate(
             {
                 chats: oldProps?.chats,
-                _chatListItems: oldProps?._chatListItems?.map((li) => li.attrs.item.id),
+                _chatListItems: oldProps?._chatListItems?.map((li) => li.attrs.item?.id),
             },
             {
                 chats: newProps?.chats,
-                _chatListItems: newProps?._chatListItems?.map((li) => li.attrs.item.id),
+                _chatListItems: newProps?._chatListItems?.map((li) => li.attrs.item?.id),
             },
         );
         if (shouldUpdate) {

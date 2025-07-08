@@ -27,11 +27,11 @@ type RequestOptionsWithMethod = RequestOptions & {
     method: EHttpMethod;
 };
 
-type HTTPMethod = <R = unknown>(
+type HTTPMethod = <Resp = unknown>(
     url: string,
     payload?: PayloadData,
     options?: RequestOptions
-) => Promise<R>;
+) => Promise<Resp>;
 
 enum EPayloadType {
     JSON = 'json',

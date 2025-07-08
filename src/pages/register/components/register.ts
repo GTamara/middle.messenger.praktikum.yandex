@@ -7,6 +7,7 @@ import { PATHS } from '../../../shared/constants/routing-constants';
 import { getElement } from '../../../shared/utils';
 import { RegisterController } from '../services/register.controller';
 import { DecoratedRouterLink } from '../../../components/drcorated-router-link/drcorated-router-link';
+import type { ValidationConfig } from '../../../core/validation/validation-config';
 
 export type RegisterPageProps = {
     Form: {
@@ -59,7 +60,7 @@ export class RegisterPage extends Block {
         this.phoneControlProps = getElement(this.form.children.PhoneInput).children['Control'] as Block;
         this.repeatPasswordControlProps = getElement(this.form.children.RepeatPasswordInput).children['Control'] as Block;
 
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
+        this.validationService = new FormValidation(this.getValidationConfig(this.form) as ValidationConfig);
     }
 
     getForm() {

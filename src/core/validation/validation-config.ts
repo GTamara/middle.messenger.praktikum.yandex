@@ -3,7 +3,7 @@ import type Block from '../block';
 export type ValidationConfig = {
     form: {
         element: HTMLFormElement;
-        attrs: AttrsObject;
+        attrs?: AttrsObject;
     };
     controls: {
         [key: string]: {

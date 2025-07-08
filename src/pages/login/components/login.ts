@@ -7,20 +7,21 @@ import { PATHS } from '../../../shared/constants/routing-constants';
 import { getElement } from '../../../shared/utils';
 import { LoginController } from '../services/login.controller';
 import { DecoratedRouterLink } from '../../../components/drcorated-router-link/drcorated-router-link';
+import type { ValidationConfig } from '../../../core/validation/validation-config';
 
 export type LoginPageProps = {
-    Form: {
-        children: {
-            LoginInput: Block;
-            PasswordInput: Block;
-            SignInButton: Block;
-            CancelButton: Block;
-        };
-    };
+    Form: FormElement;
+    // Form with children
+    //     children: {
+    //         LoginInput: Block;
+    //         PasswordInput: Block;
+    //         SignInButton: Block;
+    //         CancelButton: Block;
+    //     };
     registerRouterLink: DecoratedRouterLink;
 }
 
-export class LoginPage extends Block {
+export class LoginPage extends Block<LoginPageProps> {
     validationService: FormValidation;
     form: Block;
     passwordControlProps: Block;
@@ -43,7 +44,9 @@ export class LoginPage extends Block {
         this.passwordControlProps = getWrappedInputElement(this.form.children.PasswordInput);
         this.loginControlProps = getWrappedInputElement(this.form.children.LoginInput);
 
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
+        this.validationService = new FormValidation(
+            this.getValidationConfig(this.form) as ValidationConfig,
+        );
     }
 
     getForm() {

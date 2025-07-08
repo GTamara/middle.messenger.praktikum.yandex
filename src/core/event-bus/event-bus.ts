@@ -10,18 +10,30 @@ export default class EventBus<E extends string> {
         this.listeners[event].push(callback);
     }
 
-    once(event: E, callback: Function) {
+    once<T extends unknown[] = []>(event: E, callback: (...args: T) => void) {
         // Создаем обертку для callback
-        const onceWrapper = (...args: any[]) => {
+        const onceWrapper = (...args: T) => {
             // Удаляем подписку перед вызовом оригинального callback
             this.off(event, onceWrapper);
             // Вызываем оригинальный callback
             callback(...args);
         };
 
-        // Подписываем обертку на событие
         this.on(event, onceWrapper);
     }
+
+    // once(event: E, callback: Function) {
+    //     // Создаем обертку для callback
+    //     const onceWrapper = (...args: any[]) => {
+    //         // Удаляем подписку перед вызовом оригинального callback
+    //         this.off(event, onceWrapper);
+    //         // Вызываем оригинальный callback
+    //         callback(...args);
+    //     };
+
+    //     // Подписываем обертку на событие
+    //     this.on(event, onceWrapper);
+    // }
 
     off(event: E, callback: Function) {
         if (!this.listeners[event]) {
@@ -31,7 +43,7 @@ export default class EventBus<E extends string> {
             (listener) => listener !== callback,
         );
     }
-    emit<T extends any[] = []>(event: E, ...args: T) {
+    emit<T extends unknown[] = []>(event: E, ...args: T) {
         if (!this.listeners[event]) {
             console.error(`Не зарегистрировано событие: ${event}`);
             return;

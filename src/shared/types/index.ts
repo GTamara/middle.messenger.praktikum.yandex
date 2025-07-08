@@ -3,7 +3,7 @@ import type { MessageModel } from '../../pages/chat/types';
 
 export type Constructor<P, T = {}> = new (...args: P[]) => T;
 
-export type Indexed<K extends string = string, V = any> = {
+export type Indexed<K extends string = string, V = unknown> = {
     [key in K]: V;
 };
 

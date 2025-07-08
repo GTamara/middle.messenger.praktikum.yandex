@@ -11,7 +11,7 @@ export type InputProps = {
     class?: string;
     id?: string;
     input?: (e: Event) => void;
-    change?: (e: Event & { target: HTMLInputElement }) => void;
+    change?: (e: Event) => void;
 };
 
 export default class Input extends Block<InputProps> {
