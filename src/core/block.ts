@@ -32,6 +32,7 @@ export type Props = Record<
     | object[]
     | ((e: Event) => void)
 >
+
 export type Children = Record<string, Block | Block[]>
 
 type Events = Record<string, (e: Event) => void>;
@@ -106,16 +107,13 @@ export default abstract class Block<P extends Props = Props> {
         const events: Events = {};
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-                if (value.every((item) => item instanceof Block)) {
-                    children[key] = value;
-                } else {
-                    attrs[key] = value;
-                }
-                return;
-            }
             if (value instanceof Block) {
                 children[key] = value;
+            } else if (
+                Array.isArray(value) &&
+                value.every((item) => item instanceof Block)
+            ) {
+                children[key] = value as Block[];
             } else if (typeof value === 'function') {
                 events[key] = value;
             } else {
