@@ -13,10 +13,6 @@ type Primitive =
     | string
     | boolean
     | number
-    // | null
-    // | undefined;
-
-// type ArrayOrPrimitive<T extends Primitive> = T | T[];
 
 export type AttrValue = Primitive | Primitive[] | Record<string, Primitive>;
 
