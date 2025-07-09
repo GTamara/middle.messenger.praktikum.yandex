@@ -52,7 +52,7 @@ class Route implements IRouteItem {
 
     render() {
         if (!this._block) {
-            this._block = new this._blockClass({});
+            this._block = new this._blockClass({} as IProps);
         }
 
         this._block.show();

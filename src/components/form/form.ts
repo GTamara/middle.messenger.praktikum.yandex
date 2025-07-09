@@ -41,7 +41,7 @@ export default class FormElement extends Block<FormControlProps> {
                 const bItem = Array.isArray(b) ? b[0] : b;
 
                 // Сортируем по `props.order` (по возрастанию)
-                return (aItem.attrs.order || 0) - (bItem.attrs.order || 0);
+                return (+aItem.attrs.order || 0) - (+bItem.attrs.order || 0);
             })
 
             .map(([key, _]) => key)
