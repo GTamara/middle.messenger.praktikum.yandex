@@ -14,7 +14,7 @@ type Primitive =
     | boolean
     | number
 
-export type AttrValue = Primitive | Primitive[] | Record<string, Primitive>;
+export type AttrValue = Primitive | Primitive[] | Record<string, Primitive> | Record<string, Primitive>[];
 
 export type Attrs = Record<string, AttrValue>;
 export type Props = Record<
@@ -24,8 +24,8 @@ export type Props = Record<
     | AttrValue
     | Block
     | Block[]
-    | object
-    | object[]
+    | Record<string, Primitive>
+    | Record<string, Primitive>[]
     | ((e: Event) => void)
 >
 

@@ -3,6 +3,7 @@ import Block from '../../../../core/block';
 export type MessagesItemProps = {
     text?: string;
     date?: string;
+    owner?: boolean;
     ownerId?: number;
     type?: 'message'| 'file';
     class?: string;

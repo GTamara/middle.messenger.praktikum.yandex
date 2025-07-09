@@ -7,15 +7,6 @@ export type AvatarProps = {
 
     size: EAvatarSizes;
     imageSrc?: string;
-    // label?: string;
-    // type?: 'submit' | 'button';
-    // color?: 'primary' | 'basic' | 'warn';
-    // class?: string;
-    // order?: number;
-    // ctrlType?: 'action';
-    // icon?: string;
-    // disabled?: boolean;
-    // click?: (e: Event) => void;
 }
 
 export default class Avatar extends Block<AvatarProps> {
