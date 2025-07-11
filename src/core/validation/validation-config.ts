@@ -1,13 +1,14 @@
+import type { Attrs } from '../block';
 import type Block from '../block';
 
 export type ValidationConfig = {
     form: {
         element: HTMLFormElement;
-        attrs?: AttrsObject;
+        attrs?: Attrs;
     };
     controls: {
         [key: string]: {
-            attrs: AttrsObject;
+            attrs: Attrs;
             events?: { [key: string]: <T extends Event | undefined>(e?: T) => void; };
         };
     };

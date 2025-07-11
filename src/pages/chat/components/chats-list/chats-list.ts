@@ -12,6 +12,7 @@ import { ChatListItem } from '../chat-list-item/chat-list-item';
 export type ChatListProps = {
     chats?: ChatsResponse[];
     _chatListItems?: ChatListItem[];
+    chatListItemsIds?: number[];
 }
 
 class ChatsList extends Block<ChatListProps> {
@@ -66,11 +67,12 @@ class ChatsList extends Block<ChatListProps> {
 
     selectChat(id: number) {
         if (!Array.isArray(this.children._chatListItems)) {
-            console.error('chatListItems не массив!', this.children._chatListItems);
+            console.error('_chatListItems не массив!', this.children._chatListItems);
             return;
         }
         this.children._chatListItems.forEach((li) => {
-            if (li.attrs.item?.id === id) {
+            const item = li.attrs.item as ChatsResponse | undefined;
+            if (item?.id === id) {
                 li.setAttrs({
                     active: true,
                 });
@@ -83,14 +85,17 @@ class ChatsList extends Block<ChatListProps> {
     }
 
     componentDidUpdate(oldProps: Partial<ChatListProps>, newProps: Partial<ChatListProps>): boolean {
+        const oldIds = oldProps?._chatListItems?.map((li) => (li.attrs.item as ChatsResponse)?.id);
+        const newIds = newProps?._chatListItems?.map((li) => (li.attrs.item as ChatsResponse)?.id);
+
         const shouldUpdate = super.componentDidUpdate(
             {
                 chats: oldProps?.chats,
-                _chatListItems: oldProps?._chatListItems?.map((li) => li.attrs.item?.id),
+                chatListItemsIds: oldIds,
             },
             {
                 chats: newProps?.chats,
-                _chatListItems: newProps?._chatListItems?.map((li) => li.attrs.item?.id),
+                chatListItemsIds: newIds,
             },
         );
         if (shouldUpdate) {

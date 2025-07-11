@@ -1,14 +1,14 @@
+import type { Attrs } from '../block';
 import {
     DEFAULT_VALIDATION_CONFIG,
     DEFAULT_VALIDATION_RULES,
-    type AttrsObject,
     type ValidationConfig,
     type ValidationRuleKeys,
 } from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
-    controlsProps: { attrs: AttrsObject }[];
+    controlsProps: { attrs: Attrs }[];
     formHtmlElement: HTMLFormElement;
     controlHtmlElementsArr: HTMLElement[];
     submitBtnHtmlElement: HTMLInputElement;

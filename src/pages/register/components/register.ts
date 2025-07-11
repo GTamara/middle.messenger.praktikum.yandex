@@ -11,18 +11,17 @@ import type { ValidationConfig } from '../../../core/validation/validation-confi
 
 export type RegisterPageProps = {
     Form: {
-        children: {
-            PasswordInput: Block;
-            RepeatPasswordInput: Block;
-            LoginInput: Block;
-            EmailInput: Block;
-            FirstNameInput: Block;
-            LastNameInput: Block;
-            PhoneInput: Block;
-            SignUpButton: Block;
-            CancelButton: Block;
-        };
+        PasswordInput: Block;
+        RepeatPasswordInput: Block;
+        LoginInput: Block;
+        EmailInput: Block;
+        FirstNameInput: Block;
+        LastNameInput: Block;
+        PhoneInput: Block;
+        SignUpButton: Block;
+        CancelButton: Block;
     };
+    signinRouterLink?: Block;
 }
 
 export class RegisterPage extends Block {

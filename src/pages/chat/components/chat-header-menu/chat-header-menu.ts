@@ -2,8 +2,8 @@ import { Button, ControlWrapper, FormElement, Input, Popover, Popup, Select } fr
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import FormValidation from '../../../../core/validation/validation';
+import type { ValidationConfig } from '../../../../core/validation/validation-config';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
-import type { StoreState } from '../../../../shared/types';
 import { getElement } from '../../../../shared/utils';
 import { ChatHeaderMenuController } from './services/chat-header-menu.controller';
 
@@ -20,7 +20,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
     private readonly controller = new ChatHeaderMenuController();
     // private readonly validationService = new FormValidation();
     validationService: FormValidation | null = null;
-    store = window.store as StoreState;
+    store = window.store;
 
     constructor(props: ChatHeaderMenuProps) {
         super('chat-header-menu', {
@@ -107,7 +107,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         this.validationService = new FormValidation(
             this.getUserFormValidationConfig(
                 popup.children.content as Block,
-            ),
+            ) as ValidationConfig,
         );
     }
 
@@ -163,7 +163,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
         this.validationService = new FormValidation(
             this.getChatFormValidationConfig(
                 popup.children.content as Block,
-            ),
+            ) as ValidationConfig,
         );
     }
 

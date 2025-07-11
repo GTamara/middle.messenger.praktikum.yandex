@@ -8,6 +8,7 @@ import { PATHS } from '../../../../shared/constants/routing-constants';
 import type { StoreState } from '../../../../shared/types';
 import { ChatHeaderMenu, ChatsList, MessageForm, MessagesList } from '../../components';
 import type { MessageFormType } from '../../components/message-form/message-form';
+import { getChatItem } from '../../components/utils/chat-item.guars';
 
 export type ChatPageProps = {
     SearchInput: ControlWrapper;
@@ -63,10 +64,9 @@ class ChatPage extends Block<ChatPageProps> {
             value: target.value,
         });
     }
-    // ${ userData.login }
+
     render() {
-        const { activeChat } = this.attrs;
-        console.log('userData', this.attrs.userData);
+        const activeChat = getChatItem(this.attrs);
         return `
     <div class="chat-container">
         <div class="chat-container__messages">

@@ -5,6 +5,6 @@ export class UserDataApiService {
     readonly http = new HTTPTransport();
 
     getUserData(): Promise<UserResponse> {
-        return this.http.get<UserResponse, void>('auth/user');
+        return this.http.get('auth/user');
     }
 }

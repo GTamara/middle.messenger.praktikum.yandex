@@ -14,19 +14,31 @@ type Primitive =
     | boolean
     | number
 
-export type AttrValue = Primitive | Primitive[] | Record<string, Primitive> | Record<string, Primitive>[];
+export type AttrValue =
+    | Primitive
+    | Primitive[]
+    | Record<string, Primitive>
+    | Record<string, Primitive>[]
+    | AttrValue[]
+    | object
+    | null
 
 export type Attrs = Record<string, AttrValue>;
 export type Props = Record<
     string,
-    | Primitive
-    | Primitive[]
+    // | Primitive
+    // | Primitive[]
     | AttrValue
     | Block
     | Block[]
-    | Record<string, Primitive>
-    | Record<string, Primitive>[]
+    | { [key: string]: Block }
+    | { [key: string]: Block[] }
+    // | Record<string, Primitive>
+    // | Record<string, Primitive>[]
+    // | Record<string, unknown>
     | ((e: Event) => void)
+| object
+| object[]
 >
 
 export type Children = Record<string, Block | Block[]>
@@ -111,9 +123,17 @@ export default abstract class Block<P extends Props = Props> {
             ) {
                 children[key] = value as Block[];
             } else if (typeof value === 'function') {
-                events[key] = value;
+                events[key] = value as (e: Event) => void;
             } else {
-                attrs[key] = value;
+                if (
+                    typeof value === 'string' ||
+                    typeof value === 'number' ||
+                    typeof value === 'boolean' ||
+                    Array.isArray(value) ||
+                    (typeof value === 'object' && value !== null)
+                ) {
+                    attrs[key] = value as AttrValue;
+                }
             }
         });
 

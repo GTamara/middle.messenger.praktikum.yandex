@@ -4,11 +4,11 @@ import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
 import { connect } from '../../../../core/store/connect';
 import type { StoreState } from '../../../../shared/types';
+import { getChatItem } from '../utils/chat-item.guars';
 
 export type ChatListItemProps = {
     class?: string;
     name: string;
-    // avatarImageSrc?: string;
     avatar?: Block;
     item: ChatsResponse;
     click?: (e: Event, item: ChatsResponse) => void;
@@ -21,6 +21,7 @@ export class ChatListItem extends Block<ChatListItemProps> {
             ...props,
             active: false,
             class: 'test-item',
+            // item: props.item || {} as ChatsResponse,
             avatar: new Avatar({
                 size: EAvatarSizes.SMALL,
             }),
@@ -39,18 +40,14 @@ export class ChatListItem extends Block<ChatListItemProps> {
     }
 
     render() {
-        const { name, item, active } = this.attrs;
-        const id = item.id;
-        const activeCatIndex = 1;
+        const { name, active } = this.attrs;
+        const id = getChatItem(this.attrs)?.id;
         return `
         <div class="chat-list-item {{#if ${active === true}}}chat-list-item__active{{/if}}"> 
         {{{avatar}}}
         <div class="chat-list-item__data">
             <h2 class="chat-list-item__data-row">${name}</h2>
             <p class="chat-list-item__data-row">ID: ${id}</p>
-            {{#if ${activeCatIndex === 1}}}
-                dfdfgdgdfgdfgf
-            {{/if}}
         </div>
         
         </div>
