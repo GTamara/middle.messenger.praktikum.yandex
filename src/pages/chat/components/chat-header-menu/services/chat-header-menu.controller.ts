@@ -39,7 +39,11 @@ export class ChatHeaderMenuController {
 
     removeUserSubmitForm(e: SubmitEvent) {
         e.preventDefault();
-        return this.chatApiService.deleteUser((e.target as HTMLFormElement).login.value)
+        const deletingUserId = (e.target as HTMLFormElement).login.value;
+        return this.chatApiService.deleteUser({
+            users: [ deletingUserId ],
+            chatId: this.store.getState().chat.selectedChat?.id || 0,
+        })
             .then(() => {
                 this.notificationService.showSuccessMessage('Пользователь удален');
             }).catch((error) => this.processError(error));

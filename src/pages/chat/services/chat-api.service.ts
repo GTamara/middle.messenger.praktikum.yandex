@@ -2,9 +2,7 @@ import { HTTPTransport } from '../../../core/http-transport/http-transport';
 import {
     type ChatsMessagesTokenResponse,
     type ChatsResponse,
-    type DeleteChatRequest,
     type DeleteChatResponse,
-    type FindUserRequest,
     type UserResponse,
     type UsersRequest,
 } from '../../../core/http-transport/types/swagger-types';
@@ -21,19 +19,19 @@ export class ChatApiService {
     }
 
     addUser(payload: UsersRequest): Promise<void> {
-        return this.http.put<void, UsersRequest>('chats/users', payload);
+        return this.http.put<void>('chats/users', payload);
     }
 
     deleteUser(payload: UsersRequest): Promise<void> {
-        return this.http.delete<void, UsersRequest>('chats/users', payload);
+        return this.http.delete<void>('chats/users', payload);
     }
 
     getUserByLogin(login: string): Promise<UserResponse> {
-        return this.http.post<UserResponse, FindUserRequest>(`user/search`, { login });
+        return this.http.post<UserResponse>(`user/search`, { login });
     }
 
     deleteChat(chatId: number): Promise<DeleteChatResponse> {
-        return this.http.delete<DeleteChatResponse, DeleteChatRequest>(`chats/${chatId}`);
+        return this.http.delete<DeleteChatResponse>(`chats/${chatId}`);
     }
 
     getWebsocketChatToken(chatId: number): Promise<ChatsMessagesTokenResponse> {
