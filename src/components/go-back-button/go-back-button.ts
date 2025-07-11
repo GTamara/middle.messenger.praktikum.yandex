@@ -5,8 +5,7 @@ export type GoBackButtonProps = {
     color?: 'primary' | 'basic';
     class?: string;
     routerLink?: string;
-    click?: (e: Event) => void;
-
+    click?: (e: MouseEvent) => void;
     role?: string;
     type?: string;
 
@@ -21,7 +20,7 @@ export class GoBackButton extends Block<GoBackButtonProps> {
             role: 'button',
             type: 'button',
             class: 'icon-button',
-            click: (e: Event) => {
+            click: (e: MouseEvent) => {
                 e.preventDefault();
                 const routerLink = props.routerLink;
                 if (routerLink) {

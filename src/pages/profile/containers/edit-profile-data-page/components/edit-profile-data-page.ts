@@ -2,6 +2,7 @@ import { Avatar, Button, ControlWrapper, FormElement, GoBackButton, Input } from
 import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.types';
 import Block from '../../../../../core/block';
 import FormValidation from '../../../../../core/validation/validation';
+import type { ValidationConfig } from '../../../../../core/validation/validation-config';
 import { getWrappedTextInputPropsForValidation } from '../../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { getWrappedInputElement } from '../../../../../shared/helper-functions';
@@ -67,18 +68,18 @@ export class EditProfileDataPage extends Block {
         this.displayNameControlProps = getWrappedInputElement(this.form.children.DisplayNameInput);
         this.phoneControlProps = getWrappedInputElement(this.form.children.PhoneInput);
 
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
+        this.validationService = new FormValidation(this.getValidationConfig(this.form) as ValidationConfig);
 
         this.controller.fillFormWithStoredData(this.form.element as HTMLFormElement)
             .then(() => {
                 this.setChildren({
                     avatar: new Avatar({
                         size: EAvatarSizes.LARGE,
-                        imageSrc: this.store.getState().user.avatar,
+                        imageSrc: this.store.getState()?.user?.avatar,
                     }),
                     avatarUploader: new AvatarUploader({
                         size: EAvatarSizes.LARGE,
-                        imageSrc: this.store.getState().user.avatar,
+                        imageSrc: this.store.getState()?.user?.avatar,
                         class: 'edit-profile__avatar-uploader',
                     }),
                 });
@@ -118,7 +119,7 @@ export class EditProfileDataPage extends Block {
                 type: 'email',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.emailControlProps);
                 }),
                 change: ((e: Event) => {
@@ -137,7 +138,7 @@ export class EditProfileDataPage extends Block {
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.loginControlProps);
                 }),
                 change: ((e: Event) => {
@@ -156,7 +157,7 @@ export class EditProfileDataPage extends Block {
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.firstNameControlProps);
                 }),
                 change: ((e: Event) => {
@@ -175,7 +176,7 @@ export class EditProfileDataPage extends Block {
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.lastNameControlProps);
                 }),
                 change: ((e: Event) => {
@@ -194,7 +195,7 @@ export class EditProfileDataPage extends Block {
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.displayNameControlProps);
                 }),
                 change: ((e: Event) => {
@@ -213,7 +214,7 @@ export class EditProfileDataPage extends Block {
                 type: 'text',
                 required: true,
                 autocomplete: 'off',
-                input: ((e: Event) => {
+                input: ((e: InputEvent) => {
                     this.setValue(e, this.phoneControlProps);
                 }),
                 change: ((e: Event) => {
@@ -286,11 +287,7 @@ export class EditProfileDataPage extends Block {
             cancelAction: {
                 CancelButton: getElement(form.children.CancelButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 

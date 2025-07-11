@@ -11,7 +11,7 @@ export type ChatListItemProps = {
     name: string;
     avatar?: Block;
     item: ChatsResponse;
-    click?: (e: Event, item: ChatsResponse) => void;
+    click?: (e: MouseEvent, item: ChatsResponse) => void;
     active?: boolean;
 }
 

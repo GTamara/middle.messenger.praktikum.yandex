@@ -84,11 +84,7 @@ class MessageForm extends Block<MessageFormProps> {
             submitAction: {
                 SendButton: getElement(form.children.SendButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 

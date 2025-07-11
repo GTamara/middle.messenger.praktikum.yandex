@@ -11,7 +11,7 @@ export type ButtonProps = {
     icon?: string;
     disabled?: boolean;
     popovertarget?: string;
-    click?: (e: Event) => void;
+    click?: (e: MouseEvent) => void;
 }
 
 export default class Button extends Block<ButtonProps> {

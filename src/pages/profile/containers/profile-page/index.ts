@@ -1,2 +1,2 @@
 import './components/profile-page.pcss';
-export { ProfilePage as default } from './components/profile-page';
+export { ConnectedProfilePage as ProfilePage } from './components/profile-page';

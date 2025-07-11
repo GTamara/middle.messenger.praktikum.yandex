@@ -3,6 +3,8 @@ import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.type
 import { DecoratedRouterLink } from '../../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../../core/block';
 import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
+import { connect } from '../../../../../core/store/connect';
+import type { StoreService } from '../../../../../core/store/store.service';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../../shared/services/user-data/user-data.controller';
 import type { StoreState } from '../../../../../shared/types';
@@ -22,15 +24,26 @@ export type ProfilePageProps = {
     };
     editProfileRouterLink: DecoratedRouterLink;
     changePasswordRouterLink: DecoratedRouterLink;
+    userData: UserResponse | null;
+    phone: string;
+    displayName: string;
+    firstName: string;
+    secondName: string;
+    email: string;
+    login: string;
+    SignOutButton: Button;
+    goBackButton: GoBackButton;
+    avatar: Avatar;
 }
 
-export class ProfilePage extends Block {
+class ProfilePage extends Block {
     controller: ProfilePageController = new ProfilePageController();
     userData: UserResponse | null = null;
-    store: StoreState = window.store as StoreState;
+    store: StoreService<StoreState> = window.store;
     userDataService: UserDataService = new UserDataService();
 
     constructor(props: ProfilePageProps) {
+        console.log('app-profile-page');
         super('app-profile-page', {
             ...props,
             goBackButton: new GoBackButton({
@@ -81,7 +94,7 @@ export class ProfilePage extends Block {
     }
 
     render() {
-        const userName = this.userData?.first_name ?? '';
+        const userName = this.attrs?.first_name ?? '';
         return `
             {{#> ProfileLayout }}
                 {{#> Card class='full-width gap-2' }}
@@ -108,3 +121,15 @@ export class ProfilePage extends Block {
     }
 }
 
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        phone: state.user?.phone,
+        displayName: state.user?.display_name,
+        firstName: state.user?.first_name,
+        secondName: state.user?.second_name,
+        email: state.user?.email,
+        login: state.user?.login,
+    };
+};
+
+export const ConnectedProfilePage = connect(mapStateToProps)(ProfilePage);

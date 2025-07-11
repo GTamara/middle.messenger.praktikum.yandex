@@ -43,7 +43,6 @@ class ChatsList extends Block<ChatListProps> {
                             }),
                             click: () => {
                                 this.chatItemClick({ ...item });
-                                console.log('click', this.element);
                                 this.chatMessagesController.requestNewWebsocketConnection();
                             },
                         });

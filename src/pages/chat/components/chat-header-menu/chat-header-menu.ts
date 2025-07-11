@@ -237,11 +237,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             submitAction: {
                 SubmitButton: getElement(form.children.SubmitButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 
@@ -261,11 +257,7 @@ export class ChatHeaderMenu extends Block<ChatHeaderMenuProps> {
             submitAction: {
                 SubmitButton: getElement(form.children.SubmitButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 

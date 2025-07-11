@@ -10,7 +10,7 @@ export type InputProps = {
     validationRuleName?: ValidationRuleKeys;
     class?: string;
     id?: string;
-    input?: (e: Event) => void;
+    input?: (e: InputEvent) => void;
     change?: (e: Event) => void;
 };
 

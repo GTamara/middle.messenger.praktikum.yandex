@@ -1,6 +1,7 @@
 import { Button, ControlWrapper, FormElement, GoBackButton, Input } from '../../../../../components';
 import Block from '../../../../../core/block';
 import FormValidation from '../../../../../core/validation/validation';
+import type { ValidationConfig } from '../../../../../core/validation/validation-config';
 import { getWrappedTextInputPropsForValidation } from '../../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { getWrappedInputElement } from '../../../../../shared/helper-functions';
@@ -54,7 +55,7 @@ export class ChangePasswordPage extends Block {
         this.newPasswordControlProps = getWrappedInputElement(this.form.children.NewPasswordInput);
         this.repeatPasswordControlProps = getWrappedInputElement(this.form.children.RepeatPasswordInput);
 
-        this.validationService = new FormValidation(this.getValidationConfig(this.form));
+        this.validationService = new FormValidation(this.getValidationConfig(this.form) as ValidationConfig);
     }
 
     getForm() {
@@ -65,9 +66,6 @@ export class ChangePasswordPage extends Block {
             class: 'button full-width',
             order: 1,
             ctrlType: 'action',
-            click: ((e: Event) => {
-                console.log('save password click', e);
-            }),
         });
 
         const cancelButton = new Button({
@@ -180,16 +178,12 @@ export class ChangePasswordPage extends Block {
                 ),
             },
             submitAction: {
-                SignInButton: getElement(form.children.SignInButton),
+                SaveButton: getElement(form.children.SaveButton),
             },
             cancelAction: {
                 CancelButton: getElement(form.children.CancelButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 

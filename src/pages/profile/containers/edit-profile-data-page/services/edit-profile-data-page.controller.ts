@@ -1,6 +1,8 @@
 import type { UserResponse, UserUpdateRequest } from '../../../../../core/http-transport/types/swagger-types';
 import { NotificationService } from '../../../../../core/notification.service';
+import type { StoreService } from '../../../../../core/store/store.service';
 import { UserDataService } from '../../../../../shared/services/user-data/user-data.controller';
+import type { StoreState } from '../../../../../shared/types';
 import { EEditProfileFormFields } from '../types';
 import { EditProfileDataApiService } from './edit-profile-data-api.service';
 
@@ -9,6 +11,7 @@ export class EditProfileDataPageController {
     private readonly api: EditProfileDataApiService = new EditProfileDataApiService();
     private readonly userDataService: UserDataService = new UserDataService();
     EEditProfileFormFields = EEditProfileFormFields;
+    private readonly store: StoreService<StoreState> = window.store;
 
     submitFormHandler(event: SubmitEvent) {
         event.preventDefault();
@@ -26,6 +29,7 @@ export class EditProfileDataPageController {
         this.api.editProfileData(payload)
             .then(() => {
                 this.messageService.showSuccessMessage('Форма успешно отправлена!');
+                this.store.setState('user', payload);
             })
             .catch((error) => {
                 console.error('login error', error);

@@ -20,7 +20,7 @@ export type ValidationConfig = {
     cancelAction?: {
         [key: string]: Block;
     };
-    submitHandler: <T extends Event | undefined>(e?: T) => void;
+    submitHandler: <T extends SubmitEvent>(e?: T) => void;
 };
 
 export type AttrsObject = {

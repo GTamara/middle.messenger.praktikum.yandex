@@ -5,7 +5,7 @@ export type RouterLinkProps = {
     class?: string;
     routerLink?: string;
     label?: string;
-    click?: (e: Event) => void;
+    click?: (e: MouseEvent) => void;
 }
 
 export class RouterLink extends Block<RouterLinkProps> {

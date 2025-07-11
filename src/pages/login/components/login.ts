@@ -147,11 +147,7 @@ export class LoginPage extends Block<LoginPageProps> {
             cancelAction: {
                 CancelButton: getElement(form.children.CancelButton),
             },
-            submitHandler: (e: Event | undefined) => {
-                if (e) {
-                    e.preventDefault();
-                }
-            },
+            submitHandler: (e: SubmitEvent) => e.preventDefault(),
         };
     }
 

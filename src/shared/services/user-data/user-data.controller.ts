@@ -8,10 +8,10 @@ export class UserDataService {
     private userDataApiService: UserDataApiService = new UserDataApiService();
 
     storeUserData(): Promise<UserResponse> {
-        const userData = this.store.getState().user;
-        if (userData) {
-            return Promise.resolve(userData);
-        }
+        // const userData = this.store.getState().user;
+        // if (userData) {
+        //     return Promise.resolve(userData);
+        // }
         return this.userDataApiService.getUserData()
             .then((data) => {
                 this.store.setState('user', data);

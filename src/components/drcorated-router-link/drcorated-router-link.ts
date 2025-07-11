@@ -7,7 +7,7 @@ export type DecoratedRouterLinkProps = {
     Link?: Partial<RouterLink>;
     routerLinkToNavigate?: string;
     label?: string;
-    click?: (e: Event) => void;
+    click?: (e: MouseEvent) => void;
 }
 
 export class DecoratedRouterLink extends Block<DecoratedRouterLinkProps> {
@@ -20,7 +20,7 @@ export class DecoratedRouterLink extends Block<DecoratedRouterLinkProps> {
             Link: new RouterLink({
                 class: 'link link-nice',
                 label: props.label,
-                click: (e: Event) => {
+                click: (e: MouseEvent) => {
                     e.preventDefault();
                     const routerLink = props.routerLinkToNavigate;
                     if (routerLink) {

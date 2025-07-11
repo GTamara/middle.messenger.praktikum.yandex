@@ -1,7 +1,7 @@
 import Block from '../../../../core/block';
-import type { PopoverOptionModel } from '../../types';
+import type { Popoveroptionmodel } from '../../types';
 
-type PopoverOptionProps = PopoverOptionModel;
+type PopoverOptionProps = Popoveroptionmodel;
 
 export class PopoverOption extends Block<PopoverOptionProps> {
     constructor(props: PopoverOptionProps) {
