@@ -4,6 +4,6 @@ export class ProfileApiService {
     http = new HTTPTransport();
 
     logout() {
-        return this.http.post<void, void>('auth/logout');
+        return this.http.post<void>('auth/logout');
     }
 }

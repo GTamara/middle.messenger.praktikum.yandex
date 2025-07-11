@@ -5,7 +5,7 @@ export class EditProfileDataApiService {
     http = new HTTPTransport();
 
     editProfileData(payload: UserUpdateRequest): Promise<UserResponse> {
-        return this.http.put<UserResponse, UserUpdateRequest>('/user/profile', payload);
+        return this.http.put<UserResponse>('/user/profile', payload);
     }
 }
 

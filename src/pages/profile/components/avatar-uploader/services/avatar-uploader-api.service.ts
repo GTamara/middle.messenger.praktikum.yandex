@@ -5,7 +5,7 @@ export class AvatarUploaderApiService {
     http: HTTPTransport = new HTTPTransport();
 
     uploadAvatar(payload: FormData): Promise<UserResponse> {
-        return this.http.put<UserResponse, FormData>('user/profile/avatar', payload)
+        return this.http.put<UserResponse>('user/profile/avatar', payload)
             .then((response) => response);
     }
 }
