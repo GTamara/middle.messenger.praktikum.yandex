@@ -5,6 +5,6 @@ export class ChangePasswordApiService {
     http = new HTTPTransport();
 
     changePassword(payload: ChangePasswordRequest): Promise<void> {
-        return this.http.put<void, ChangePasswordRequest>('user/password', payload);
+        return this.http.put<void>('user/password', payload);
     }
 }
