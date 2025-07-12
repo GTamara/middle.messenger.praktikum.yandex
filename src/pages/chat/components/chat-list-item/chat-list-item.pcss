@@ -2,16 +2,30 @@
 	--padding: 10px;
 
 	display: flex;
+    list-style: none;
 	gap: 1.5rem;
-
-	/* inline-size: 100%; */
 	min-height: 70px;
-	border-block-start: var(--border);
+	border-block-start: 1px solid var(--color-lighter-border);
 	margin-inline: calc(0px - var(--padding));
 	padding: var(--padding);
 	align-items: center;
 
-	&_active {
-		background-color: lightcyan;
-	}
+    &:last-child {
+        border-block-end: 1px solid var(--color-lighter-border);
+    }
+
+    &__active {
+        background-color: lightcyan;
+    }
+
+    &__data {
+        text-align: left;
+        padding-inline-end: 10px;
+        font-size: 0.9rem;
+    }
+
+    &__data-row {
+        margin: 0;
+    }
 }
+

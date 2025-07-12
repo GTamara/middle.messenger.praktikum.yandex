@@ -1,13 +1,17 @@
-import EventBus from '../event-bus';
-import { DEFAULT_VALIDATION_CONFIG, DEFAULT_VALIDATION_RULES, type AttrsObject, type ValidationConfig } from './validation-config';
+import type { Attrs } from '../block';
+import {
+    DEFAULT_VALIDATION_CONFIG,
+    DEFAULT_VALIDATION_RULES,
+    type ValidationConfig,
+    type ValidationRuleKeys,
+} from './validation-config';
 
 export default class FormValidation {
     config: ValidationConfig;
-    controlsProps: { attrs: AttrsObject }[];
+    controlsProps: { attrs: Attrs }[];
     formHtmlElement: HTMLFormElement;
     controlHtmlElementsArr: HTMLElement[];
     submitBtnHtmlElement: HTMLInputElement;
-    eventBus = new EventBus();
 
     constructor(config: ValidationConfig) {
         this.config = config;
@@ -18,10 +22,6 @@ export default class FormValidation {
         this.submitBtnHtmlElement = this.getSubmitElement();
 
         this.toggleSubmitButtonState(false);
-    }
-
-    enableValidation() {
-
     }
 
     private clearValidation() {
@@ -45,8 +45,11 @@ export default class FormValidation {
     }
 
     checkControlValidity(control: HTMLInputElement) {
-        const nameAttr = control.getAttribute('name') ?? '';
-        const isValid = new RegExp(DEFAULT_VALIDATION_RULES[nameAttr].pattern).test(control.value);
+        const validationRuleAttr = control.getAttribute('validationRuleName') ?
+            control.getAttribute('validationRuleName') :
+            control.getAttribute('name') as ValidationRuleKeys;
+        const validationRule = DEFAULT_VALIDATION_RULES[validationRuleAttr as ValidationRuleKeys];
+        const isValid = new RegExp(validationRule.pattern).test(control.value);
         if (isValid) {
             this.toggleErrorVisibility(true, control);
             if (this.isFormValid()) {
@@ -54,12 +57,20 @@ export default class FormValidation {
                 this.clearValidation();
             }
         } else {
-            this.toggleErrorVisibility(false, control, DEFAULT_VALIDATION_RULES[nameAttr].error);
+            this.toggleErrorVisibility(false, control, validationRule.error);
             this.toggleSubmitButtonState(false);
         }
     }
 
-    private isFormValid() {
+    checkFormValidity() {
+        return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
+            if (this.isHtmlInputElement(ctrl)) {
+                return this.checkControlValidity(ctrl);
+            }
+        });
+    }
+
+    isFormValid() {
         return this.controlHtmlElementsArr.every((ctrl: HTMLElement) => {
             if (this.isHtmlInputElement(ctrl)) {
                 return ctrl.validity.valid;
@@ -77,15 +88,15 @@ export default class FormValidation {
         if (isValid) {
             errorMessageElement.style.display = 'none';
             errorMessageElement.textContent = '';
+            control.classList.remove('error');
         } else {
             errorMessageElement.style.display = 'block';
             errorMessageElement.textContent = errorMessage;
+            control.classList.add('error');
         }
     }
 
     private toggleSubmitButtonState(isFormValid: boolean) {
-        // this.config.submitAction[Object.keys(this.config.submitAction)[0]]
-        // .setProps({order: 1});
         if (isFormValid) {
             this.submitBtnHtmlElement.removeAttribute('disabled');
             this.submitBtnHtmlElement.disabled = false;

@@ -1,31 +1,47 @@
-import EventBus from './event-bus';
+import EventBus from './event-bus/event-bus';
 import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
-import { EBlockEvents } from './types';
+import { EBlockEvents } from './event-bus/types';
+import isEqual from '../shared/utils/is-equal';
 
 type ComponentMetaData = {
-	tagName: string;
-	attrs: Attrs;
+    tagName: string;
+    attrs: Attrs;
 }
 
-export type PropsAndChildren = Record<string, ComponentProp | any>
+type Primitive =
+    | string
+    | boolean
+    | number
+
+export type AttrValue =
+    | Primitive
+    | Primitive[]
+    | Record<string, Primitive>
+    | Record<string, Primitive>[]
+    | AttrValue[]
+    | object
+    | null
+
+export type Attrs = Record<string, AttrValue>;
+export type Props = Record<
+    string,
+    | AttrValue
+    | Block
+    | Block[]
+    | { [key: string]: Block }
+    | { [key: string]: Block[] }
+    | ((e: Event) => void)
+    | object
+    | object[]
+>
+
 export type Children = Record<string, Block | Block[]>
 
-export type Attrs = Record<string, string | boolean | any>
-
-type Events = {
-	[key: string]: () => void;
-}
-
-type ValuesOf<T> = T[keyof T];
-
-export type ComponentProp =
-    | ValuesOf<Children>
-    | ValuesOf<Attrs>
-    | ValuesOf<Events>;
+type Events = Record<string, (e: Event) => void>;
 
 // Нельзя создавать экземпляр данного класса
-export default abstract class Block<P extends Record<string, any> = Record<string, any>> {
+export default abstract class Block<P extends Props = Props> {
     _element: HTMLElement;
     _meta: ComponentMetaData;
     _id = nanoid(6);
@@ -67,9 +83,11 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
             this._element.classList.add(...classes);
         }
 
-        if (typeof attrs ==='object') {
+        if (typeof attrs === 'object') {
             Object.entries(attrs).forEach(([attrName, attrValue]) => {
-                this._element.setAttribute(attrName, attrValue.toString());
+                if (attrValue !== null && attrValue !== undefined) {
+                    this._element.setAttribute(attrName, attrValue.toString());
+                }
             });
         }
     }
@@ -79,30 +97,31 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         this.eventBus.emit(EBlockEvents.FLOW_RENDER);
     }
 
-    _getChildrenAndProps(propsAndChildren: PropsAndChildren) {
+    _getChildrenAndProps(propsAndChildren: Props) {
         const children: Children = {};
         const attrs: Attrs = {} as Attrs;
         const events: Events = {};
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-                value.forEach((element) => {
-                    if (element instanceof Block) {
-                        children[key] = element;
-                    } else if (typeof value === 'function') {
-                        events[key] = element;
-                    } else {
-                        attrs[key] = element;
-                    }
-                });
-                return;
-            }
             if (value instanceof Block) {
                 children[key] = value;
+            } else if (
+                Array.isArray(value) &&
+                value.every((item) => item instanceof Block)
+            ) {
+                children[key] = value as Block[];
             } else if (typeof value === 'function') {
-                events[key] = value;
+                events[key] = value as (e: Event) => void;
             } else {
-                attrs[key] = value;
+                if (
+                    typeof value === 'string' ||
+                    typeof value === 'number' ||
+                    typeof value === 'boolean' ||
+                    Array.isArray(value) ||
+                    (typeof value === 'object' && value !== null)
+                ) {
+                    attrs[key] = value as AttrValue;
+                }
             }
         });
 
@@ -120,42 +139,123 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
     }
 
     _componentDidUpdate(oldProps: P, newProps: P) {
-        const response = this.componentDidUpdate(oldProps, newProps);
-        if (!response) {
+        const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
+        if (!shouldUpdate) {
             return;
         }
         this._render();
     }
 
-    componentDidUpdate(oldProps: P, newProps: P): boolean {
-        return oldProps === newProps || true;
+    componentDidUpdate(oldProps: Partial<P>, newProps: Partial<P>): boolean {
+        if (oldProps === undefined) {
+            return true;
+        }
+        const propsChanged = !isEqual(oldProps, newProps);
+        return propsChanged;
     }
 
-    setProps = (nextAttrs: Attrs) => {
-        if (!nextAttrs) {
+    setAttrs = (newProps: Props) => {
+        if (!newProps) {
             return;
         }
-        console.log('setProps', nextAttrs, this.attrs);
-        Object.assign(this.attrs, nextAttrs);
+        Object.assign(this.attrs, newProps);
     };
 
-    setChildren = (children: Children) => {
-        if (!children) {
+    setChildren = (newChildren: Children) => {
+        if (!newChildren) {
             return;
         }
-
-        Object.assign(this.children, children);
+        Object.assign(this.children, newChildren);
         this.eventBus.emit(EBlockEvents.FLOW_CDU);
     };
 
-    //     setChildren = (children: Children) => {
-    //     if (!children) {
-    //         return;
-    //     }
+    setProps = (newProps: Props) => {
+        if (!newProps) {
+            return;
+        }
+        this.setAttrs(newProps);
 
-    //     Object.assign(this.children, children);
-    //     this.eventBus.emit(EBlockEvents.FLOW_CDU);
-    // };
+        if (newProps instanceof Block || Array.isArray(newProps)) {
+            this.setChildren(newProps?.children as Children);
+        }
+    };
+
+    hasChildrenChanges(newChildren: Children) {
+        let hasChanges = false;
+
+        Object.entries(newChildren).forEach(([key, newChild]) => {
+            const oldChild = this.children[key];
+            if (Array.isArray(newChild)) {
+                if (!Array.isArray(oldChild)) {
+                    hasChanges = true;
+                    return;
+                }
+                if (newChild.length !== oldChild.length) {
+                    hasChanges = true;
+                    return;
+                }
+                newChild.forEach((child, i) => {
+                    if (child !== oldChild[i]) {
+                        hasChanges = true;
+                    }
+                });
+            } else {
+                if (newChild !== oldChild) {
+                    hasChanges = true;
+                }
+            }
+        });
+
+        // Проверяем удалённые children
+        Object.keys(this.children).forEach((key) => {
+            if (!(key in newChildren)) {
+                hasChanges = true;
+            }
+        });
+
+        if (hasChanges) {
+            // Сначала удаляем старые children
+            Object.keys(this.children).forEach((key) => {
+                if (!(key in newChildren)) {
+                    delete this.children[key];
+                }
+            });
+
+            // Затем добавляем/обновляем новые
+            Object.assign(this.children, newChildren);
+            this.eventBus.emit(EBlockEvents.FLOW_CDU);
+        }
+        return hasChanges;
+    }
+
+    updateChildren(newChildren: Children) {
+        const hasChanges = this.hasChildrenChanges(newChildren);
+        if (hasChanges) {
+            // Сначала удаляем старые children
+            Object.keys(this.children).forEach((key) => {
+                if (!(key in newChildren)) {
+                    delete this.children[key];
+                }
+            });
+
+            // Затем добавляем/обновляем новые
+            Object.assign(this.children, newChildren);
+            this.eventBus.emit(EBlockEvents.FLOW_CDU);
+        }
+    }
+
+    setEvents = (nextEvents: Events) => {
+        if (
+            !nextEvents ||
+            !Object.keys(nextEvents).length ||
+            !Object.values(nextEvents).every((value) => (typeof value === 'function'))
+        ) {
+            console.error('Некорректный тип события');
+            return;
+        }
+        Object.assign(this.events, nextEvents);
+        this.eventBus.emit(EBlockEvents.FLOW_CDU);
+    };
 
     get element() {
         return this._element;
@@ -174,8 +274,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
     }
 
     _compile() {
-        const propsAndStubs: { [key: string]: string | string[] | boolean } = { ...this.attrs };
-
+        const propsAndStubs: Record<string, AttrValue> = { ...this.attrs };
         Object.entries(this.children).forEach(([key, child]) => {
             if (Array.isArray(child)) {
                 propsAndStubs[key] = child.map(
@@ -188,6 +287,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
 
         const fragment: HTMLTemplateElement = this._createDocumentElement<HTMLTemplateElement>('template');
         const template = Handlebars.compile(this.render());
+        fragment.innerHTML = '';
         fragment.innerHTML = template(propsAndStubs);
 
         Object.values(this.children).forEach((child) => {
@@ -201,14 +301,13 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
                 });
             } else {
                 const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-
                 stub?.replaceWith(child.getContent());
             }
         });
 
         /**
-		 * Заменяем заглушки на компоненты
-		 */
+         * Заменяем заглушки на компоненты
+         */
         // Object.keys(this.children).forEach(childKey => {
         // 	/**
         // 	 * Ищем заглушку по id
@@ -251,26 +350,30 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
         return this.element;
     }
 
-    _makePropsProxy(props: PropsAndChildren) {
+    _makePropsProxy(props: Attrs): Attrs {
         const eventBus = this.eventBus;
         const emitBind = eventBus.emit.bind(eventBus);
 
-        return new Proxy(props as any, {
-            get(target, prop) {
+        return new Proxy<Attrs>(props, {
+            get(target: Attrs, prop: string) {
                 const value = target[prop];
-                return typeof value === 'function' ? value.bind(target) : value;
+                return typeof value === 'function' ? (value as Function).bind(target) : value;
             },
-            set(target, prop, value) {
+            set(target: Attrs, prop: string, value: AttrValue) {
                 const oldTarget = { ...target };
                 target[prop] = value;
-
                 // Запускаем обновление компоненты
-                // Плохой cloneDeep, в следующей итерации нужно заставлять добавлять cloneDeep им самим
                 emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
                 return true;
             },
-            deleteProperty() {
-                throw new Error('Нет доступа');
+            deleteProperty(target: Attrs, prop: string) {
+                console.log('deleteProperty', target, prop);
+                if (prop in target) {
+                    const oldTarget = { ...target };
+                    delete target[prop];
+                    emitBind(EBlockEvents.FLOW_CDU, oldTarget, target);
+                }
+                return true;
             },
         });
     }
@@ -281,7 +384,7 @@ export default abstract class Block<P extends Record<string, any> = Record<strin
     }
 
     show() {
-        this.getContent().style.display = 'block';
+        this.getContent().style.display = '';
     }
 
     hide() {

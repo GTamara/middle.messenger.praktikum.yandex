@@ -1,5 +1,9 @@
 @import '../../styles/mixins.pcss';
 
+button {
+    cursor: pointer;
+}
+
 .button {
 	border-radius: 50px;
 	color: var(--color-accent);
@@ -11,6 +15,11 @@
 	outline: 0;
 	font-size: 1.1rem;
 	font-weight: 500;
+    cursor: pointer;
+
+    .button-icon {
+        pointer-events: none;
+    }
 }
 
 [color="primary"] {
@@ -21,11 +30,17 @@
 	@mixin basic-button-styles;
 }
 
-[disabled] {
+[color="warn"] {
+    @mixin warning-button-styles;
+    
+    color: white;
+}
+
+button[disabled] {
 	@mixin disabled-button-styles;
 }
 
 button:focus,
 button:focus-visible {
-	outline: 1px auto var(--color-medium-border);
+	outline: 1px auto var(--color-focus-visible);
 }

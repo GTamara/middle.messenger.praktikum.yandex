@@ -1,4 +1,5 @@
 import Block from '../../core/block';
+import type { ValidationRuleKeys } from '../../core/validation/validation-config';
 
 export type InputProps = {
     name: string;
@@ -6,7 +7,10 @@ export type InputProps = {
     autocomplete: string;
     required?: boolean;
     icon?: string;
-    input?: (e: Event) => void;
+    validationRuleName?: ValidationRuleKeys;
+    class?: string;
+    id?: string;
+    input?: (e: InputEvent) => void;
     change?: (e: Event) => void;
 };
 

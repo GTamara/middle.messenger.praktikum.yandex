@@ -1,0 +1,26 @@
+app-popover {
+    display: block;
+    position: relative;
+
+    .popover-content {
+        position: relative;
+    }
+
+    button {
+        outline: none;
+        border: 0;
+        border-radius: 50%;
+    }
+
+    .popover {
+        position: absolute;
+        inset: 2rem 2.5rem auto auto;
+        border: 1px solid var(--color-medium-border);
+        box-shadow:
+            rgb(150 150 150 / 20%) 0 -25px 18px -14px inset,
+            rgb(150 150 150 / 10%) 0 1px 2px,
+            rgb(150 150 150 / 10%) 0 2px 4px,
+            rgb(150 150 150 / 10%) 0 2px 8px, 
+            rgb(150 150 150 / 10%) 0 4px 16px !important;
+    }
+}

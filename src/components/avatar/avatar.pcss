@@ -1,13 +1,20 @@
 .avatar {
-	inline-size: 50px;
-	block-size: 50px;
+	/* inline-size: 50px;
+	block-size: 50px; */
 	border-radius: 50%;
 	border: var(--border);
 	background-color: aquamarine;
 	box-shadow: rgb(44 187 99 / 15%) 0 0 1px 4px;
 
+
+
 	&[size="large"] {
 		inline-size: 150px;
 		block-size: 150px;
+	}
+
+    &[size="small"] {
+		inline-size: 50px;
+		block-size: 50px;
 	}
 }

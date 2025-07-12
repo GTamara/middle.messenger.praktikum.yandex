@@ -19,6 +19,21 @@
 					"include"
 				]
 			}
-		]
-	}
+		],
+		"media-feature-range-notation": null,
+		"color-hex-length": "short"
+	},
+	"ignoreFiles": [
+		"dist/**", "**/*.ts", "**/*.hbs", "**/assets/**"
+	],
+	"overrides": [
+		{
+			"files": [
+				"**/*.css",
+				"**/*.scss",
+				"**/*.pcss"
+			],
+			"customSyntax": "postcss-scss"
+		}
+	]
 }
