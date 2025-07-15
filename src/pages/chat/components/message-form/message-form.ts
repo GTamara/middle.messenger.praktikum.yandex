@@ -1,5 +1,4 @@
 import Block from '../../../../core/block';
-import { connect } from '../../../../core/store/connect';
 import type { StoreState } from '../../../../shared/types';
 import { WebsocketService } from '../../../../core/websocket/websocket.service';
 import FormValidation from '../../../../core/validation/validation';
@@ -7,6 +6,7 @@ import { Button, Input } from '../../../../components';
 import { getElement } from '../../../../shared/utils';
 import { getTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import type { ValidationConfig } from '../../../../core/validation/validation-config';
+import { Connect } from '../../../../core/store/connect.decorator';
 
 export type MessageFormProps = {
     class?: string;
@@ -18,7 +18,14 @@ export type MessageFormProps = {
 
 export type MessageFormType = InstanceType<typeof MessageForm>;
 
-class MessageForm extends Block<MessageFormProps> {
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        activeChat: state?.chat?.selectedChat?.id,
+    };
+};
+
+@Connect(mapStateToProps)
+export class MessageForm extends Block<MessageFormProps> {
     private readonly validationService: FormValidation;
     private readonly messageControlProps: Block;
 
@@ -95,12 +102,3 @@ class MessageForm extends Block<MessageFormProps> {
         `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        activeChat: state?.chat?.selectedChat?.id,
-    };
-};
-
-export const ConnectedMessageForm = connect(mapStateToProps)(MessageForm);
-

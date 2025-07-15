@@ -1,17 +1,25 @@
 import Block from '../../../../core/block';
 import type EventBus from '../../../../core/event-bus/event-bus';
 import { EChatMessagesEvents } from '../../../../core/event-bus/types';
-import { connect } from '../../../../core/store/connect';
+import { Connect } from '../../../../core/store/connect.decorator';
 import type { StoreState } from '../../../../shared/types';
 import { ChatMessagesManagerController } from '../../services/chat-messages-manager.controller';
 import { MessageItem } from '../message-item';
 
-type MessagesListProps = {
+export type MessagesListProps = {
     _messages: Block[];
     activeChatId?: number
 }
 
-class MessagesList extends Block<MessagesListProps> {
+export const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        messages: state.chat?.selectedChatMessagesList,
+        activeChatId: state?.chat?.selectedChat?.id,
+    };
+};
+
+@Connect(mapStateToProps)
+export class MessagesList extends Block<MessagesListProps> {
     private readonly chatMessagesController = new ChatMessagesManagerController();
     private readonly websocketMessagesEventBus: EventBus<EChatMessagesEvents> = window.websocketMessagesEventBus;
 
@@ -49,12 +57,3 @@ class MessagesList extends Block<MessagesListProps> {
         `;
     }
 }
-
-export const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        messages: state.chat?.selectedChatMessagesList,
-        activeChatId: state?.chat?.selectedChat?.id,
-    };
-};
-
-export const ConnectedMessagesList = connect(mapStateToProps)(MessagesList);

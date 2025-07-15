@@ -15,63 +15,73 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
-	baseDirectory: __dirname,
-	recommendedConfig: js.configs.recommended,
-	allConfig: js.configs.all
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all
 });
 
 export default defineConfig([
-	{
-		ignores: [
+    {
+        ignores: [
             "**/dist/**",          // Игнорируем всю папку dist
             "**/*.d.ts",           // Игнорируем файлы деклараций TypeScript
             "**/assets/**",        // Игнорируем папку assets
             "/dist/assets/*.js"    // Конкретно для вашего случая
         ]
-	},
-	eslint.configs.recommended,
-	{
-		extends: [
-			compat.extends("google"),
-		],
-		files: ["**/*.ts"],
-		languageOptions: {
-			parser: tsParser,
-			globals: {
-				...globals.browser, // Добавляем браузерные глобальные переменные
-				...globals.es2021,  // Если нужно, можно добавить другие глобалы
-			}
-			// parserOptions: {
-			// 	project: './tsconfig.json' // Path to your tsconfig.json
-			// }
-		},
-		plugins: {
-			'@typescript-eslint': tsPlugin,
-			import: importPlugin,
-		},
-		rules: {
-			'@typescript-eslint/no-unused-vars': [
-				"error",
-				{
-					"argsIgnorePattern": "^_",  // Игнорировать неиспользуемые аргументы, начинающиеся с _
-					"varsIgnorePattern": "^_",  // Игнорировать неиспользуемые переменные, начинающиеся с _
-					"caughtErrorsIgnorePattern": "^_"  // Игнорировать неиспользуемые ошибки в catch
-				}
-			],
-			'@typescript-eslint/no-explicit-any': 'warn',
-			'@typescript-eslint/explicit-function-return-type': 'off',
-			"indent": ["error", 4],
-			"no-unused-vars": "off",
-			"no-tabs": "off",
-			"object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
-			"array-bracket-spacing": ["error", "never", {
-				"singleValue": true,
-				"objectsInArrays": true,
-				"arraysInArrays": true,
-			}],
-			"require-jsdoc": "off",
-			"valid-jsdoc": "off",
-			"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1, "maxBOF": 0 }],
-			"max-len": "off"
-		},
-	}]);
+    },
+    eslint.configs.recommended,
+    {
+        extends: [
+            compat.extends("google"),
+        ],
+        files: ["**/*.ts"],
+        languageOptions: {
+            parser: tsParser,
+            globals: {
+                ...globals.browser, // Добавляем браузерные глобальные переменные
+                ...globals.es2021,  // Если нужно, можно добавить другие глобалы
+            }
+            // parserOptions: {
+            // 	project: './tsconfig.json' // Path to your tsconfig.json
+            // }
+        },
+        plugins: {
+            '@typescript-eslint': tsPlugin,
+            import: importPlugin,
+        },
+        rules: {
+            '@typescript-eslint/no-unused-vars': [
+                "error",
+                {
+                    "argsIgnorePattern": "^_",  // Игнорировать неиспользуемые аргументы, начинающиеся с _
+                    "varsIgnorePattern": "^_",  // Игнорировать неиспользуемые переменные, начинающиеся с _
+                    "caughtErrorsIgnorePattern": "^_"  // Игнорировать неиспользуемые ошибки в catch
+                }
+            ],
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            "indent": ["error", 4],
+            "no-unused-vars": "off",
+            "no-tabs": "off",
+            "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
+            "array-bracket-spacing": ["error", "never", {
+                "singleValue": true,
+                "objectsInArrays": true,
+                "arraysInArrays": true,
+            }],
+            "require-jsdoc": "off",
+            "valid-jsdoc": "off",
+            "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1, "maxBOF": 0 }],
+            "max-len": "off",
+            'new-cap': [
+                'error',
+                {
+                    newIsCap: true,       // Конструкторы должны быть с `new`
+                    capIsNew: false,      // Не требовать `new` для функций с заглавной буквы
+                    properties: true,     // Проверять имена свойств объектов
+                    // Добавляем исключение для декораторов:
+                    capIsNewExceptions: ['Connect']  // Разрешить `Connect` без `new`
+                }
+            ]
+        },
+    }]);

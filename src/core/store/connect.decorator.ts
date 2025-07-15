@@ -1,12 +1,23 @@
 import type { Indexed } from '../../shared/types';
 import { EStoreEvents } from '../event-bus/types';
 
-export function connect(mapStateToProps: (state: Indexed) => Indexed) {
-    return function(Component: any) {
+// Базовый интерфейс для компонента
+export interface IConnectableComponent<P = unknown> {
+    setProps: (newProps: Partial<P>) => void;
+}
+
+// Тип конструктора компонента
+export type ConnectableComponentConstructor<P extends Indexed = Indexed> = {
+    new(...args: unknown[]): IConnectableComponent<P>;
+};
+
+export function Connect<P extends Indexed>(mapStateToProps: (state: Indexed) => Partial<P>) {
+    return function<T extends new(...args: any[]) => IConnectableComponent<P>>(Component: T) {
         // используем class expression
         return class extends Component {
-            constructor(props: any) {
+            constructor(...args: any[]) {
                 const store = window.store;
+                const props = args[0] || {};
                 super({ ...props, ...mapStateToProps(store.getState()) });
 
                 // подписываемся на событие

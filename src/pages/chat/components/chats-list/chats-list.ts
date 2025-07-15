@@ -2,7 +2,7 @@ import { Avatar } from '../../../../components';
 import { EAvatarSizes } from '../../../../components/avatar/types/avatar.types';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
-import { connect } from '../../../../core/store/connect';
+import { Connect } from '../../../../core/store/connect.decorator';
 import type { StoreService } from '../../../../core/store/store.service';
 import type { StoreState } from '../../../../shared/types';
 import { ChatMessagesManagerController } from '../../services/chat-messages-manager.controller';
@@ -15,7 +15,14 @@ export type ChatListProps = {
     chatListItemsIds?: number[];
 }
 
-class ChatsList extends Block<ChatListProps> {
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        chats: state?.chat?.chats || [],
+    };
+};
+
+@Connect(mapStateToProps)
+export class ChatsList extends Block<ChatListProps> {
     private readonly controller = new ChatController();
     private readonly store: StoreService<StoreState> = window.store as StoreService<StoreState>;
     private readonly chatMessagesController = new ChatMessagesManagerController();
@@ -115,11 +122,3 @@ class ChatsList extends Block<ChatListProps> {
         `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        chats: state?.chat?.chats || [],
-    };
-};
-
-export const ConnectedChatsList = connect(mapStateToProps)(ChatsList) as typeof ChatsList;

@@ -3,7 +3,7 @@ import { EAvatarSizes } from '../../../../../components/avatar/types/avatar.type
 import { DecoratedRouterLink } from '../../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../../core/block';
 import type { UserResponse } from '../../../../../core/http-transport/types/swagger-types';
-import { connect } from '../../../../../core/store/connect';
+import { Connect } from '../../../../../core/store/connect.decorator';
 import type { StoreService } from '../../../../../core/store/store.service';
 import { PATHS } from '../../../../../shared/constants/routing-constants';
 import { UserDataService } from '../../../../../shared/services/user-data/user-data.controller';
@@ -36,7 +36,19 @@ export type ProfilePageProps = {
     avatar: Avatar;
 }
 
-class ProfilePage extends Block {
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        phone: state.user?.phone,
+        displayName: state.user?.display_name,
+        firstName: state.user?.first_name,
+        secondName: state.user?.second_name,
+        email: state.user?.email,
+        login: state.user?.login,
+    };
+};
+
+@Connect(mapStateToProps)
+export class ProfilePage extends Block {
     controller: ProfilePageController = new ProfilePageController();
     userData: UserResponse | null = null;
     store: StoreService<StoreState> = window.store;
@@ -120,16 +132,3 @@ class ProfilePage extends Block {
         `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        phone: state.user?.phone,
-        displayName: state.user?.display_name,
-        firstName: state.user?.first_name,
-        secondName: state.user?.second_name,
-        email: state.user?.email,
-        login: state.user?.login,
-    };
-};
-
-export const ConnectedProfilePage = connect(mapStateToProps)(ProfilePage);
