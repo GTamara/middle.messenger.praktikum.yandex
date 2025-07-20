@@ -26,15 +26,21 @@ export default defineConfig([
             "**/dist/**",          // Игнорируем всю папку dist
             "**/*.d.ts",           // Игнорируем файлы деклараций TypeScript
             "**/assets/**",        // Игнорируем папку assets
-            "/dist/assets/*.js"    // Конкретно для вашего случая
+            "/dist/assets/*.js",    // Конкретно для вашего случая
+            //"**/*.{js,ts}",
+            "!src/**/*.{js,ts}",
+            "**/*spec.ts"
         ]
     },
-    eslint.configs.recommended,
     {
-        extends: [
-            compat.extends("google"),
-        ],
-        files: ["**/*.ts"],
+        ...eslint.configs.recommended,
+        files: ["src/**/*.{js,ts}"],  // Ограничиваем recommended
+    },
+    {
+        // extends: [
+        //     compat.extends("google"),
+        // ],
+        // files: ["src/**/*.{js,ts}"],
         languageOptions: {
             parser: tsParser,
             globals: {

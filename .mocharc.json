@@ -1,0 +1,12 @@
+{
+    "extension": [
+        "ts"
+    ],
+    "spec": "src/**/*.spec.ts",
+    "require": ["mocha-setup.js"],
+    "node-option": [
+        "loader=ts-node/esm",
+        "experimental-specifier-resolution=node"
+    ],
+    "timeout": 5000
+}
