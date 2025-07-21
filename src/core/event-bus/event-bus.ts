@@ -22,19 +22,6 @@ export default class EventBus<E extends string> {
         this.on(event, onceWrapper);
     }
 
-    // once(event: E, callback: Function) {
-    //     // Создаем обертку для callback
-    //     const onceWrapper = (...args: any[]) => {
-    //         // Удаляем подписку перед вызовом оригинального callback
-    //         this.off(event, onceWrapper);
-    //         // Вызываем оригинальный callback
-    //         callback(...args);
-    //     };
-
-    //     // Подписываем обертку на событие
-    //     this.on(event, onceWrapper);
-    // }
-
     off(event: E, callback: Function) {
         if (!this.listeners[event]) {
             throw new Error(`Не зарегистрировано событие: ${event}`);

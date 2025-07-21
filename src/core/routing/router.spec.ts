@@ -18,7 +18,7 @@ class MockRouteGuard { //  implements RouteGuard
     checkAccess = sinon.stub().resolves({ allow: true, requiredAuth: false });
 }
 
-describe.only('Router', () => {
+describe('Router', () => {
     let router: Router;
     let guard: MockRouteGuard;
     const config = {
