@@ -1,6 +1,6 @@
 import { API_URL } from '../../app-config';
 
-enum EHttpMethod {
+export enum EHttpMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',
@@ -33,7 +33,7 @@ type HTTPMethod = <Resp = unknown>(
     options?: RequestOptions
 ) => Promise<Resp>;
 
-enum EPayloadType {
+export enum EPayloadType {
     JSON = 'json',
     FORM_DATA = 'form-data',
     TEXT = 'text',

@@ -2,7 +2,7 @@ import { Avatar } from '../../../../components';
 import { EAvatarSizes } from '../../../../components/avatar/types/avatar.types';
 import Block from '../../../../core/block';
 import type { ChatsResponse } from '../../../../core/http-transport/types/swagger-types';
-import { connect } from '../../../../core/store/connect';
+import { Connect } from '../../../../core/store/connect.decorator';
 import type { StoreState } from '../../../../shared/types';
 import { getChatItem } from '../utils/chat-item.guars';
 
@@ -15,6 +15,13 @@ export type ChatListItemProps = {
     active?: boolean;
 }
 
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        activeChat: state?.chat?.selectedChat,
+    };
+};
+
+@Connect(mapStateToProps)
 export class ChatListItem extends Block<ChatListItemProps> {
     constructor(props: ChatListItemProps) {
         super('chat-list-item', {
@@ -54,12 +61,4 @@ export class ChatListItem extends Block<ChatListItemProps> {
         `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        activeChat: state?.chat?.selectedChat,
-    };
-};
-
-export const ConnectedChatListItem = connect(mapStateToProps)(ChatListItem);
 

@@ -2,12 +2,13 @@ import { ControlWrapper, Input } from '../../../../components';
 import { DecoratedRouterLink } from '../../../../components/drcorated-router-link/drcorated-router-link';
 import Block from '../../../../core/block';
 import type { ChatsResponse, UserResponse } from '../../../../core/http-transport/types/swagger-types';
-import { connect } from '../../../../core/store/connect';
+import { Connect } from '../../../../core/store/connect.decorator';
 import { getWrappedTextInputPropsForValidation } from '../../../../core/validation/validation-utils';
 import { PATHS } from '../../../../shared/constants/routing-constants';
 import type { StoreState } from '../../../../shared/types';
 import { ChatHeaderMenu, ChatsList, MessageForm, MessagesList } from '../../components';
-import type { MessageFormType } from '../../components/message-form/message-form';
+import type { MessageFormProps, MessageFormType } from '../../components/message-form/message-form';
+import type { MessagesListProps } from '../../components/messages-list/messages-list';
 import { getChatItem } from '../../components/utils/chat-item.guars';
 
 export type ChatPageProps = {
@@ -24,7 +25,17 @@ export type ChatPageProps = {
     userData?: UserResponse;
 }
 
-class ChatPage extends Block<ChatPageProps> {
+const mapStateToProps = (state: Partial<StoreState>) => {
+    return {
+        activeChatId: state?.chat?.selectedChat?.id,
+        activeChat: state?.chat?.selectedChat,
+        chatsCount: state?.chat?.chats?.length,
+        userData: state?.user,
+    };
+};
+
+@Connect(mapStateToProps)
+export class ChatPage extends Block<ChatPageProps> {
     constructor(props: ChatPageProps) {
         super('app-chat-page', {
             ...props,
@@ -53,8 +64,8 @@ class ChatPage extends Block<ChatPageProps> {
             }),
             chatHeaderMenu: new ChatHeaderMenu({}),
             chatsList: new ChatsList({}),
-            messagesList: new MessagesList({}),
-            Form: new MessageForm({}),
+            messagesList: new MessagesList({} as MessagesListProps),
+            Form: new MessageForm({} as MessageFormProps),
         });
     }
 
@@ -98,14 +109,3 @@ class ChatPage extends Block<ChatPageProps> {
             `;
     }
 }
-
-const mapStateToProps = (state: Partial<StoreState>) => {
-    return {
-        activeChatId: state?.chat?.selectedChat?.id,
-        activeChat: state?.chat?.selectedChat,
-        chatsCount: state?.chat?.chats?.length,
-        userData: state?.user,
-    };
-};
-
-export const ConnectedChatPage = connect(mapStateToProps)(ChatPage);

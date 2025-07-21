@@ -30,7 +30,7 @@ class Route implements IRouteItem {
             this.render();
         }
     }
-
+    
     leave() {
         if (this._block) {
             this._block.hide();
@@ -41,7 +41,7 @@ class Route implements IRouteItem {
         return pathname === this._pathname;
     }
 
-    _renderDom(query: string, block: IBlock) {
+    private _renderDom(query: string, block: IBlock) {
         const rootElement = document.querySelector<HTMLElement>(query);
         if (!rootElement) {
             throw new Error(`Root element ${query} not found`);

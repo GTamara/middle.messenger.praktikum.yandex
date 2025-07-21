@@ -10,8 +10,8 @@ export interface IRouteItem {
 
 export interface IBlock {
     // методы и свойства, которые есть у всех блоков
-    render(): HTMLElement;
-    componentDidMount: () => {};
+    render(): string;
+    componentDidMount: () => void;
     getContent(): HTMLElement;
     show(): void;
     hide(): void;
