@@ -58,7 +58,7 @@ class Router {
         this._onRoute(window.location.pathname);
     }
 
-    async _onRoute(pathname: string) {
+    private async _onRoute(pathname: string) {
         const route: IRouteItem | undefined = this.getRoute(pathname);
 
         if (!route) {
@@ -104,7 +104,7 @@ class Router {
         return route;
     }
 
-    showPathNameWarn(pathName: string) {
+    private showPathNameWarn(pathName: string) {
         console.warn(`Route ${pathName} not found`);
     }
 }

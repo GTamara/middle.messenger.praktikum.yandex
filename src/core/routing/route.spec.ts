@@ -33,7 +33,7 @@ class MockComponent {
 }
 
 
-describe.only('Route', () => {
+describe('Route', () => {
     let route: Route;
     const testPath = '/test';
     const rootQuery = '#app';
