@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import EventBus from './event-bus';
 
-describe.only('EventBus', () => {
+describe('EventBus', () => {
     let eventBus: EventBus<string>;
     const testEvent = 'testEvent' as const;
     const anotherEvent = 'anotherEvent' as const;
